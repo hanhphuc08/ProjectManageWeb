@@ -1,0 +1,37 @@
+/* Profile page styles */
+.pf-dark { background: #f5f7fb; color: #111827; }
+.pf-container { min-height: 100vh; }
+.pf-header { height: 140px; background: linear-gradient(90deg, #e9eef7, #f7f9ff); }
+.pf-main.container { display: grid; grid-template-columns: 360px 1fr; gap: 24px; margin-top: -60px; }
+
+.pf-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; box-shadow: 0 10px 24px rgba(0,0,0,.04); }
+.pf-profile { text-align: center; padding-top: 24px; }
+.pf-avatar-wrap { display: grid; justify-items: center; gap: 10px; margin-top: -64px; }
+.pf-avatar { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: 0 6px 18px rgba(0,0,0,.1); }
+.pf-name { font-size: 24px; font-weight: 800; }
+.pf-manage-btn { background: #fff; border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 12px; font-weight: 600; }
+
+.pf-section-title { text-align: left; margin-top: 16px; font-weight: 800; color: #374151; }
+.pf-fields { display: grid; gap: 8px; margin-top: 8px; }
+.pf-field { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; padding: 10px; border: 1px solid #e5e7eb; border-radius: 10px; }
+.pf-icon { font-size: 18px; opacity: .8; margin-top: 4px; }
+.pf-body label { display: block; color: #6b7280; font-size: 14px; margin-bottom: 6px; }
+.pf-editable { display: flex; align-items: center; gap: 8px; }
+.pf-input { flex: 1; height: 44px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 12px; }
+.pf-actions { display: none; gap: 6px; }
+.pf-btn { height: 36px; width: 36px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; font-weight: 800; }
+.pf-btn.pf-save { background: #e8f3ff; border-color: #bfdbfe; color: #2563eb; }
+.pf-btn.pf-cancel { background: #fff1f2; border-color: #fecdd3; color: #e11d48; }
+.pf-field.is-dirty .pf-actions { display: inline-flex; }
+
+.pf-contact { text-align: left; display: grid; gap: 8px; margin-top: 8px; }
+.pf-contact-row { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: center; }
+.pf-contact-text { color: #111827; }
+
+/* Right side */
+.pf-block-title { font-weight: 800; margin-bottom: 12px; }
+.pf-recent { margin: 0 0 8px 0; padding: 0 0 0 18px; }
+.pf-empty { text-align: center; }
+.pf-empty-illustration { font-size: 64px; }
+.pf-empty-title { font-weight: 800; margin-top: 8px; }
+.pf-empty-desc { color: #6b7280; }

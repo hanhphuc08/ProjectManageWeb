@@ -1,0 +1,14 @@
+.cp-app { min-height: 100vh; background: #111318; color: #e6e6e6; }
+.cp-main.container { max-width: 960px; padding: 24px 16px 48px; }
+.cp-title { font-size: 28px; font-weight: 800; margin: 12px 0 4px; }
+.cp-sub { color: #9aa7b0; margin-bottom: 16px; }
+
+.cp-form { background: #111318; border: 1px solid #242a2e; border-radius: 12px; padding: 16px; }
+.cp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cp-col-span { grid-column: 1 / -1; }
+.cp-field label { display: block; font-weight: 700; margin-bottom: 6px; }
+.cp-input { width: 100%; background: #1b2024; border: 1px solid #2a3236; color: #e6e6e6; border-radius: 8px; height: 40px; padding: 0 12px; }
+textarea.cp-input { height: auto; padding: 10px 12px; }
+.cp-hint { color: #9aa7b0; font-size: 12px; }
+.cp-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Dự án | Projects</title>
+    <link href="/assets/css/styles.css" rel="stylesheet" />
+    <link href="/assets/css/user-home.css" rel="stylesheet" />
+</head>
+<body class="uh-dark">
+<div class="uh-app">
+    <aside class="uh-sidebar">
+        <div class="uh-sidebar-top">
+            <div class="uh-logo">
+                <span class="uh-logo-mark">APT</span>
+                <span class="uh-logo-text">Project</span>
+            </div>
+        </div>
+        <nav class="uh-nav">
+            <a class="uh-nav-item is-active" href="#"><span class="icon">🏠</span> For you</a>
+            <a class="uh-nav-item" href="#"><span class="icon">🕘</span> Recent</a>
+            <a class="uh-nav-item" href="#"><span class="icon">⭐</span> Starred</a>
+            <div class="uh-nav-section">Projects</div>
+            <a class="uh-nav-item" href="#"><span class="icon">➕</span> Create project</a>
+        </nav>
+        <div class="uh-sidebar-bottom">
+            <a class="uh-nav-item" href="#"><span class="icon">👥</span> Teams</a>
+            <a class="uh-nav-item" href="#"><span class="icon">⋯</span> More</a>
+        </div>
+    </aside>
+
+    <main class="uh-main">
+        <th:block th:replace="~{commons/header :: header}"></th:block>
+
+        <section class="uh-content">
+            <div class="uh-page-header">
+                <h1>Projects</h1>
+                <div class="uh-page-actions">
+                    <a class="uh-btn uh-btn-secondary" href="/projects/create">Create project</a>
+                </div>
+            </div>
+
+            <div class="uh-controls">
+                <div class="uh-input-wrap">
+                    <span class="uh-input-icon">🔎</span>
+                    <input type="text" placeholder="Search projects" />
+                </div>
+                <div class="uh-input-wrap">
+                    <button class="uh-select">
+                        Filter by product
+                        <span class="caret">▾</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="uh-table">
+                <div class="uh-thead">
+                    <div class="uh-th star"></div>
+                    <div class="uh-th name">Name</div>
+                    <div class="uh-th key">Key</div>
+                    <div class="uh-th type">Type</div>
+                    <div class="uh-th lead">Leader</div>
+                    <div class="uh-th url">Project URL</div>
+                    <div class="uh-th more"></div>
+                </div>
+            </div>
+
+            <div class="uh-pagination">
+                <button class="uh-btn uh-btn-tertiary" disabled>‹</button>
+                <button class="uh-btn uh-btn-secondary is-active">1</button>
+                <button class="uh-btn uh-btn-tertiary" disabled>›</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+(function(){
+  const avatar = document.getElementById('uhAvatar');
+  const menu = document.getElementById('uhMenu');
+  function toggle(){ menu.classList.toggle('is-open'); }
+  function close(e){ if(!menu.contains(e.target) && !avatar.contains(e.target)) menu.classList.remove('is-open'); }
+  if(avatar){
+    avatar.addEventListener('click', toggle);
+    document.addEventListener('click', close);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+/* Home/Index specific overrides */
+body#page-top { 
+	background-image: url('/images/auth/lockscreen-bg.jpg');
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+}
+.masthead {
+	background: transparent;
+}
+
+/* Improve readability on Services and About sections */
+#services .container,
+#about .container {
+	background: rgba(255,255,255,0.92);
+	border-radius: 14px;
+	box-shadow: 0 10px 30px rgba(0,0,0,.06);
+	padding: 24px;
+}
+#services, #about { color: #111827; }
+#services .text-muted, #about .text-muted { color: #374151 !important; }
+#services .section-heading, #about .section-heading { color: #0f172a; }

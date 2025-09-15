@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Hồ sơ cá nhân</title>
+    <link href="/assets/css/styles.css" rel="stylesheet" />
+    <link href="/assets/css/user-home.css" rel="stylesheet" />
+    <link href="/assets/css/profile.css" rel="stylesheet" />
+</head>
+<body class="pf-dark">
+<th:block th:replace="~{commons/header :: header}"></th:block>
+<div class="pf-container">
+    <main class="pf-main container">
+        <section class="pf-left">
+            <div class="pf-card pf-profile">
+                <div class="pf-avatar-wrap">
+                    <img class="pf-avatar" src="/images/team/1.jpg" alt="avatar">
+                    <div class="pf-name">Hạnh Phúc Trần Huy</div>
+                </div>
+                <div class="pf-section-title">Giới thiệu</div>
+                <div class="pf-fields">
+                    <div class="pf-field" data-key="title">
+                        <div class="pf-icon">💼</div>
+                        <div class="pf-body">
+                            <label>Chức danh của bạn</label>
+                            <div class="pf-editable">
+                                <input type="text" class="pf-input" placeholder="Chức danh của bạn">
+                                <div class="pf-actions">
+                                    <button class="pf-btn pf-save" data-action="save">✓</button>
+                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pf-field" data-key="department">
+                        <div class="pf-icon">🧩</div>
+                        <div class="pf-body">
+                            <label>Phòng ban của bạn</label>
+                            <div class="pf-editable">
+                                <input type="text" class="pf-input" placeholder="Phòng ban của bạn">
+                                <div class="pf-actions">
+                                    <button class="pf-btn pf-save" data-action="save">✓</button>
+                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pf-field" data-key="org">
+                        <div class="pf-icon">🏢</div>
+                        <div class="pf-body">
+                            <label>Tổ chức của bạn</label>
+                            <div class="pf-editable">
+                                <input type="text" class="pf-input" placeholder="Tổ chức của bạn">
+                                <div class="pf-actions">
+                                    <button class="pf-btn pf-save" data-action="save">✓</button>
+                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pf-field" data-key="location">
+                        <div class="pf-icon">📍</div>
+                        <div class="pf-body">
+                            <label>Vị trí của bạn</label>
+                            <div class="pf-editable">
+                                <input type="text" class="pf-input" placeholder="Vị trí của bạn">
+                                <div class="pf-actions">
+                                    <button class="pf-btn pf-save" data-action="save">✓</button>
+                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pf-section-title">Liên hệ</div>
+                <div class="pf-contact">
+                    <div class="pf-contact-row">
+                        <div class="pf-icon">✉️</div>
+                        <div class="pf-contact-text">lamngocnhaky8@gmail.com</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pf-right">
+            <div class="pf-card">
+                <div class="pf-block-title">Công việc gần đây</div>
+                <a class="pf-link" href="#">Xem tất cả</a>
+            </div>
+            <div class="pf-card pf-empty">
+                <div class="pf-block-title">Nơi làm việc</div>
+                <div class="pf-empty-illustration">📍</div>
+                <div class="pf-empty-title">Chúng tôi chưa có nơi làm việc nào để hiển thị ở đây</div>
+                <div class="pf-empty-desc">Bạn không làm việc trong bất kỳ dự án hoặc không gian nào trong 90 ngày qua.</div>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="/assets/js/profile.js"></script>
+<script>
+(function(){
+  const avatar = document.getElementById('uhAvatar');
+  const menu = document.getElementById('uhMenu');
+  function toggle(){ if(menu) menu.classList.toggle('is-open'); }
+  function close(e){ if(menu && !menu.contains(e.target) && !avatar.contains(e.target)) menu.classList.remove('is-open'); }
+  if(avatar){
+    avatar.addEventListener('click', toggle);
+    document.addEventListener('click', close);
+  }
+})();
+</script>
+</body>
+</html>

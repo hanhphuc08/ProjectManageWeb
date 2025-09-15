@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<title>Tạo dự án</title>
+	<link href="/assets/css/styles.css" rel="stylesheet" />
+	<link href="/assets/css/user-home.css" rel="stylesheet" />
+	<link href="/assets/css/project-create.css" rel="stylesheet" />
+</head>
+<body class="uh-dark">
+<div class="cp-app">
+	<header class="uh-topbar">
+		<div class="uh-search"><input type="text" placeholder="Search" /></div>
+		<div class="uh-actions"><div class="uh-avatar">HP</div></div>
+	</header>
+
+	<main class="cp-main container">
+		<h1 class="cp-title">Create project</h1>
+		<p class="cp-sub">Thiết lập dự án phần mềm mới để quản lý backlog, sprint và issues.</p>
+
+		<form class="cp-form">
+			<div class="cp-grid">
+				<div class="cp-field">
+					<label for="name">Project name</label>
+					<input id="name" class="cp-input" type="text" placeholder="e.g. My Kanban Project" required>
+					<small class="cp-hint">Tên có thể đổi bất kỳ lúc nào.</small>
+				</div>
+				<div class="cp-field">
+					<label for="key">Project key</label>
+					<input id="key" class="cp-input" type="text" placeholder="KAN" maxlength="10" required>
+					<small class="cp-hint">Tối đa 10 ký tự, dùng làm tiền tố issue (VD: KAN-123).</small>
+				</div>
+				<div class="cp-field">
+					<label for="type">Project type</label>
+					<select id="type" class="cp-input">
+						<option>Team-managed software</option>
+						<option>Company-managed software</option>
+					</select>
+				</div>
+				<div class="cp-field">
+					<label for="lead">Project lead</label>
+					<input id="lead" class="cp-input" type="text" value="Hạnh Phúc Trần Huy">
+				</div>
+				<div class="cp-field">
+					<label for="visibility">Visibility</label>
+					<select id="visibility" class="cp-input">
+						<option>Private (members only)</option>
+						<option>Open to team</option>
+					</select>
+				</div>
+				<div class="cp-field cp-col-span">
+					<label for="desc">Description</label>
+					<textarea id="desc" class="cp-input" rows="4" placeholder="Mô tả ngắn về dự án..."></textarea>
+				</div>
+			</div>
+
+			<div class="cp-actions">
+				<a class="uh-btn uh-btn-tertiary" href="/user/home">Cancel</a>
+				<button type="submit" class="uh-btn uh-btn-primary">Create</button>
+			</div>
+		</form>
+	</main>
+</div>
+</body>
+</html>
+
+
