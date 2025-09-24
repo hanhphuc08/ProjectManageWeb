@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-@RequiredArgsConstructor 
+/*@RequiredArgsConstructor */
 public class AuthController {
 	
 	private final AuthService authService;

@@ -25,6 +25,13 @@
 /* Buttons */
 .uh-btn { border: 1px solid transparent; border-radius: 6px; padding: 6px 10px; font-weight: 600; color: #e6e6e6; background: #1b2024; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
 .uh-btn:hover { background: #22272b; text-decoration: none; }
+
+/* Project Table Styles */
+.uh-tbody { display: block; }
+.uh-row { display: grid; grid-template-columns: 40px 1fr 100px 100px 120px 1fr 40px; gap: 16px; padding: 12px 16px; border-bottom: 1px solid #2c3338; align-items: center; }
+.uh-td { color: #e6e6e6; font-size: 14px; }
+.uh-project-link { color: #0052cc; text-decoration: none; font-weight: 500; }
+.uh-project-link:hover { color: #0065ff; text-decoration: none; }
 .uh-btn-primary { background: #2684ff; border-color: #2684ff; color: #fff; }
 .uh-btn-primary:hover { filter: brightness(1.05); }
 .uh-btn-secondary { background: #1b2024; border-color: #2a3236; }
@@ -76,3 +83,46 @@
 
 /* Utility */
 .icon { opacity: .9; }
+
+/* Icon colors */
+.uh-nav-item i {
+    width: 20px;
+    text-align: center;
+    margin-right: 12px;
+}
+
+.uh-nav-item i.fa-home {
+    color: #4f46e5;
+}
+
+.uh-nav-item i.fa-clock {
+    color: #10b981;
+}
+
+.uh-nav-item i.fa-star {
+    color: #f59e0b;
+}
+
+.uh-nav-item i.fa-plus {
+    color: #8b5cf6;
+}
+
+.uh-nav-item i.fa-users {
+    color: #06b6d4;
+}
+
+.uh-nav-item i.fa-ellipsis-h {
+    color: #6b7280;
+}
+
+.uh-input-icon {
+    color: #6b7280;
+}
+
+.uh-td i.fa-star {
+    color: #f59e0b;
+}
+
+.uh-td i.fa-ellipsis-h {
+    color: #6b7280;
+}

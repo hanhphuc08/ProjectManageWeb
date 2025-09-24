@@ -6,6 +6,7 @@
     <title>Dự án | Projects</title>
     <link href="/assets/css/styles.css" rel="stylesheet" />
     <link href="/assets/css/user-home.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="uh-dark">
 <div class="uh-app">
@@ -17,15 +18,15 @@
             </div>
         </div>
         <nav class="uh-nav">
-            <a class="uh-nav-item is-active" href="#"><span class="icon">🏠</span> For you</a>
-            <a class="uh-nav-item" href="#"><span class="icon">🕘</span> Recent</a>
-            <a class="uh-nav-item" href="#"><span class="icon">⭐</span> Starred</a>
+            <a class="uh-nav-item is-active" href="#"><i class="fas fa-home"></i> For you</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-clock"></i> Recent</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-star"></i> Starred</a>
             <div class="uh-nav-section">Projects</div>
-            <a class="uh-nav-item" href="#"><span class="icon">➕</span> Create project</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-plus"></i> Create project</a>
         </nav>
         <div class="uh-sidebar-bottom">
-            <a class="uh-nav-item" href="#"><span class="icon">👥</span> Teams</a>
-            <a class="uh-nav-item" href="#"><span class="icon">⋯</span> More</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-users"></i> Teams</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-ellipsis-h"></i> More</a>
         </div>
     </aside>
 
@@ -42,7 +43,7 @@
 
             <div class="uh-controls">
                 <div class="uh-input-wrap">
-                    <span class="uh-input-icon">🔎</span>
+                    <i class="fas fa-search uh-input-icon"></i>
                     <input type="text" placeholder="Search projects" />
                 </div>
                 <div class="uh-input-wrap">
@@ -62,6 +63,30 @@
                     <div class="uh-th lead">Leader</div>
                     <div class="uh-th url">Project URL</div>
                     <div class="uh-th more"></div>
+                </div>
+                <div class="uh-tbody">
+                    <div class="uh-row">
+                        <div class="uh-td star"><i class="fas fa-star"></i></div>
+                        <div class="uh-td name">
+                            <a href="/user/projectmanage" class="uh-project-link">(Learn) Jira Premium benefits in 5 min</a>
+                        </div>
+                        <div class="uh-td key">LEARNJIRA</div>
+                        <div class="uh-td type">Software</div>
+                        <div class="uh-td lead">John Doe</div>
+                        <div class="uh-td url">jira.atlassian.com</div>
+                        <div class="uh-td more"><i class="fas fa-ellipsis-h"></i></div>
+                    </div>
+                    <div class="uh-row">
+                        <div class="uh-td star"></div>
+                        <div class="uh-td name">
+                            <a href="/user/projectmanage" class="uh-project-link">My Kanban Project</a>
+                        </div>
+                        <div class="uh-td key">KANBAN</div>
+                        <div class="uh-td type">Software</div>
+                        <div class="uh-td lead">Jane Smith</div>
+                        <div class="uh-td url">jira.atlassian.com</div>
+                        <div class="uh-td more"><i class="fas fa-ellipsis-h"></i></div>
+                    </div>
                 </div>
             </div>
 

@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Project Detail | APT Project</title>
+    <link href="/assets/css/styles.css" rel="stylesheet" />
+    <link href="/assets/css/user-home.css" rel="stylesheet" />
+    <link href="/assets/css/project-detail.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="uh-dark">
+<div class="uh-app">
+    <aside class="uh-sidebar">
+        <div class="uh-sidebar-top">
+            <div class="uh-logo">
+                <span class="uh-logo-mark">APT</span>
+                <span class="uh-logo-text">Project</span>
+            </div>
+        </div>
+        <nav class="uh-nav">
+            <a class="uh-nav-item" href="/user/home"><i class="fas fa-home"></i> For you</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-clock"></i> Recent</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-star"></i> Starred</a>
+            <div class="uh-nav-section">Projects</div>
+            <a class="uh-nav-item is-active" href="#"><i class="fas fa-folder"></i> (Learn) Jira Premium benefits in 5 min</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-folder"></i> My Kanban Project</a>
+            <a class="uh-nav-item" href="/projects/create"><i class="fas fa-plus"></i> Create project</a>
+        </nav>
+        <div class="uh-sidebar-bottom">
+            <a class="uh-nav-item" href="#"><i class="fas fa-users"></i> Teams</a>
+            <a class="uh-nav-item" href="#"><i class="fas fa-ellipsis-h"></i> More</a>
+        </div>
+    </aside>
+
+    <main class="uh-main">
+        <th:block th:replace="~{commons/header :: header}"></th:block>
+        
+        <!-- Quickstart Toggle Button (hidden by default) -->
+        <div class="pd-quickstart-toggle-btn" id="pdQuickstartToggleBtn" style="display: none;">
+            <button class="pd-toggle-btn">
+                <i class="fas fa-question-circle"></i>
+                <span>Quickstart</span>
+            </button>
+        </div>
+
+        <section class="uh-content">
+            <!-- Project Header -->
+            <div class="pd-project-header">
+                <div class="pd-project-title">
+                    <span class="pd-project-icon"><i class="fas fa-folder"></i></span>
+                    <h1>(Learn) Jira Premium benefits in 5 min</h1>
+                    <span class="pd-project-emoji"><i class="fas fa-thumbs-up"></i></span>
+                    <span class="pd-project-grid"><i class="fas fa-th"></i></span>
+                </div>
+            </div>
+
+            <!-- Project Navigation Tabs -->
+            <div class="pd-tabs">
+                <a href="#" class="pd-tab" data-tab="summary">Summary</a>
+                <a href="#" class="pd-tab" data-tab="timeline">Timeline</a>
+                <a href="#" class="pd-tab is-active" data-tab="board">Board</a>
+                <a href="#" class="pd-tab" data-tab="calendar">Calendar</a>
+                <a href="#" class="pd-tab" data-tab="list">List</a>
+                <a href="#" class="pd-tab">Forms</a>
+                <a href="#" class="pd-tab">Goals</a>
+                <a href="#" class="pd-tab">All work</a>
+                <a href="#" class="pd-tab">More 5</a>
+                <button class="pd-tab-add"><i class="fas fa-plus"></i></button>
+            </div>
+
+            <!-- Summary Content (Hidden by default) -->
+            <div class="pd-tab-content" id="summary-content" style="display: none;">
+                <!-- Top Metrics -->
+                <div class="summary-metrics">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">completed</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value">3</div>
+                            <div class="metric-label">updated</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-plus-square"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value">3</div>
+                            <div class="metric-label">created</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="metric-content">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">due soon</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="summary-grid">
+                    <!-- Left Column -->
+                    <div class="summary-left">
+                        <!-- Status Overview -->
+                        <div class="summary-card">
+                            <div class="summary-card-header">
+                                <h3>Status overview</h3>
+                                <p>Get a snapshot of the status of your work items.</p>
+                                <a href="#" class="summary-link">View all work items</a>
+                            </div>
+                            <div class="summary-card-content">
+                                <div class="donut-chart">
+                                    <div class="donut-center">
+                                        <div class="donut-total">3</div>
+                                        <div class="donut-label">Total work items</div>
+                                    </div>
+                                </div>
+                                <div class="donut-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-color" style="background: #0052cc;"></div>
+                                        <span>To Do: 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Priority Breakdown -->
+                        <div class="summary-card">
+                            <div class="summary-card-header">
+                                <h3>Priority breakdown</h3>
+                                <p>Get a holistic view of how work is being prioritized. See what your team's been focusing on</p>
+                            </div>
+                            <div class="summary-card-content">
+                                <div class="priority-chart">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <p>Priority breakdown chart</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="summary-right">
+                        <!-- Recent Activity -->
+                        <div class="summary-card">
+                            <div class="summary-card-header">
+                                <h3>Recent activity</h3>
+                                <p>Stay up to date with what's happening across the project.</p>
+                            </div>
+                            <div class="summary-card-content">
+                                <div class="activity-list">
+                                    <div class="activity-group">
+                                        <div class="activity-group-title">Today</div>
+                                        <div class="activity-item">
+                                            <div class="activity-avatar">
+                                                <img src="/images/avatar1.jpg" alt="Avatar" />
+                                            </div>
+                                            <div class="activity-content">
+                                                <div class="activity-user">Hạnh Phúc Trần Huy</div>
+                                                <div class="activity-action">created</div>
+                                                <div class="activity-item-title">LEARNJIRA-3: Atlassian Intelligence...</div>
+                                                <div class="activity-description">...o work smarter with AI</div>
+                                                <div class="activity-meta">
+                                                    <span class="activity-status">🤖 TO DO</span>
+                                                    <span class="activity-time">about 1 hour ago</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item">
+                                            <div class="activity-avatar">
+                                                <img src="/images/avatar1.jpg" alt="Avatar" />
+                                            </div>
+                                            <div class="activity-content">
+                                                <div class="activity-user">Hạnh Phúc Trần Huy</div>
+                                                <div class="activity-action">created</div>
+                                                <div class="activity-item-title">LEARNJIRA-2: Plans: How to use admaps...</div>
+                                                <div class="activity-description">...to plan out your work</div>
+                                                <div class="activity-meta">
+                                                    <span class="activity-status">🎈 TO DO</span>
+                                                    <span class="activity-time">about 1 hour ago</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item">
+                                            <div class="activity-avatar">
+                                                <img src="/images/avatar1.jpg" alt="Avatar" />
+                                            </div>
+                                            <div class="activity-content">
+                                                <div class="activity-user">Hạnh Phúc Trần Huy</div>
+                                                <div class="activity-action">created</div>
+                                                <div class="activity-item-title">LEARNJIRA-1: Security & permissions...</div>
+                                                <div class="activity-description">...to control who can edit or manage projects</div>
+                                                <div class="activity-meta">
+                                                    <span class="activity-status">🔥 TO DO</span>
+                                                    <span class="activity-time">about 1 hour ago</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Types of Work -->
+                        <div class="summary-card">
+                            <div class="summary-card-header">
+                                <h3>Types of work</h3>
+                                <p>Get a breakdown of work items by their types. <a href="#" class="summary-link">View all items</a></p>
+                            </div>
+                            <div class="summary-card-content">
+                                <div class="work-types-table">
+                                    <div class="work-type-row">
+                                        <div class="work-type-name">
+                                            <i class="fas fa-check-square"></i>
+                                            <span>Task</span>
+                                        </div>
+                                        <div class="work-type-distribution">100%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Content (Hidden by default) -->
+            <div class="pd-tab-content" id="timeline-content" style="display: none;">
+                <!-- Timeline Controls -->
+                <div class="pd-timeline-header">
+                    <div class="pd-timeline-controls">
+                        <div class="pd-timeline-search-wrap">
+                            <i class="fas fa-search pd-timeline-search-icon"></i>
+                            <input type="text" placeholder="Search timeline" class="pd-timeline-search-input" />
+                        </div>
+                        <div class="pd-timeline-filter-group">
+                            <img src="/images/face1.jpg" alt="Assignee" class="pd-timeline-avatar" />
+                            <button class="pd-timeline-status-category">Status category <i class="fas fa-chevron-down"></i></button>
+                            <button class="pd-timeline-more-options"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pd-timeline-main">
+                    <div class="pd-timeline-left-panel">
+                        <div class="pd-timeline-left-header">Work</div>
+                        <button class="pd-timeline-create-epic"><i class="fas fa-plus"></i> Create Epic</button>
+                    </div>
+                    <div class="pd-timeline-right-panel">
+                        <div class="pd-timeline-months">
+                            <div class="pd-timeline-month">September</div>
+                            <div class="pd-timeline-month">October</div>
+                            <div class="pd-timeline-month">November</div>
+                        </div>
+                        <div class="pd-timeline-grid">
+                            <!-- Vertical line for today -->
+                            <div class="pd-timeline-today-line"></div>
+                            <!-- Placeholder for timeline items -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Bottom Controls -->
+                <div class="pd-timeline-bottom-bar">
+                    <div class="pd-timeline-bottom-controls">
+                        <button class="pd-timeline-bottom-button">Today</button>
+                        <button class="pd-timeline-bottom-button">Weeks</button>
+                        <button class="pd-timeline-bottom-button is-active">Months</button>
+                        <button class="pd-timeline-bottom-button">Quarters</button>
+                        <button class="pd-timeline-bottom-button"><i class="fas fa-info-circle"></i></button>
+                        <button class="pd-timeline-bottom-button"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div> <!-- End Timeline Content -->
+
+            <!-- Calendar Content (Hidden by default) -->
+            <div class="pd-tab-content" id="calendar-content" style="display: none;">
+                <!-- Calendar Controls -->
+                <div class="pd-calendar-header">
+                    <div class="pd-calendar-controls">
+                        <div class="pd-calendar-search-wrap">
+                            <i class="fas fa-search pd-calendar-search-icon"></i>
+                            <input type="text" placeholder="Search calendar" class="pd-calendar-search-input" />
+                        </div>
+                        <div class="pd-calendar-filters">
+                            <button class="pd-calendar-filter">Assignee <i class="fas fa-chevron-down"></i></button>
+                            <button class="pd-calendar-filter">Type <i class="fas fa-chevron-down"></i></button>
+                            <button class="pd-calendar-filter">Status <i class="fas fa-chevron-down"></i></button>
+                            <button class="pd-calendar-filter">More filters <i class="fas fa-chevron-down"></i></button>
+                        </div>
+                        <div class="pd-calendar-navigation">
+                            <button class="pd-calendar-nav-btn">Today</button>
+                            <button class="pd-calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
+                            <span class="pd-calendar-month">Sep 2025</span>
+                            <button class="pd-calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
+                            <button class="pd-calendar-view-btn"><i class="fas fa-calendar-day"></i></button>
+                            <button class="pd-calendar-view-btn"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="pd-calendar-grid">
+                    <div class="pd-calendar-weekdays">
+                        <div class="pd-calendar-weekday">Mon</div>
+                        <div class="pd-calendar-weekday">Tue</div>
+                        <div class="pd-calendar-weekday">Wed</div>
+                        <div class="pd-calendar-weekday">Thu</div>
+                        <div class="pd-calendar-weekday">Fri</div>
+                        <div class="pd-calendar-weekday">Sat</div>
+                        <div class="pd-calendar-weekday">Sun</div>
+                    </div>
+                    <div class="pd-calendar-dates">
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">1</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Team Meeting</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">2</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Code Review</div>
+                                <div class="pd-calendar-task">Bug Fix</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">3</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">4</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Sprint Planning</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">5</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">8</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Feature Development</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">9</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">10</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Testing</div>
+                                <div class="pd-calendar-task">Documentation</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">11</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">12</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Deployment</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">15</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">16</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Client Meeting</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">17</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">18</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Performance Review</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">19</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">22</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">23</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">API Integration</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date current">
+                            <div class="pd-calendar-date-number">24</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Current Task</div>
+                                <div class="pd-calendar-task">Deadline</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">25</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">26</div>
+                            <div class="pd-calendar-tasks">
+                                <div class="pd-calendar-task">Final Review</div>
+                            </div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">27</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">28</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">29</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pd-calendar-date">
+                            <div class="pd-calendar-date-number">30</div>
+                            <div class="pd-calendar-tasks"></div>
+                            <button class="pd-calendar-add-task">Add task</button>
+                            <div class="pd-calendar-task-form">
+                                <input type="text" class="pd-calendar-task-input" placeholder="What needs to be done?" />
+                                <div class="pd-calendar-task-type">
+                                    <i class="fas fa-check-square"></i>
+                                    <span>Task</span>
+                                </div>
+                                <div class="pd-calendar-task-buttons">
+                                    <button class="pd-calendar-task-create">
+                                        <i class="fas fa-arrow-right"></i>
+                                        Create
+                                    </button>
+                                    <button class="pd-calendar-task-cancel">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Calendar Content -->
+
+            <!-- List Content (Hidden by default) -->
+            <div class="pd-tab-content" id="list-content" style="display: none;">
+                <!-- List Controls -->
+                <div class="pd-list-header">
+                    <div class="pd-list-controls">
+                        <div class="pd-list-search-wrap">
+                            <i class="fas fa-search pd-list-search-icon"></i>
+                            <input type="text" placeholder="Search list" class="pd-list-search-input" />
+                        </div>
+                        <div class="pd-list-filters">
+                            <button class="pd-list-filter">Filter <i class="fas fa-chevron-down"></i></button>
+                            <div class="pd-list-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="pd-list-actions">
+                            <button class="pd-list-action">Group <i class="fas fa-chevron-down"></i></button>
+                            <button class="pd-list-action"><i class="fas fa-th"></i></button>
+                            <button class="pd-list-action"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Table -->
+                <div class="pd-list-table">
+                    <div class="pd-list-table-header">
+                        <div class="pd-list-column">Type</div>
+                        <div class="pd-list-column">Key</div>
+                        <div class="pd-list-column">Title</div>
+                        <div class="pd-list-column">Status</div>
+                        <div class="pd-list-column">Descriptions</div>
+                        <div class="pd-list-column">Assignee</div>
+                        <div class="pd-list-column">Due date</div>
+                        <div class="pd-list-column">Created</div>
+                        <div class="pd-list-column">Updated</div>
+                    </div>
+                    
+                    <div class="pd-list-table-body">
+                        <div class="pd-list-row">
+                            <div class="pd-list-cell">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="pd-list-cell pd-list-key">LEARNJIRA-1</div>
+                            <div class="pd-list-cell pd-list-summary">Security & permissions: How to control who can edit or or m...</div>
+                            <div class="pd-list-cell">
+                                <span class="pd-list-status pd-list-status-todo">TO DO</span>
+                            </div>
+                            <div class="pd-list-cell">
+                                <a href="#" class="pd-list-comment">Add Descriptions <i class="fas fa-comment"></i></a>
+                            </div>
+                            <div class="pd-list-cell pd-list-assignee"></div>
+                            <div class="pd-list-cell pd-list-due-date"></div>
+                            <div class="pd-list-cell">Sep 24, 2025</div>
+                            <div class="pd-list-cell">Sep 24, 2025</div>
+                        </div>
+                        
+                        <div class="pd-list-row">
+                            <div class="pd-list-cell">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="pd-list-cell pd-list-key">LEARNJIRA-2</div>
+                            <div class="pd-list-cell pd-list-summary">Plans: How to use detailed roadmaps to plan out your work ...</div>
+                            <div class="pd-list-cell">
+                                <span class="pd-list-status pd-list-status-todo">TO DO</span>
+                            </div>
+                            <div class="pd-list-cell">
+                                <a href="#" class="pd-list-comment">Add Descriptions <i class="fas fa-comment"></i></a>
+                            </div>
+                            <div class="pd-list-cell pd-list-assignee"></div>
+                            <div class="pd-list-cell pd-list-due-date"></div>
+                            <div class="pd-list-cell">Sep 24, 2025</div>
+                            <div class="pd-list-cell">Sep 24, 2025</div>
+                        </div>
+                        
+                        <div class="pd-list-row">
+                            <div class="pd-list-cell">
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="pd-list-cell pd-list-key">LEARNJIRA-3</div>
+                            <div class="pd-list-cell pd-list-summary">Atlassian Intelligence: How to work smarter with AI 🤖</div>
+                            <div class="pd-list-cell">
+                                <span class="pd-list-status pd-list-status-todo">TO DO</span>
+                            </div>
+                            <div class="pd-list-cell">
+                                <a href="#" class="pd-list-comment">Add descriptions <i class="fas fa-comment"></i></a>
+                            </div>
+                            <div class="pd-list-cell pd-list-assignee"></div>
+                            <div class="pd-list-cell pd-list-due-date"></div>
+                            <div class="pd-list-cell">Sep 24, 2025</div>
+                            <div class="pd-list-cell">Sep 24, 2025</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Create Button -->
+                <div class="pd-list-create">
+                    <button class="pd-list-create-btn">
+                        <i class="fas fa-plus"></i>
+                        Create
+                    </button>
+                </div>
+            </div> <!-- End List Content -->
+
+            <!-- Board Content (Hidden by default) -->
+            <div class="pd-tab-content" id="board-content" style="display: block;">
+                <!-- Board Controls -->
+                <div class="pd-board-controls">
+                <div class="pd-search">
+                    <span class="pd-search-icon"><i class="fas fa-search"></i></span>
+                    <input type="text" placeholder="Search board" />
+                </div>
+                <div class="pd-people" id="pdPeopleBtn">
+                    <i class="fas fa-users"></i>
+                    <span class="pd-people-dots">⋯</span>
+                </div>
+                <button class="pd-filter is-active">
+                    <span class="pd-filter-icon"><i class="fas fa-chevron-down"></i></span>
+                    Filter
+                </button>
+                <div class="pd-group">
+                    <select>
+                        <option>Group by</option>
+                    </select>
+                </div>
+                <div class="pd-view-icons">
+                    <button class="pd-view-btn is-active"><i class="fas fa-th"></i></button>
+                    <button class="pd-view-btn"><i class="fas fa-list"></i></button>
+                    <button class="pd-view-btn"><i class="fas fa-chart-bar"></i></button>
+                </div>
+            </div>
+
+            <!-- Kanban Board -->
+            <div class="pd-kanban-board">
+                <!-- TO DO Column -->
+                <div class="pd-column">
+                    <div class="pd-column-header">
+                        <h3>TO DO</h3>
+                        <span class="pd-count">3</span>
+                    </div>
+                    <div class="pd-cards">
+                        <div class="pd-card">
+                            <div class="pd-card-header">
+                                <span class="pd-card-icon"><i class="fas fa-lock"></i></span>
+                                <span class="pd-card-video"><i class="fas fa-play"></i> 1:18</span>
+                            </div>
+                            <h4>Security & Permissions</h4>
+                            <p>Security & permissions: How to control who can edit or manage projects</p>
+                            <div class="pd-card-footer">
+                                <span class="pd-card-id">LEARNJIRA-1</span>
+                                <span class="pd-card-avatar"><i class="fas fa-user"></i></span>
+                            </div>
+                        </div>
+                        <div class="pd-card">
+                            <div class="pd-card-header">
+                                <span class="pd-card-icon"><i class="fas fa-hashtag"></i></span>
+                                <span class="pd-card-video"><i class="fas fa-play"></i> 1:11</span>
+                            </div>
+                            <h4>Plans</h4>
+                            <p>Plans: How to use detailed...</p>
+                            <div class="pd-card-footer">
+                                <span class="pd-card-id">LEARNJIRA-2</span>
+                                <span class="pd-card-avatar"><i class="fas fa-user"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IN PROGRESS Column -->
+                <div class="pd-column">
+                    <div class="pd-column-header">
+                        <h3>IN PROGRESS</h3>
+                        <span class="pd-count">0</span>
+                    </div>
+                    <div class="pd-cards">
+                        <!-- Empty column - create button will appear on hover -->
+                    </div>
+                </div>
+
+                <!-- DONE Column -->
+                <div class="pd-column">
+                    <div class="pd-column-header">
+                        <h3>DONE</h3>
+                        <span class="pd-count">0</span>
+                    </div>
+                    <div class="pd-cards">
+                        <!-- Empty column - create button will appear on hover -->
+                    </div>
+                </div>
+            </div>
+            </div> <!-- End Board Content -->
+        </section>
+    </main>
+</div>
+
+<!-- Quickstart Panel -->
+<div class="pd-quickstart">
+    <div class="pd-quickstart-header">
+        <h2>Quickstart</h2>
+        <button class="pd-quickstart-toggle" id="pdQuickstartToggle"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="pd-quickstart-content">
+        <div class="pd-quickstart-section is-expanded">
+            <div class="pd-quickstart-section-header">
+                <span class="pd-quickstart-icon"><i class="fas fa-check"></i></span>
+                <h3>Sort and prioritize with ease</h3>
+                <span class="pd-quickstart-arrow"><i class="fas fa-chevron-up"></i></span>
+            </div>
+            <div class="pd-quickstart-section-content">
+                <div class="pd-quickstart-illustration">
+                    <div class="pd-list-demo">
+                        <div class="pd-list-line"></div>
+                        <div class="pd-list-line"></div>
+                        <div class="pd-list-line highlighted"></div>
+                        <div class="pd-list-line highlighted"></div>
+                        <div class="pd-list-line highlighted"></div>
+                        <div class="pd-list-line"></div>
+                    </div>
+                </div>
+                <p>Like a super-powered spreadsheet, the list helps you break down work efficiently, and sort by any field.</p>
+                <button class="pd-quickstart-btn">Guide me</button>
+            </div>
+        </div>
+        <div class="pd-quickstart-section">
+            <div class="pd-quickstart-section-header">
+                <span class="pd-quickstart-icon"><i class="fas fa-check"></i></span>
+                <h3>Visualize timeframes</h3>
+                <span class="pd-quickstart-arrow"><i class="fas fa-chevron-down"></i></span>
+            </div>
+        </div>
+        <div class="pd-quickstart-section">
+            <div class="pd-quickstart-section-header">
+                <span class="pd-quickstart-icon"><i class="fas fa-check"></i></span>
+                <h3>Gain a bird's eye view</h3>
+                <span class="pd-quickstart-arrow"><i class="fas fa-chevron-down"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="pd-quickstart-footer">
+        <a href="#" class="pd-dismiss">Dismiss Quickstart</a>
+    </div>
+</div>
+
+<!-- Team Management Modal -->
+<div class="pd-modal-overlay" id="pdModalOverlay">
+    <div class="pd-modal">
+        <div class="pd-modal-header">
+            <h2>Link contributing teams</h2>
+            <button class="pd-modal-close" id="pdModalClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="pd-modal-body">
+            <p class="pd-modal-description">Add the teams that work in this project, so everyone knows who to go to for help.</p>
+            
+            <div class="pd-team-display">
+                <div class="pd-team-info">
+                    <div class="pd-team-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="pd-team-details">
+                        <h3>Team Awesome</h3>
+                        <div class="pd-team-avatars">
+                            <div class="pd-avatar">A</div>
+                            <div class="pd-avatar">B</div>
+                            <div class="pd-avatar">C</div>
+                            <div class="pd-avatar">D</div>
+                            <div class="pd-avatar-more">+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pd-team-types">
+                <div class="pd-team-type">
+                    <i class="fas fa-user"></i>
+                    <div class="pd-wave-line"></div>
+                </div>
+                <div class="pd-team-type">
+                    <i class="fas fa-arrow-up"></i>
+                    <div class="pd-wave-line"></div>
+                </div>
+                <div class="pd-team-type">
+                    <i class="fas fa-cog"></i>
+                    <div class="pd-wave-line"></div>
+                </div>
+                <div class="pd-team-type">
+                    <i class="fas fa-star"></i>
+                    <div class="pd-wave-line"></div>
+                </div>
+            </div>
+            
+            <div class="pd-modal-search">
+                <div class="pd-search-input">
+                    <i class="fas fa-users"></i>
+                    <input type="text" placeholder="Search and add teams" />
+                </div>
+            </div>
+        </div>
+        <div class="pd-modal-footer">
+            <button class="pd-btn pd-btn-secondary" id="pdModalCancel">Cancel</button>
+            <button class="pd-btn pd-btn-primary" id="pdModalSave">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function(){
+  const avatar = document.getElementById('uhAvatar');
+  const menu = document.getElementById('uhMenu');
+  function toggle(){ menu.classList.toggle('is-open'); }
+  function close(e){ if(!menu.contains(e.target) && !avatar.contains(e.target)) menu.classList.remove('is-open'); }
+  if(avatar){
+    avatar.addEventListener('click', toggle);
+    document.addEventListener('click', close);
+  }
+})();
+
+// Modal functionality
+(function(){
+  const peopleBtn = document.getElementById('pdPeopleBtn');
+  const modalOverlay = document.getElementById('pdModalOverlay');
+  const modalClose = document.getElementById('pdModalClose');
+  const modalCancel = document.getElementById('pdModalCancel');
+  const modalSave = document.getElementById('pdModalSave');
+  
+  function openModal() {
+    modalOverlay.style.display = 'flex';
+  }
+  
+  function closeModal() {
+    modalOverlay.style.display = 'none';
+  }
+  
+  if(peopleBtn) {
+    peopleBtn.addEventListener('click', openModal);
+  }
+  
+  if(modalClose) {
+    modalClose.addEventListener('click', closeModal);
+  }
+  
+  if(modalCancel) {
+    modalCancel.addEventListener('click', closeModal);
+  }
+  
+  if(modalSave) {
+    modalSave.addEventListener('click', closeModal);
+  }
+  
+  // Close modal when clicking overlay
+  if(modalOverlay) {
+    modalOverlay.addEventListener('click', function(e) {
+      if(e.target === modalOverlay) {
+        closeModal();
+      }
+    });
+  }
+})();
+
+// Quickstart Panel Toggle functionality
+(function(){
+  const quickstartToggle = document.getElementById('pdQuickstartToggle');
+  const quickstartPanel = document.querySelector('.pd-quickstart');
+  const toggleBtn = document.getElementById('pdQuickstartToggleBtn');
+  
+  function hideQuickstart() {
+    quickstartPanel.style.display = 'none';
+    toggleBtn.style.display = 'block';
+  }
+  
+  function showQuickstart() {
+    quickstartPanel.style.display = 'flex';
+    toggleBtn.style.display = 'none';
+  }
+  
+  if(quickstartToggle) {
+    quickstartToggle.addEventListener('click', hideQuickstart);
+  }
+  
+  if(toggleBtn) {
+    toggleBtn.addEventListener('click', showQuickstart);
+  }
+})();
+
+// Tab switching functionality
+(function(){
+  const tabs = document.querySelectorAll('.pd-tab[data-tab]');
+  const contents = document.querySelectorAll('.pd-tab-content');
+  
+  function switchTab(tabName) {
+    // Remove active class from all tabs
+    tabs.forEach(tab => tab.classList.remove('is-active'));
+    
+    // Hide all content
+    contents.forEach(content => content.style.display = 'none');
+    
+    // Show selected content
+    const selectedContent = document.getElementById(tabName + '-content');
+    if (selectedContent) {
+      selectedContent.style.display = 'block';
+    }
+    
+    // Add active class to clicked tab
+    const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeTab) {
+      activeTab.classList.add('is-active');
+    }
+  }
+  
+  // Add click listeners to tabs
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      const tabName = this.getAttribute('data-tab');
+      if (tabName) {
+        switchTab(tabName);
+      }
+    });
+  });
+})();
+
+// Calendar Add Task functionality
+(function(){
+  // Click on date cell to show task form
+  document.querySelectorAll('.pd-calendar-date').forEach(dateCell => {
+    dateCell.addEventListener('click', function(e) {
+      // Don't trigger if clicking on existing tasks
+      if (e.target.classList.contains('pd-calendar-task')) {
+        return;
+      }
+      
+      const taskForm = this.querySelector('.pd-calendar-task-form');
+      const taskInput = taskForm.querySelector('.pd-calendar-task-input');
+      
+      // Show form
+      taskForm.classList.add('active');
+      taskInput.focus();
+    });
+  });
+
+  // Task form functionality
+  document.querySelectorAll('.pd-calendar-task-form').forEach(form => {
+    const input = form.querySelector('.pd-calendar-task-input');
+    const createBtn = form.querySelector('.pd-calendar-task-create');
+    const cancelBtn = form.querySelector('.pd-calendar-task-cancel');
+    
+    // Create task
+    createBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      const taskName = input.value.trim();
+      if (taskName) {
+        const tasksContainer = form.parentElement.querySelector('.pd-calendar-tasks');
+        const newTask = document.createElement('div');
+        newTask.className = 'pd-calendar-task';
+        newTask.textContent = taskName;
+        newTask.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (confirm('Delete this task?')) {
+            this.remove();
+          }
+        });
+        tasksContainer.appendChild(newTask);
+        
+        // Reset form
+        input.value = '';
+        form.classList.remove('active');
+      }
+    });
+    
+    // Cancel task creation
+    cancelBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      input.value = '';
+      form.classList.remove('active');
+    });
+    
+    // Create on Enter key
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        createBtn.click();
+      }
+    });
+    
+    // Cancel on Escape key
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        cancelBtn.click();
+      }
+    });
+  });
+
+  // Existing task click to delete
+  document.querySelectorAll('.pd-calendar-task').forEach(task => {
+    task.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (confirm('Delete this task?')) {
+        this.remove();
+      }
+    });
+  });
+})();
+
+</script>
+
+<!-- Task Detail Modal (added) -->
+<div class="pd-issue-overlay" id="pdIssueOverlay" style="display:none;">
+    <div class="pd-issue-modal">
+        <div class="pd-issue-header">
+            <div class="pd-issue-title-wrap">
+                <span class="pd-issue-key" id="pdIssueKey">KEY-1</span>
+                <h3 class="pd-issue-title" id="pdIssueTitle">Issue title</h3>
+            </div>
+            <div class="pd-issue-actions">
+                <button class="pd-issue-close" id="pdIssueClose"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="pd-issue-body">
+            <div class="pd-issue-left">
+                <div class="pd-issue-section">
+                    <h4>Description</h4>
+                    <p id="pdIssueDescription">Add a description…</p>
+                    <textarea id="pdIssueDescriptionInput" class="pd-input" rows="6" placeholder="Add a description…"></textarea>
+                </div>
+                <div class="pd-issue-section">
+                    <h4>Title</h4>
+                    <input id="pdIssueTitleInput" class="pd-input" type="text" placeholder="Issue title" />
+                </div>
+                <div class="pd-issue-section">
+                    <h4>Connected work items</h4>
+                    <p>Add connected work item</p>
+                </div>
+            </div>
+            <div class="pd-issue-right">
+                <div class="pd-issue-field">
+                    <label>Status</label>
+                    <span class="pd-issue-status" id="pdIssueStatus">TO DO</span>
+                    <select id="pdIssueStatusSelect" class="pd-select">
+                        <option value="TO DO">TO DO</option>
+                        <option value="IN PROGRESS">IN PROGRESS</option>
+                        <option value="DONE">DONE</option>
+                    </select>
+                </div>
+                <div class="pd-issue-field">
+                    <label>Assignee</label>
+                    <span id="pdIssueAssignee">Unassigned</span>
+                    <input id="pdIssueAssigneeInput" class="pd-input" type="text" placeholder="Unassigned" />
+                </div>
+                <div class="pd-issue-field">
+                    <label>Due date</label>
+                    <span id="pdIssueDue">None</span>
+                    <input id="pdIssueDueInput" class="pd-input" type="date" />
+                </div>
+                <div class="pd-issue-field">
+                    <label>Labels</label>
+                    <span id="pdIssueLabels">None</span>
+                    <input id="pdIssueLabelsInput" class="pd-input" type="text" placeholder="Comma separated" />
+                </div>
+            </div>
+        </div>
+        <div class="pd-issue-footer" style="display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #2a3236;background:#0f1418;">
+            <button class="pd-btn pd-btn-secondary" id="pdIssueCancel">Cancel</button>
+            <button class="pd-btn pd-btn-primary" id="pdIssueSave">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Task Detail Modal wiring (added)
+(function(){
+  const overlay = document.getElementById('pdIssueOverlay');
+  if(!overlay) return;
+  const closeBtn = document.getElementById('pdIssueClose');
+  const keyEl = document.getElementById('pdIssueKey');
+  const titleEl = document.getElementById('pdIssueTitle');
+  const statusEl = document.getElementById('pdIssueStatus');
+  const dueEl = document.getElementById('pdIssueDue');
+  const assigneeEl = document.getElementById('pdIssueAssignee');
+
+  function openIssue(data){
+    keyEl.textContent = data.key || 'KEY-1';
+    titleEl.textContent = data.title || 'Issue title';
+    statusEl.textContent = data.status || 'TO DO';
+    dueEl.textContent = data.due || 'None';
+    assigneeEl.textContent = data.assignee || 'Unassigned';
+    overlay.style.display = 'flex';
+  }
+  function closeIssue(){ overlay.style.display = 'none'; }
+
+  if(closeBtn) closeBtn.addEventListener('click', closeIssue);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeIssue(); });
+
+  // Board cards
+  document.querySelectorAll('.pd-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function(){
+      const key = this.querySelector('.pd-card-id')?.textContent?.trim();
+      const title = this.querySelector('h4')?.textContent?.trim();
+      const status = this.closest('.pd-column')?.querySelector('h3')?.textContent?.trim();
+      openIssue({ key, title, status });
+    });
+  });
+
+
+  document.querySelectorAll('#list-content .pd-list-row').forEach(row => {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function(e){
+      if(e.target.tagName === 'INPUT' || e.target.closest('a')) return;
+      const key = this.querySelector('.pd-list-key')?.textContent?.trim();
+      const title = this.querySelector('.pd-list-summary')?.textContent?.trim();
+      const status = this.querySelector('.pd-list-status')?.textContent?.trim();
+      const assignee = this.querySelector('.pd-list-assignee')?.textContent?.trim();
+      const due = this.querySelector('.pd-list-due-date')?.textContent?.trim();
+      openIssue({ key, title, status, assignee, due });
+    });
+  });
+
+
+  document.querySelectorAll('.pd-calendar-task').forEach(task => {
+    task.style.cursor = 'pointer';
+    task.addEventListener('dblclick', function(e){
+      e.stopPropagation();
+      const title = this.textContent.trim();
+      const key = 'CAL-' + (title.replace(/\s+/g,'-').toUpperCase()).slice(0,8);
+      openIssue({ key, title, status: 'TO DO' });
+    });
+  });
+})();
+</script>
+
+<script>
+
+(function(){
+  const overlay = document.getElementById('pdIssueOverlay');
+  if(!overlay) return;
+  const titleEl = document.getElementById('pdIssueTitle');
+  const statusEl = document.getElementById('pdIssueStatus');
+  const assigneeEl = document.getElementById('pdIssueAssignee');
+  const dueEl = document.getElementById('pdIssueDue');
+  const labelsEl = document.getElementById('pdIssueLabels');
+  const descEl = document.getElementById('pdIssueDescription');
+
+  const titleInput = document.getElementById('pdIssueTitleInput');
+  const statusSelect = document.getElementById('pdIssueStatusSelect');
+  const assigneeInput = document.getElementById('pdIssueAssigneeInput');
+  const dueInput = document.getElementById('pdIssueDueInput');
+  const labelsInput = document.getElementById('pdIssueLabelsInput');
+  const descInput = document.getElementById('pdIssueDescriptionInput');
+
+  const btnSave = document.getElementById('pdIssueSave');
+  const btnCancel = document.getElementById('pdIssueCancel');
+  const closeBtn = document.getElementById('pdIssueClose');
+
+  function isoToYmd(text){
+    const d = new Date(text);
+    return isNaN(d) ? '' : d.toISOString().slice(0,10);
+  }
+  function ymdToPretty(ymd){
+    if(!ymd) return 'None';
+    try { return new Date(ymd).toDateString(); } catch(e){ return 'None'; }
+  }
+
+  function syncInputsFromView(){
+    titleInput.value = titleEl.textContent || '';
+    statusSelect.value = statusEl.textContent || 'TO DO';
+    assigneeInput.value = assigneeEl.textContent === 'Unassigned' ? '' : assigneeEl.textContent;
+    dueInput.value = isoToYmd(dueEl.textContent);
+    labelsInput.value = labelsEl.textContent === 'None' ? '' : labelsEl.textContent;
+    descInput.value = descEl.textContent === 'Add a description…' ? '' : descEl.textContent;
+  }
+
+  const observe = new MutationObserver(() => {
+    if (getComputedStyle(overlay).display !== 'none') {
+      syncInputsFromView();
+    }
+  });
+  observe.observe(overlay, { attributes:true, attributeFilter:['style'] });
+
+  function close(){ overlay.style.display='none'; }
+  closeBtn?.addEventListener('click', close);
+  btnCancel?.addEventListener('click', close);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) close(); });
+
+  btnSave?.addEventListener('click', function(){
+    titleEl.textContent = titleInput.value || 'Issue title';
+    statusEl.textContent = statusSelect.value || 'TO DO';
+    assigneeEl.textContent = assigneeInput.value || 'Unassigned';
+    dueEl.textContent = ymdToPretty(dueInput.value);
+    labelsEl.textContent = labelsInput.value || 'None';
+    descEl.textContent = descInput.value || 'Add a description…';
+    close();
+  });
+})();
+</script>
+
+</body>
+</html>
