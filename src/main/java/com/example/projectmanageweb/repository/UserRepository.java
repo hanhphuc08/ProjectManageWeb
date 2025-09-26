@@ -54,6 +54,10 @@ public class UserRepository {
 		  Integer roleId = (u.getRole()!=null) ? u.getRole().getRoleId() : null;
 		  return jdbc.update(sql, u.getFullName(), u.getEmail(), u.getPasswordHash(), roleId, u.getPhoneNumber());
 		}
-
+	
+	public int updatePasswordByEmail(String email, String newPasswordHash) {
+		String sql = "UPDATE users SET password_hash = ? WHERE email = ?";
+		return jdbc.update(sql, newPasswordHash, email);
+	}
 
 }
