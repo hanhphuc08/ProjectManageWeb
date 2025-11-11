@@ -26,8 +26,8 @@
 .uh-btn { border: 1px solid transparent; border-radius: 6px; padding: 6px 10px; font-weight: 600; color: #e6e6e6; background: #1b2024; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
 .uh-btn:hover { background: #22272b; text-decoration: none; }
 
-/* Project Table Styles */
-.uh-tbody { display: block; }
+/* /* Project Table Styles */
+/* .uh-tbody { display: block; }
 .uh-row { display: grid; grid-template-columns: 40px 1fr 100px 100px 120px 1fr 40px; gap: 16px; padding: 12px 16px; border-bottom: 1px solid #2c3338; align-items: center; }
 .uh-td { color: #e6e6e6; font-size: 14px; }
 .uh-project-link { color: #0052cc; text-decoration: none; font-weight: 500; }
@@ -36,7 +36,7 @@
 .uh-btn-primary:hover { filter: brightness(1.05); }
 .uh-btn-secondary { background: #1b2024; border-color: #2a3236; }
 .uh-btn-tertiary { background: transparent; border-color: #2a3236; }
-.is-active.uh-btn-secondary { background: #2a3236; }
+.is-active.uh-btn-secondary { background: #2a3236; }  */
 
 /* Content */
 .uh-content { padding: 16px 24px 32px; }
@@ -51,7 +51,7 @@
 .uh-select { background: #1b2024; border: 1px solid #2a3236; color: #e6e6e6; border-radius: 6px; height: 36px; padding: 0 10px; }
 
 /* Table */
-.uh-table { border: 1px solid #242a2e; border-radius: 8px; overflow: hidden; }
+/* .uh-table { border: 1px solid #242a2e; border-radius: 8px; overflow: hidden; }
 .uh-thead, .uh-row { display: grid; grid-template-columns: 40px 2fr 1fr 2fr 2fr 1fr 40px; align-items: center; }
 .uh-thead { background: #161a1d; color: #8f9ca3; font-size: 12px; text-transform: uppercase; letter-spacing: .02em; }
 .uh-th, .uh-td { padding: 10px 12px; border-bottom: 1px solid #242a2e; }
@@ -60,7 +60,7 @@
 .uh-td a { color: #91baff; text-decoration: none; }
 .uh-td a:hover { text-decoration: underline; }
 .uh-chip { display: inline-flex; align-items: center; gap: 8px; }
-.uh-chip .avatar { width: 24px; height: 24px; background: #29323a; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
+.uh-chip .avatar { width: 24px; height: 24px; background: #29323a; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; } */
 
 /* Pagination */
 .uh-pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; }
@@ -126,3 +126,132 @@
 .uh-td i.fa-ellipsis-h {
     color: #6b7280;
 }
+
+
+
+/* ============================
+   TABLE REWORK (JIRA STYLE)
+   ============================ */
+
+.uh-table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+    display: block;
+}
+
+.uh-thead {
+    width: 100%;
+    display: flex;
+}
+
+.uh-tbody {
+    width: 100%;
+    display: block;
+}
+
+.uh-th,
+.uh-td {
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #e5e7eb;
+    /* bỏ border-bottom ở từng ô */
+    border-bottom: none;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Header có border riêng */
+.uh-thead .uh-th {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #3b3b3b; /* giữ border ở header */
+    background: #1a1a1a;
+}
+
+/* Border cho cả dòng */
+.uh-row {
+    display: flex;
+    width: 100%;
+    min-height: 52px;
+    align-items: center;
+    transition: background .2s;
+    border-bottom: 1px solid #2e2e2e;   /* 👈 thêm dòng này */
+}
+
+
+.uh-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.uh-thead .uh-th {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9ca3af; /* text-gray-400 */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #3b3b3b;
+    background: #1a1a1a;
+}
+
+/* ========= COLUMN WIDTHS ========= */
+
+.uh-th.star, .uh-td.star {
+    width: 40px;
+    justify-content: center;
+}
+
+.uh-th.name, .uh-td.name {
+    width: 26%;
+}
+
+.uh-th.type, .uh-td.type {
+    width: 18%;
+}
+
+.uh-th.lead, .uh-td.lead {
+    width: 14%;
+}
+
+.uh-th.status, .uh-td.status {
+    width: 12%;
+}
+
+.uh-th.dates, .uh-td.dates {
+    width: 20%;
+}
+
+.uh-th.members, .uh-td.members {
+    width: 10%;
+    justify-content: flex-start;
+}
+
+.uh-th.more, .uh-td.more {
+    width: 50px;
+    justify-content: center;
+}
+
+/* ========= BADGES ========= */
+
+.uh-badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Status colors */
+.is-planned { background: #374151; color: #d1d5db; }
+.is-inprogress { background: #2563eb; color: white; }
+.is-completed { background: #059669; color: white; }
+.is-onhold { background: #b45309; color: white; }
+
+/* Member count */
+.uh-td.members i {
+    margin-right: 6px;
+}
+

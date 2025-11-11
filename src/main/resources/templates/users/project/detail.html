@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Project Detail | APT Project</title>
+
+  <link href="/assets/css/styles.css" rel="stylesheet" />
+  <link href="/assets/css/user-home.css" rel="stylesheet" />
+  <link href="/assets/css/project-detail.css" rel="stylesheet" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="uh-dark">
+<div class="uh-app">
+
+  <!-- SIDEBAR -->
+  <aside class="uh-sidebar">
+    <div class="uh-sidebar-top">
+      <div class="uh-logo">
+        <span class="uh-logo-mark">APT</span>
+        <span class="uh-logo-text">Project</span>
+      </div>
+    </div>
+    <nav class="uh-nav">
+      <a class="uh-nav-item" th:href="@{/projects}">
+        <i class="fas fa-home"></i> For you
+      </a>
+      <a class="uh-nav-item" href="#"><i class="fas fa-clock"></i> Recent</a>
+      <a class="uh-nav-item" href="#"><i class="fas fa-star"></i> Starred</a>
+
+      <div class="uh-nav-section">Projects</div>
+
+      <!-- project hiện tại -->
+      <a class="uh-nav-item is-active" href="#">
+        <i class="fas fa-folder"></i> <span th:text="${project.projectName}">Project name</span>
+      </a>
+
+      <a class="uh-nav-item" th:href="@{/projects/create}">
+        <i class="fas fa-plus"></i> Create project
+      </a>
+    </nav>
+
+    <div class="uh-sidebar-bottom">
+      <a class="uh-nav-item" href="#"><i class="fas fa-users"></i> Teams</a>
+      <a class="uh-nav-item" href="#"><i class="fas fa-ellipsis-h"></i> More</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="uh-main">
+    <th:block th:replace="~{commons/header :: header}"></th:block>
+
+    <!-- Nút toggle quickstart -->
+    <th:block th:replace="~{users/project/fragments/quickstart :: toggle}"></th:block>
+
+    <section class="uh-content">
+      <!-- Project header -->
+      <div class="pd-project-header">
+        <div class="pd-project-title">
+          <span class="pd-project-icon"><i class="fas fa-folder"></i></span>
+          <h1 th:text="${project.projectName}">Project name</h1>
+          <span class="pd-project-emoji"><i class="fas fa-thumbs-up"></i></span>
+          <span class="pd-project-grid"><i class="fas fa-th"></i></span>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <th:block th:replace="~{users/project/fragments/tabs :: tabs}"></th:block>
+
+      <!-- Summary -->
+      <th:block th:replace="~{users/project/fragments/summary :: summaryContent}"></th:block>
+
+      <!-- Timeline -->
+      <th:block th:replace="~{users/project/fragments/timeline :: timelineContent}"></th:block>
+
+      <!-- Calendar -->
+      <th:block th:replace="~{users/project/fragments/calendar :: calendarContent}"></th:block>
+
+      <!-- List -->
+      <th:block th:replace="~{users/project/fragments/list :: listContent}"></th:block>
+
+      <!-- Board -->
+      <th:block th:replace="~{users/project/fragments/board :: boardContent}"></th:block>
+    </section>
+  </main>
+</div>
+
+<!-- Quickstart panel & các modal -->
+<th:block th:replace="~{users/project/fragments/quickstart :: panel}"></th:block>
+<th:block th:replace="~{users/project/fragments/modals :: modals}"></th:block>
+
+<!-- JS riêng -->
+<script src="/assets/js/project-detail.js"></script>
+</body>
+</html>

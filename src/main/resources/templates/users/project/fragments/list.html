@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="listContent">
+    <div class="pd-tab-content" id="list-content" style="display:none;">
+
+        <!-- List Controls -->
+        <div class="pd-list-header">
+            <div class="pd-list-controls">
+                <div class="pd-list-search-wrap">
+                    <i class="fas fa-search pd-list-search-icon"></i>
+                    <input type="text" placeholder="Search list" class="pd-list-search-input" />
+                </div>
+
+                <div class="pd-list-filters">
+                    <button class="pd-list-filter">
+                        Filter <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="pd-list-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="pd-list-actions">
+                    <button class="pd-list-action">
+                        Group <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="pd-list-action"><i class="fas fa-th"></i></button>
+                    <button class="pd-list-action"><i class="fas fa-ellipsis-h"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- List Table -->
+        <div class="pd-list-table">
+            <div class="pd-list-table-header">
+                <div class="pd-list-column">Type</div>
+                <div class="pd-list-column">Key</div>
+                <div class="pd-list-column">Title</div>
+                <div class="pd-list-column">Status</div>
+                <div class="pd-list-column">Descriptions</div>
+                <div class="pd-list-column">Assignee</div>
+                <div class="pd-list-column">Due date</div>
+                <div class="pd-list-column">Created</div>
+                <div class="pd-list-column">Updated</div>
+            </div>
+
+            <div class="pd-list-table-body">
+
+                <!-- Row 1 -->
+                <div class="pd-list-row">
+                    <div class="pd-list-cell">
+                        <input type="checkbox" checked>
+                    </div>
+                    <div class="pd-list-cell pd-list-key">LEARNJIRA-1</div>
+                    <div class="pd-list-cell pd-list-summary">
+                        Security & permissions: How to control who can edit or...
+                    </div>
+                    <div class="pd-list-cell">
+                        <span class="pd-list-status pd-list-status-todo">TO DO</span>
+                    </div>
+                    <div class="pd-list-cell">
+                        <a href="#" class="pd-list-comment">
+                            Add Descriptions <i class="fas fa-comment"></i>
+                        </a>
+                    </div>
+                    <div class="pd-list-cell pd-list-assignee"></div>
+                    <div class="pd-list-cell pd-list-due-date"></div>
+                    <div class="pd-list-cell">Sep 24, 2025</div>
+                    <div class="pd-list-cell">Sep 24, 2025</div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="pd-list-row">
+                    <div class="pd-list-cell">
+                        <input type="checkbox" checked>
+                    </div>
+                    <div class="pd-list-cell pd-list-key">LEARNJIRA-2</div>
+                    <div class="pd-list-cell pd-list-summary">
+                        Plans: How to use detailed roadmaps to plan out your work...
+                    </div>
+                    <div class="pd-list-cell">
+                        <span class="pd-list-status pd-list-status-todo">TO DO</span>
+                    </div>
+                    <div class="pd-list-cell">
+                        <a href="#" class="pd-list-comment">
+                            Add Descriptions <i class="fas fa-comment"></i>
+                        </a>
+                    </div>
+                    <div class="pd-list-cell pd-list-assignee"></div>
+                    <div class="pd-list-cell pd-list-due-date"></div>
+                    <div class="pd-list-cell">Sep 24, 2025</div>
+                    <div class="pd-list-cell">Sep 24, 2025</div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="pd-list-row">
+                    <div class="pd-list-cell">
+                        <input type="checkbox" checked>
+                    </div>
+                    <div class="pd-list-cell pd-list-key">LEARNJIRA-3</div>
+                    <div class="pd-list-cell pd-list-summary">
+                        Atlassian Intelligence: How to work smarter with AI 🤖
+                    </div>
+                    <div class="pd-list-cell">
+                        <span class="pd-list-status pd-list-status-todo">TO DO</span>
+                    </div>
+                    <div class="pd-list-cell">
+                        <a href="#" class="pd-list-comment">
+                            Add descriptions <i class="fas fa-comment"></i>
+                        </a>
+                    </div>
+                    <div class="pd-list-cell pd-list-assignee"></div>
+                    <div class="pd-list-cell pd-list-due-date"></div>
+                    <div class="pd-list-cell">Sep 24, 2025</div>
+                    <div class="pd-list-cell">Sep 24, 2025</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Create Button -->
+        <div class="pd-list-create">
+            <button class="pd-list-create-btn">
+                <i class="fas fa-plus"></i>
+                Create
+            </button>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

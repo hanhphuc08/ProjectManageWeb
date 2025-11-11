@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="calendarContent">
+    <div class="pd-tab-content" id="calendar-content" style="display:none;">
+
+        <!-- Calendar Controls -->
+        <div class="pd-calendar-header">
+            <div class="pd-calendar-controls">
+                <div class="pd-calendar-search-wrap">
+                    <i class="fas fa-search pd-calendar-search-icon"></i>
+                    <input type="text" placeholder="Search calendar" class="pd-calendar-search-input" />
+                </div>
+
+                <div class="pd-calendar-filters">
+                    <button class="pd-calendar-filter">
+                        Assignee <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="pd-calendar-filter">
+                        Type <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="pd-calendar-filter">
+                        Status <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="pd-calendar-filter">
+                        More filters <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+
+                <div class="pd-calendar-navigation">
+                    <button class="pd-calendar-nav-btn">Today</button>
+                    <button class="pd-calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
+                    <span class="pd-calendar-month">Sep 2025</span>
+                    <button class="pd-calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    <button class="pd-calendar-view-btn"><i class="fas fa-calendar-day"></i></button>
+                    <button class="pd-calendar-view-btn"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="pd-calendar-grid">
+            <div class="pd-calendar-weekdays">
+                <div class="pd-calendar-weekday">Mon</div>
+                <div class="pd-calendar-weekday">Tue</div>
+                <div class="pd-calendar-weekday">Wed</div>
+                <div class="pd-calendar-weekday">Thu</div>
+                <div class="pd-calendar-weekday">Fri</div>
+                <div class="pd-calendar-weekday">Sat</div>
+                <div class="pd-calendar-weekday">Sun</div>
+            </div>
+
+            <div class="pd-calendar-dates">
+
+                <!-- Day 1 -->
+                <div class="pd-calendar-date">
+                    <div class="pd-calendar-date-number">1</div>
+                    <div class="pd-calendar-tasks">
+                        <div class="pd-calendar-task">Team Meeting</div>
+                    </div>
+
+                    <button class="pd-calendar-add-task">Add task</button>
+
+                    <div class="pd-calendar-task-form">
+                        <input type="text"
+                               class="pd-calendar-task-input"
+                               placeholder="What needs to be done?" />
+                        <div class="pd-calendar-task-type">
+                            <i class="fas fa-check-square"></i>
+                            <span>Task</span>
+                        </div>
+                        <div class="pd-calendar-task-buttons">
+                            <button class="pd-calendar-task-create">
+                                <i class="fas fa-arrow-right"></i> Create
+                            </button>
+                            <button class="pd-calendar-task-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 2 -->
+                <div class="pd-calendar-date">
+                    <div class="pd-calendar-date-number">2</div>
+                    <div class="pd-calendar-tasks">
+                        <div class="pd-calendar-task">Code Review</div>
+                        <div class="pd-calendar-task">Bug Fix</div>
+                    </div>
+
+                    <button class="pd-calendar-add-task">Add task</button>
+
+                    <div class="pd-calendar-task-form">
+                        <input type="text"
+                               class="pd-calendar-task-input"
+                               placeholder="What needs to be done?" />
+                        <div class="pd-calendar-task-type">
+                            <i class="fas fa-check-square"></i>
+                            <span>Task</span>
+                        </div>
+                        <div class="pd-calendar-task-buttons">
+                            <button class="pd-calendar-task-create">
+                                <i class="fas fa-arrow-right"></i> Create
+                            </button>
+                            <button class="pd-calendar-task-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Day 3 (empty sample) -->
+                <div class="pd-calendar-date">
+                    <div class="pd-calendar-date-number">3</div>
+                    <div class="pd-calendar-tasks"></div>
+
+                    <button class="pd-calendar-add-task">Add task</button>
+
+                    <div class="pd-calendar-task-form">
+                        <input type="text"
+                               class="pd-calendar-task-input"
+                               placeholder="What needs to be done?" />
+                        <div class="pd-calendar-task-type">
+                            <i class="fas fa-check-square"></i>
+                            <span>Task</span>
+                        </div>
+                        <div class="pd-calendar-task-buttons">
+                            <button class="pd-calendar-task-create">
+                                <i class="fas fa-arrow-right"></i> Create
+                            </button>
+                            <button class="pd-calendar-task-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current day sample -->
+                <div class="pd-calendar-date current">
+                    <div class="pd-calendar-date-number">24</div>
+                    <div class="pd-calendar-tasks">
+                        <div class="pd-calendar-task">Current Task</div>
+                        <div class="pd-calendar-task">Deadline</div>
+                    </div>
+
+                    <button class="pd-calendar-add-task">Add task</button>
+
+                    <div class="pd-calendar-task-form">
+                        <input type="text"
+                               class="pd-calendar-task-input"
+                               placeholder="What needs to be done?" />
+                        <div class="pd-calendar-task-type">
+                            <i class="fas fa-check-square"></i>
+                            <span>Task</span>
+                        </div>
+                        <div class="pd-calendar-task-buttons">
+                            <button class="pd-calendar-task-create">
+                                <i class="fas fa-arrow-right"></i> Create
+                            </button>
+                            <button class="pd-calendar-task-cancel">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -2095,3 +2095,352 @@
 .pd-btn-primary{background:linear-gradient(135deg,#0052cc,#0065ff);color:#fff}
 .pd-btn-primary:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,82,204,.35)}
 .pd-btn-secondary{background:#22272b;border-color:#3a4246;color:#fff}
+
+
+.pd-card-create {
+  border: 1px dashed rgba(255,255,255,0.2);
+  background: transparent;
+  margin-top: 0.75rem;
+}
+
+.pd-create-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pd-create-row-inline {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pd-input,
+.pd-select {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: #111827;
+  color: #e5e7eb;
+  font-size: 13px;
+}
+
+.pd-btn-primary {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #5b21ff;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pd-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.pd-modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.5);
+    display:flex; align-items:center; justify-content:center;
+    z-index:999;
+}
+.pd-modal{
+    background:#020617;
+    border-radius:12px;
+    padding:20px 24px;
+    width:480px;
+    box-shadow:0 20px 40px rgba(0,0,0,.5);
+}
+.pd-modal-header{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:12px;
+}
+.pd-modal-close{
+    background:transparent; border:none; color:#9ca3af; cursor:pointer;
+}
+.pd-status-badge{
+    font-size:11px;
+    margin-left:8px;
+    padding:2px 8px;
+    border-radius:999px;
+    background:#111827; color:#e5e7eb;
+}
+.pd-textarea{
+    width:100%; background:#020617;
+    border:1px solid #374151; border-radius:6px;
+    color:#e5e7eb; font-size:13px;
+    padding:6px 8px; resize:vertical;
+}
+.pd-label{
+    display:block; font-size:12px; color:#9ca3af; margin-bottom:4px;
+}
+
+
+.pd-card-create{
+    border: 1px dashed #374151;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 72px;
+    cursor: pointer;
+}
+
+.pd-card-create button{
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 13px;
+    padding: 0;
+}
+
+.pd-card-create button:hover{
+    color: #e5e7eb;
+}
+
+
+/* ===== Task Create Modal ===== */
+
+.pd-task-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;           /* JS set display:flex khi mở */
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.pd-task-modal {
+    background: #020617;
+    border-radius: 18px;
+    width: 620px;
+    max-height: 80vh;
+    padding: 24px 26px 22px;
+    box-shadow: 0 18px 60px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #1f2937;
+}
+
+/* Header */
+.pd-task-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.pd-task-modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.pd-task-status-pill {
+    margin-left: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    background: #111827;
+    color: #9ca3af;
+    border: 1px solid #374151;
+}
+
+.pd-task-modal-close {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 16px;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+
+.pd-task-modal-close:hover {
+    color: #e5e7eb;
+}
+
+/* Body */
+.pd-task-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+/* Form rows */
+.pd-form-row {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pd-form-row-inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.pd-form-label {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* Inputs / selects / textarea */
+.pd-input,
+.pd-select,
+.pd-textarea {
+    width: 100%;
+    background: #020617;
+    border-radius: 8px;
+    border: 1px solid #1f2937;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #e5e7eb;
+    outline: none;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.pd-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.pd-input:focus,
+.pd-select:focus,
+.pd-textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 1px rgba(99,102,241,0.55);
+    background: #020617;
+}
+
+/* Placeholder màu nhẹ */
+.pd-input::placeholder,
+.pd-textarea::placeholder {
+    color: #6b7280;
+}
+
+/* Priority + date inline */
+.pd-priority-col {
+    flex: 0 0 160px;
+}
+
+.pd-date-col {
+    flex: 1;
+}
+
+/* Assignees (multi select) */
+.pd-assignees-select {
+    min-height: 90px;
+}
+
+/* Footer buttons */
+.pd-task-modal-footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.pd-btn-secondary,
+.pd-btn-primary {
+    border-radius: 999px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+}
+
+.pd-btn-secondary {
+    background: transparent;
+    color: #e5e7eb;
+}
+
+.pd-btn-secondary:hover {
+    background: #111827;
+}
+
+.pd-btn-primary {
+    background: #6366f1;
+    color: white;
+}
+
+.pd-btn-primary:hover {
+    background: #4f46e5;
+}
+
+/* Scrollbar nhỏ trong body modal */
+.pd-task-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.pd-task-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.pd-task-modal-body::-webkit-scrollbar-thumb {
+    background: #1f2937;
+    border-radius: 999px;
+}
+
+
+.pd-add-member-btn {
+    margin-left: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(120, 82, 255, 0.12);
+    color: #f5f5ff;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: background 0.15s ease, transform 0.1s ease,
+                box-shadow 0.15s ease;
+}
+
+.pd-add-member-btn i {
+    font-size: 13px;
+}
+
+.pd-add-member-btn:hover {
+    background: rgba(120, 82, 255, 0.28);
+    box-shadow: 0 0 0 1px rgba(120, 82, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.pd-add-member-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+
+/* Nút remove cho member */
+.pd-btn-remove {
+    background: transparent;
+    border: 1px solid #ff5252;
+    color: #ff5252;
+    padding: 4px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.pd-btn-remove:hover {
+    background: #ff525220; /* đỏ nhạt */
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+
+.pd-team-remove-form {
+    margin-left: auto; /* đẩy nút sang phải */
+    display: flex;
+    align-items: center;
+}
+

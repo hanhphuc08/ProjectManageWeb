@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="summaryContent">
+    <div class="pd-tab-content" id="summary-content" style="display: none;">
+
+        <!-- Metrics Top -->
+        <div class="summary-metrics">
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-check"></i></div>
+                <div class="metric-content">
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">completed</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-edit"></i></div>
+                <div class="metric-content">
+                    <div class="metric-value">3</div>
+                    <div class="metric-label">updated</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-plus-square"></i></div>
+                <div class="metric-content">
+                    <div class="metric-value">3</div>
+                    <div class="metric-label">created</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon"><i class="fas fa-calendar"></i></div>
+                <div class="metric-content">
+                    <div class="metric-value">0</div>
+                    <div class="metric-label">due soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Grid -->
+        <div class="summary-grid">
+
+            <!-- LEFT -->
+            <div class="summary-left">
+
+                <!-- Status overview -->
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <h3>Status overview</h3>
+                        <p>Get a snapshot of your project's work items.</p>
+                    </div>
+
+                    <div class="summary-card-content">
+                        <div class="donut-chart">
+                            <div class="donut-center">
+                                <div class="donut-total">3</div>
+                                <div class="donut-label">Total work items</div>
+                            </div>
+                        </div>
+
+                        <div class="donut-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #0052cc;"></div>
+                                <span>To Do: 3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Priority Breakdown -->
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <h3>Priority breakdown</h3>
+                        <p>Your team's current focus</p>
+                    </div>
+
+                    <div class="summary-card-content">
+                        <div class="priority-chart">
+                            <div class="chart-placeholder">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>Priority breakdown chart</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="summary-right">
+
+                <!-- Recent Activity -->
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <h3>Recent activity</h3>
+                        <p>Stay up to date with your project.</p>
+                    </div>
+
+                    <div class="summary-card-content">
+                        <div class="activity-list">
+                            <div class="activity-group">
+                                <div class="activity-group-title">Today</div>
+
+                                <div class="activity-item">
+                                    <div class="activity-avatar">
+                                        <img src="/images/avatar1.jpg">
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-user">Hạnh Phúc Trần Huy</div>
+                                        <div class="activity-action">created</div>
+                                        <div class="activity-item-title">LEARNJIRA-3: Atlassian Intelligence...</div>
+                                        <div class="activity-description">...work smarter with AI</div>
+                                        <div class="activity-meta">
+                                            <span class="activity-status">🤖 TO DO</span>
+                                            <span class="activity-time">1 hour ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 2 more sample items -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Types of work -->
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <h3>Types of work</h3>
+                        <p>Breakdown by task type.</p>
+                    </div>
+
+                    <div class="summary-card-content">
+                        <div class="work-types-table">
+                            <div class="work-type-row">
+                                <div class="work-type-name">
+                                    <i class="fas fa-check-square"></i> <span>Task</span>
+                                </div>
+                                <div class="work-type-distribution">100%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

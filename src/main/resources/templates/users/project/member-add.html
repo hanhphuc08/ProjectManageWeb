@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add member | APT Project</title>
+
+    <link href="/assets/css/styles.css" rel="stylesheet"/>
+    <link href="/assets/css/user-home.css" rel="stylesheet"/>
+    <link href="/assets/css/project-detail.css" rel="stylesheet"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body class="uh-dark">
+<div class="uh-app">
+
+    <!-- SIDEBAR đơn giản -->
+    <aside class="uh-sidebar">
+        <div class="uh-sidebar-top">
+            <div class="uh-logo">
+                <span class="uh-logo-mark">APT</span>
+                <span class="uh-logo-text">Project</span>
+            </div>
+        </div>
+
+        <nav class="uh-nav">
+            <a class="uh-nav-item" th:href="@{/projects}">
+                <i class="fas fa-home"></i> For you
+            </a>
+            <a class="uh-nav-item is-active"
+               th:href="@{|/projects/${projectId}|}">
+                <i class="fas fa-folder"></i> Project detail
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="uh-main">
+        <!-- header chung -->
+        <th:block th:replace="~{commons/header :: header}"></th:block>
+
+        <section class="uh-content">
+
+            <!-- Tiêu đề -->
+           <div class="pd-form-card">
+
+    <h2 class="pd-form-title">➕ Thêm thành viên vào dự án</h2>
+
+    <form th:action="@{'/projects/' + ${projectId} + '/members/add'}"
+          th:object="${form}"
+          method="post">
+
+        <!-- Chọn User -->
+						<!-- Hidden userId để bind về form -->
+						<input type="hidden" th:field="*{userId}" id="pmUserId" />
+
+						<!-- Ô search -->
+						<div class="pd-form-row">
+							<label class="pd-label">Thành viên</label> <input type="text"
+								id="pmUserSearch" class="pd-input"
+								placeholder="Tìm theo tên hoặc email..." />
+						</div>
+
+						<!-- Danh sách user để chọn -->
+						<div class="pd-form-row">
+							<div class="pm-user-list">
+								<div class="pm-user-item" th:each="u : ${availableUsers}"
+									th:data-id="${u.userId}"
+									th:data-text="${u.fullName + ' ' + u.email}">
+									<div class="pm-user-name" th:text="${u.fullName}">Tên
+										User</div>
+									<div class="pm-user-email" th:text="${u.email}">email@example.com</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Vai trò -->
+        <div class="pd-form-row">
+            <label class="pd-label">Vai trò trong dự án</label>
+            <select class="pd-select" th:field="*{projectRoleId}">
+                <option th:each="r : ${projectRoles}"
+                        th:value="${r.projectRoleId}"
+                        th:text="${r.roleName}">
+                </option>
+            </select>
+        </div>
+
+        <div class="pd-subtext">Ví dụ: Developer, Tester, Business Analyst…</div>
+
+        <!-- Allocation -->
+        <div class="pd-form-row">
+            <label class="pd-label">% tham gia</label>
+            <select class="pd-select" th:field="*{allocationPct}">
+                <option value="">Mặc định 100%</option>
+                <option value="50">50%</option>
+                <option value="80">80%</option>
+            </select>
+        </div>
+
+        <!-- Availability -->
+        <div class="pd-form-row">
+            <label class="pd-label">Hình thức</label>
+            <select class="pd-select" th:field="*{availability}">
+                <option value="FULL_TIME">Mặc định: Full-time</option>
+                <option value="PART_TIME">Part-time</option>
+            </select>
+        </div>
+
+        <!-- Skills -->
+        <div class="pd-form-row">
+            <label class="pd-label">Kỹ năng trong dự án</label>
+            <input class="pd-input" th:field="*{skills}" placeholder="VD: Java, Spring, Testing"/>
+        </div>
+        <div class="pd-subtext">Nhập nhiều kỹ năng, cách nhau bằng dấu phẩy.</div>
+
+                <!-- Buttons -->
+        <div class="pd-form-actions">
+            <button type="submit" class="pd-btn-primary pd-btn-lg">
+                Thêm thành viên
+            </button>
+            <a th:href="@{'/projects/' + ${projectId}}" class="pd-btn-link">
+                Hủy
+            </a>
+        </div>
+
+
+    </form>
+</div>
+
+
+        </section>
+    </main>
+</div>
+<script>
+(function () {
+  const searchInput = document.getElementById('pmUserSearch');
+  const hiddenUserId = document.getElementById('pmUserId');
+  const userItems = document.querySelectorAll('.pm-user-item');
+
+  if (!searchInput || !hiddenUserId || userItems.length === 0) return;
+
+  function updateFilter() {
+    const q = (searchInput.value || '').toLowerCase();
+    userItems.forEach(item => {
+      const text = item.dataset.text.toLowerCase();
+      item.style.display = text.includes(q) ? '' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', updateFilter);
+
+  userItems.forEach(item => {
+    item.addEventListener('click', () => {
+      // clear chọn cũ
+      userItems.forEach(i => i.classList.remove('is-selected'));
+
+      // set chọn mới
+      item.classList.add('is-selected');
+      hiddenUserId.value = item.dataset.id;
+
+      // fill tên user vào ô search cho đẹp
+      const nameEl = item.querySelector('.pm-user-name');
+      if (nameEl) {
+        searchInput.value = nameEl.textContent;
+      }
+    });
+  });
+})();
+</script>
+
+<style>
+.pd-form-card {
+    background: #0e1320;
+    padding: 28px;
+    border-radius: 16px;
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+
+.pd-form-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.pd-form-row {
+    margin-bottom: 18px;
+}
+
+.pd-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #ddd;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.pd-input, .pd-select {
+    width: 100%;
+    background: #141a2b;
+    border: 1px solid #2a3040;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.pd-input:focus, .pd-select:focus {
+    border-color: #6366f1;
+    outline: none;
+}
+
+.pd-btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 12px;
+    background: #6366f1;
+    border: none;
+    margin-top: 8px;
+}
+
+.pd-btn-cancel {
+    margin-left: 20px;
+    color: #ddd;
+}
+
+.pd-subtext {
+    font-size: 12px;
+    color: #888;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.pd-form-card {
+    background: #0e1320;
+    padding: 28px;
+    border-radius: 16px;
+    width: 95%;
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+
+.pd-form-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.pd-form-row {
+    margin-bottom: 18px;
+}
+
+.pd-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #ddd;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.pd-input, .pd-select {
+    width: 100%;
+    background: #141a2b;
+    border: 1px solid #2a3040;
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.pd-input:focus, .pd-select:focus {
+    border-color: #6366f1;
+    outline: none;
+}
+
+.pd-subtext {
+    font-size: 12px;
+    color: #888;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+/* --- phần button giống modal --- */
+.pd-form-actions {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* nút chính: dùng style purple giống modal */
+.pd-form-actions .pd-btn-primary {
+    flex: 1;
+    justify-content: center;
+}
+
+/* nếu trong styles.css chưa có, có thể thêm: */
+.pd-btn-primary {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.pd-btn-primary:hover {
+    background: #4f46e5;
+}
+
+/* nút Huỷ dạng link đẹp */
+.pd-btn-link {
+    font-size: 14px;
+    color: #a5b4fc;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.pd-btn-link:hover {
+    text-decoration: underline;
+    color: #c7d2ff;
+}
+
+
+.pm-user-list {
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: 10px;
+    background: #0b1020;
+    border: 1px solid #1f2433;
+    padding: 6px;
+}
+
+.pm-user-item {
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pm-user-item:hover {
+    background: #141a2b;
+}
+
+.pm-user-item.is-selected {
+    background: #1d2140;
+    border: 1px solid #6366f1;
+}
+
+.pm-user-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #f9fafb;
+}
+
+.pm-user-email {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+
+</style>
+
+</body>
+</html>

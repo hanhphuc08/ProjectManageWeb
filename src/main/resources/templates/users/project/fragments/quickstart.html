@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Nút thu nhỏ Quickstart -->
+<div th:fragment="toggle">
+    <div class="pd-quickstart-toggle-btn" id="pdQuickstartToggleBtn" style="display:none;">
+        <button class="pd-toggle-btn">
+            <i class="fas fa-question-circle"></i>
+            <span>Quickstart</span>
+        </button>
+    </div>
+</div>
+
+<!-- Panel Quickstart bên phải -->
+<div th:fragment="panel">
+    <div class="pd-quickstart">
+        <div class="pd-quickstart-header">
+            <h2>Quickstart</h2>
+            <button class="pd-quickstart-toggle" id="pdQuickstartToggle">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="pd-quickstart-content">
+            <!-- Section 1 -->
+            <div class="pd-quickstart-section is-expanded">
+                <div class="pd-quickstart-section-header">
+                    <span class="pd-quickstart-icon"><i class="fas fa-check"></i></span>
+                    <h3>Sort and prioritize with ease</h3>
+                    <span class="pd-quickstart-arrow">
+                        <i class="fas fa-chevron-up"></i>
+                    </span>
+                </div>
+                <div class="pd-quickstart-section-content">
+                    <div class="pd-quickstart-illustration">
+                        <div class="pd-list-demo">
+                            <div class="pd-list-line"></div>
+                            <div class="pd-list-line"></div>
+                            <div class="pd-list-line highlighted"></div>
+                            <div class="pd-list-line highlighted"></div>
+                            <div class="pd-list-line highlighted"></div>
+                            <div class="pd-list-line"></div>
+                        </div>
+                    </div>
+                    <p>
+                        Like a super-powered spreadsheet, the list helps you break down
+                        work efficiently, and sort by any field.
+                    </p>
+                    <button class="pd-quickstart-btn">Guide me</button>
+                </div>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="pd-quickstart-section">
+                <div class="pd-quickstart-section-header">
+                    <span class="pd-quickstart-icon"><i class="fas fa-check"></i></span>
+                    <h3>Visualize timeframes</h3>
+                    <span class="pd-quickstart-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="pd-quickstart-section">
+                <div class="pd-quickstart-section-header">
+                    <span class="pd-quickstart-icon"><i class="fas fa-check"></i></span>
+                    <h3>Gain a bird's eye view</h3>
+                    <span class="pd-quickstart-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pd-quickstart-footer">
+            <a href="#" class="pd-dismiss">Dismiss Quickstart</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

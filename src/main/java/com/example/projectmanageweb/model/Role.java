@@ -2,12 +2,13 @@ package com.example.projectmanageweb.model;
 
 
 public class Role {
-	private int roleId;
-	private String roleName;
-	public int getRoleId() {
+	
+	private Integer roleId;
+    private String roleName;
+	public Integer getRoleId() {
 		return roleId;
 	}
-	public void setRoleId(int roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
 	public String getRoleName() {
@@ -16,8 +17,8 @@ public class Role {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-
-	
+    
+    
 	
 	
 }

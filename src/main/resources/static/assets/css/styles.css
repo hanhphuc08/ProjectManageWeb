@@ -11314,3 +11314,133 @@ section#contact form#contactForm :-ms-input-placeholder {
   font-size: 0.9rem;
   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+
+
+
+/* ====== Team modal ====== */
+
+.pd-team-members {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.pd-team-member-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #050816;
+    border-radius: 16px;
+    padding: 14px 18px;
+    border: 1px solid #151a2f;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.08s ease;
+}
+
+.pd-team-member-card:hover {
+    border-color: #3b82f6;
+    background: #070b1b;
+    transform: translateY(-1px);
+}
+
+.pd-team-member-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pd-team-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: #111827;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: #e5e7eb;
+    flex-shrink: 0;
+}
+
+.pd-team-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pd-team-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pd-team-name {
+    font-weight: 600;
+    color: #f9fafb;
+}
+
+.pd-team-role-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(96, 165, 250, 0.2);
+    color: #60a5fa;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.pd-team-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.pd-skill-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #111827;
+    color: #9ca3af;
+}
+
+
+
+
+.pm-user-list {
+    max-height: 220px;
+    overflow-y: auto;
+    border-radius: 10px;
+    border: 1px solid #1f2434;
+    background: #070b18;
+}
+
+.pm-user-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #151a28;
+}
+
+.pm-user-item:last-child {
+    border-bottom: none;
+}
+
+.pm-user-item:hover {
+    background: #111729;
+}
+
+.pm-user-item.is-selected {
+    background: #1d2440;
+}
+
+.pm-user-name {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.pm-user-email {
+    font-size: 11px;
+    color: #a0a0c0;
+}
+
+

@@ -15,7 +15,7 @@ public class DatabaseConfig {
 		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 		dataSource.setUrl("jdbc:mysql://localhost:3306/project_ai_management?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Ho_Chi_Minh&useSSL=false&allowPublicKeyRetrieval=true");
 		dataSource.setUsername("root");
-		dataSource.setPassword("binebi123!");
+		dataSource.setPassword("123456");
 		
 		return dataSource;
 	}

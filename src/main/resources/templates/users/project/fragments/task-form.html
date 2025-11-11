@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="taskCreateModal">
+    <!-- Overlay -->
+		<div id="pdTaskModalOverlay" class="pd-task-modal-overlay">
+			<div class="pd-task-modal">
+
+				<div class="pd-task-modal-header">
+					<div>
+						<span class="pd-task-modal-title">Create task</span> <span
+							id="pdTaskModalStatusBadge" class="pd-task-status-pill">TODO</span>
+					</div>
+					<button type="button" id="pdTaskModalClose"
+						class="pd-task-modal-close">✕</button>
+				</div>
+
+				<form id="pdTaskCreateForm"
+					th:action="@{|/projects/${board.projectId}/tasks|}" method="post">
+
+					<input type="hidden" id="pdTaskStatusInput" name="status"
+						value="TODO" />
+
+					<div class="pd-task-modal-body">
+
+						<div class="pd-form-row">
+							<label class="pd-form-label">Summary</label>
+							 <input name="title" class="pd-input" placeholder="Task summary" required />
+						</div>
+
+						<div class="pd-form-row">
+							<label class="pd-form-label">Description</label>
+							<textarea name="description" class="pd-textarea"
+								placeholder="Description (optional)"></textarea>
+						</div>
+
+						<div class="pd-form-row">
+							<label class="pd-form-label">Type</label> <select name="type"
+								class="pd-select">
+								<option value="Task" selected>Task</option>
+								<option value="Bug">Bug</option>
+								<option value="Story">Story</option>
+							</select>
+						</div>
+
+						<div class="pd-form-row pd-form-row-inline">
+							<div class="pd-priority-col">
+								<label class="pd-form-label">Priority</label> <select
+									name="priority" class="pd-select">
+									<option value="LOW">Low</option>
+									<option value="MEDIUM" selected>Medium</option>
+									<option value="HIGH">High</option>
+								</select>
+							</div>
+							<div class="pd-date-col">
+								<label class="pd-form-label">Due date</label> <input type="date"
+									name="dueDate" class="pd-input" />
+							</div>
+						</div>
+
+						<div class="pd-form-row">
+							<label class="pd-form-label">Assignees</label>
+							 <select name="assigneeIds"
+								class="pd-select pd-assignees-select" multiple>
+								<option th:each="m : ${board.members}" th:value="${m.userId}"
+									th:text="${m.fullName}"></option>
+							</select>
+						</div>
+
+					</div>
+
+					<div class="pd-task-modal-footer">
+						<button type="submit" class="pd-btn-primary">Create</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

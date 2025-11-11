@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="timelineContent">
+    <div class="pd-tab-content" id="timeline-content" style="display:none;">
+        
+        <!-- Header -->
+        <div class="pd-timeline-header">
+            <div class="pd-timeline-controls">
+                <div class="pd-timeline-search-wrap">
+                    <i class="fas fa-search pd-timeline-search-icon"></i>
+                    <input type="text" placeholder="Search timeline" class="pd-timeline-search-input" />
+                </div>
+                <div class="pd-timeline-filter-group">
+                    <img src="/images/face1.jpg" class="pd-timeline-avatar" />
+                    <button class="pd-timeline-status-category">Status <i class="fas fa-chevron-down"></i></button>
+                    <button class="pd-timeline-more-options"><i class="fas fa-ellipsis-h"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main timeline -->
+        <div class="pd-timeline-main">
+            <div class="pd-timeline-left-panel">
+                <div class="pd-timeline-left-header">Work</div>
+                <button class="pd-timeline-create-epic">
+                    <i class="fas fa-plus"></i> Create Epic
+                </button>
+            </div>
+
+            <div class="pd-timeline-right-panel">
+                <div class="pd-timeline-months">
+                    <div class="pd-timeline-month">September</div>
+                    <div class="pd-timeline-month">October</div>
+                    <div class="pd-timeline-month">November</div>
+                </div>
+
+                <div class="pd-timeline-grid">
+                    <div class="pd-timeline-today-line"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Bottom -->
+        <div class="pd-timeline-bottom-bar">
+            <div class="pd-timeline-bottom-controls">
+                <button class="pd-timeline-bottom-button">Today</button>
+                <button class="pd-timeline-bottom-button">Weeks</button>
+                <button class="pd-timeline-bottom-button is-active">Months</button>
+                <button class="pd-timeline-bottom-button">Quarters</button>
+                <button class="pd-timeline-bottom-button"><i class="fas fa-info-circle"></i></button>
+                <button class="pd-timeline-bottom-button"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

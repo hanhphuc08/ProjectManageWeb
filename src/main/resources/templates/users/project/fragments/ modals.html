@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- Fragment chứa tất cả các modal -->
+<div th:fragment="modals">
+
+    <!-- Team Management Modal -->
+    <div id="pdModalOverlay" class="pd-modal-overlay" style="display:none;">
+        <div class="pd-modal">
+            <div class="pd-modal-header">
+                <h3>Manage people</h3>
+                <button id="pdModalClose" class="pd-icon-btn">&times;</button>
+            </div>
+            <div class="pd-modal-body">
+                <p>Here you can manage members of this project (dummy UI).</p>
+            </div>
+            <div class="pd-modal-footer">
+                <button id="pdModalCancel" class="pd-btn pd-btn-secondary">Cancel</button>
+                <button id="pdModalSave" class="pd-btn pd-btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Issue Detail Modal -->
+    <div id="pdIssueOverlay" class="pd-modal-overlay" style="display:none;">
+        <div class="pd-modal pd-issue-modal">
+            <div class="pd-modal-header">
+                <span id="pdIssueKey" class="pd-issue-key">KEY-1</span>
+                <h3 id="pdIssueTitle">Issue title</h3>
+                <button id="pdIssueClose" class="pd-icon-btn">&times;</button>
+            </div>
+
+            <div class="pd-modal-body">
+                <p id="pdIssueDescription">Add a description…</p>
+                <p><strong>Status:</strong> <span id="pdIssueStatus">TO DO</span></p>
+                <p><strong>Assignee:</strong> <span id="pdIssueAssignee">Unassigned</span></p>
+                <p><strong>Due date:</strong> <span id="pdIssueDue">None</span></p>
+                <p><strong>Labels:</strong> <span id="pdIssueLabels">None</span></p>
+
+                <!-- Form edit -->
+                <hr/>
+                <input id="pdIssueTitleInput" type="text" placeholder="Title" />
+                <textarea id="pdIssueDescriptionInput" placeholder="Description"></textarea>
+                <select id="pdIssueStatusSelect">
+                    <option>TO DO</option>
+                    <option>IN PROGRESS</option>
+                    <option>DONE</option>
+                </select>
+                <input id="pdIssueAssigneeInput" type="text" placeholder="Assignee" />
+                <input id="pdIssueDueInput" type="date" />
+                <input id="pdIssueLabelsInput" type="text" placeholder="Labels" />
+            </div>
+
+            <div class="pd-modal-footer">
+                <button id="pdIssueCancel" class="pd-btn pd-btn-secondary">Cancel</button>
+                <button id="pdIssueSave" class="pd-btn pd-btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

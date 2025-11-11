@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="boardContent">
+    <div class="pd-tab-content" id="board-content" style="display: block;">
+
+        <!-- Board Controls -->
+        <div class="pd-board-controls">
+            <div class="pd-search">
+                <span class="pd-search-icon"><i class="fas fa-search"></i></span>
+                <input type="text" placeholder="Search board"/>
+            </div>
+
+            <div class="pd-people" id="pdPeopleBtn">
+                <i class="fas fa-users"></i>
+                <span class="pd-people-dots">⋯</span>
+            </div>
+            
+				<a th:if="${board.currentUserIsPm}" class="pd-add-member-btn"
+					th:href="@{|/projects/${board.projectId}/members/add|}"> <i
+					class="fas fa-user-plus"></i> Add member
+				</a>
+
+				<button class="pd-filter is-active">
+                <span class="pd-filter-icon"><i class="fas fa-chevron-down"></i></span>
+                Filter
+            </button>
+            <button type="button"
+        class="pd-ai-suggest-btn"
+        th:if="${board.currentUserIsPm}">
+    <i class="fas fa-magic"></i>
+    AI suggest tasks
+</button>
+            
+
+            <div class="pd-group">
+                <select>
+                    <option>Group by</option>
+                </select>
+            </div>
+
+            <div class="pd-view-icons">
+                <button class="pd-view-btn is-active"><i class="fas fa-th"></i></button>
+                <button class="pd-view-btn"><i class="fas fa-list"></i></button>
+                <button class="pd-view-btn"><i class="fas fa-chart-bar"></i></button>
+            </div>
+        </div>
+
+        <!-- Kanban Board -->
+        <div class="pd-kanban-board" th:attr="data-project-id=${board.projectId}, data-is-pm=${board.currentUserIsPm}">
+
+            <!-- TO DO Column -->
+            <div class="pd-column">
+                <div class="pd-column-header">
+                    <h3>TO DO</h3>
+                    <span class="pd-count" th:text="${#lists.size(board.todo)}">0</span>
+                </div>
+
+                <div class="pd-cards">
+                    <!-- Tasks -->
+                    <div class="pd-card"
+                         th:each="task : ${board.todo}"
+                         th:attr="data-task-id=${task.taskId},
+                                  data-task-summary=${task.summary},
+                                  data-task-status=${task.status},
+                                  data-task-type=${task.type},
+                                  data-task-priority=${task.priority},
+                                  data-task-due-date=${task.dueDate},
+                                  data-task-assignees=${#strings.arrayJoin(task.assignees, ', ')},
+                                  data-task-assignee-ids=${#strings.arrayJoin(task.assigneeIds, ',')},
+                                  data-can-change-status=${task.canChangeStatus}">
+                        <div class="pd-card-header">
+                            <span class="pd-card-dot"></span>
+                        </div>
+                        <h4 th:text="${task.summary}">Task title</h4>
+                        <p class="pd-card-type" th:text="${task.type}">Task</p>
+                        <div class="pd-card-footer">
+                            <span class="pd-card-id" th:text="${'TASK-' + task.taskId}">TASK-1</span>
+                            <span class="pd-card-date" th:text="${task.dueDate}">2025-11-30</span>
+                        </div>
+                    </div>
+
+                    <!-- Create card -->
+                    <div class="pd-card pd-card-create"
+                         th:if="${board.currentUserIsPm}">
+                        <button type="button" class="pd-create-task-open"
+                                data-status="TODO">+ Create</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IN PROGRESS Column -->
+            <div class="pd-column">
+                <div class="pd-column-header">
+                    <h3>IN PROGRESS</h3>
+                    <span class="pd-count" th:text="${#lists.size(board.inProgress)}">0</span>
+                </div>
+
+                <div class="pd-cards">
+                    <div class="pd-card"
+                         th:each="task : ${board.inProgress}"
+                         th:attr="data-task-id=${task.taskId},
+                                  data-task-summary=${task.summary},
+                                  data-task-status=${task.status},
+                                  data-task-type=${task.type},
+                                  data-task-priority=${task.priority},
+                                  data-task-due-date=${task.dueDate},
+                                  data-task-assignees=${#strings.arrayJoin(task.assignees, ', ')},
+                                  data-task-assignee-ids=${#strings.arrayJoin(task.assigneeIds, ',')},
+                                  data-can-change-status=${task.canChangeStatus}">
+                        <div class="pd-card-header">
+                            <span class="pd-card-dot"></span>
+                        </div>
+                        <h4 th:text="${task.summary}">Task title</h4>
+                        <p class="pd-card-type" th:text="${task.type}">Task</p>
+                        <div class="pd-card-footer">
+                            <span class="pd-card-id" th:text="${'TASK-' + task.taskId}">TASK-2</span>
+                            <span class="pd-card-date" th:text="${task.dueDate}">2025-12-05</span>
+                        </div>
+                    </div>
+
+                    <div class="pd-card pd-card-create"
+                         th:if="${board.currentUserIsPm}">
+                        <button type="button" class="pd-create-task-open"
+                                data-status="IN_PROGRESS">+ Create</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEW Column -->
+            <div class="pd-column">
+                <div class="pd-column-header">
+                    <h3>REVIEW</h3>
+                    <span class="pd-count" th:text="${#lists.size(board.review)}">0</span>
+                </div>
+
+                <div class="pd-cards">
+                    <div class="pd-card"
+                         th:each="task : ${board.review}"
+                         th:attr="data-task-id=${task.taskId},
+                                  data-task-summary=${task.summary},
+                                  data-task-status=${task.status},
+                                  data-task-type=${task.type},
+                                  data-task-priority=${task.priority},
+                                  data-task-due-date=${task.dueDate},
+                                  data-task-assignees=${#strings.arrayJoin(task.assignees, ', ')},
+                                  data-task-assignee-ids=${#strings.arrayJoin(task.assigneeIds, ',')},
+                                  data-can-change-status=${task.canChangeStatus}">
+                        <div class="pd-card-header">
+                            <span class="pd-card-dot"></span>
+                        </div>
+                        <h4 th:text="${task.summary}">Task title</h4>
+                        <p class="pd-card-type" th:text="${task.type}">Task</p>
+                        <div class="pd-card-footer">
+                            <span class="pd-card-id" th:text="${'TASK-' + task.taskId}">TASK-3</span>
+                            <span class="pd-card-date" th:text="${task.dueDate}">2025-12-10</span>
+                        </div>
+                    </div>
+
+                    <div class="pd-card pd-card-create"
+                         th:if="${board.currentUserIsPm}">
+                        <button type="button" class="pd-create-task-open"
+                                data-status="REVIEW">+ Create</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DONE Column -->
+            <div class="pd-column">
+                <div class="pd-column-header">
+                    <h3>DONE</h3>
+                    <span class="pd-count" th:text="${#lists.size(board.done)}">0</span>
+                </div>
+
+                <div class="pd-cards">
+                    <div class="pd-card"
+                         th:each="task : ${board.done}"
+                         th:attr="data-task-id=${task.taskId},
+                                  data-task-summary=${task.summary},
+                                  data-task-status=${task.status},
+                                  data-task-type=${task.type},
+                                  data-task-priority=${task.priority},
+                                  data-task-due-date=${task.dueDate},
+                                  data-task-assignees=${#strings.arrayJoin(task.assignees, ', ')},
+                                  data-task-assignee-ids=${#strings.arrayJoin(task.assigneeIds, ',')},
+                                  data-can-change-status=${task.canChangeStatus}">
+                        <div class="pd-card-header">
+                            <span class="pd-card-dot"></span>
+                        </div>
+                        <h4 th:text="${task.summary}">Task title</h4>
+                        <p class="pd-card-type" th:text="${task.type}">Task</p>
+                        <div class="pd-card-footer">
+                            <span class="pd-card-id" th:text="${'TASK-' + task.taskId}">TASK-4</span>
+                            <span class="pd-card-date" th:text="${task.dueDate}">2025-11-10</span>
+                        </div>
+                    </div>
+
+                    <div class="pd-card pd-card-create"
+                         th:if="${board.currentUserIsPm}">
+                        <button type="button" class="pd-create-task-open"
+                                data-status="DONE">+ Create</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /pd-kanban-board -->
+
+        <!-- Task Detail Modal -->
+        <div id="pdTaskDetailModal" class="pd-task-modal-overlay" style="display: none;">
+            <div class="pd-task-modal">
+
+                <div class="pd-task-modal-header">
+                    <div>
+                        <span class="pd-task-modal-title">Task detail</span>
+                        <span id="taskDetailStatusBadge" class="pd-task-status-pill">To Do</span>
+                    </div>
+                    <button type="button" id="pdTaskDetailClose" class="pd-task-modal-close">✕</button>
+                </div>
+
+                <!-- Form chỉ dùng để update STATUS (tạm thời) -->
+                <form id="pdTaskStatusForm" method="post">
+                    <!-- action sẽ set bằng JS: /projects/{projectId}/tasks/{taskId}/status -->
+
+                    <div class="pd-task-modal-body">
+
+                        <div class="pd-form-row">
+                            <label class="pd-form-label">Summary</label>
+                            <input id="taskDetailSummary" class="pd-input" readonly/>
+                        </div>
+
+                        <div class="pd-form-row">
+                            <label class="pd-form-label">Type</label>
+                            <input id="taskDetailType" class="pd-input" readonly/>
+                        </div>
+
+                        <div class="pd-form-row pd-form-row-inline">
+                            <div class="pd-priority-col">
+                                <label class="pd-form-label">Priority</label>
+                                <input id="taskDetailPriority" class="pd-input" readonly/>
+                            </div>
+                            <div class="pd-date-col">
+                                <label class="pd-form-label">Due date</label>
+                                <input id="taskDetailDueDate" class="pd-input" readonly/>
+                            </div>
+                        </div>
+
+							<div class="pd-form-row">
+								<label class="pd-form-label">Assignees</label>
+								 <select
+									id="taskDetailAssigneesSelect" name="assigneeIds"
+									class="pd-select pd-assignees-select" multiple>
+									<option th:each="m : ${board.members}" th:value="${m.userId}"
+										th:text="${m.fullName}"></option>
+								</select>
+							</div>
+
+							<div class="pd-form-row">
+                            <label class="pd-form-label">Status</label>
+                            <select name="status" id="taskDetailStatusSelect" class="pd-select">
+                                <option value="TODO">To Do</option>
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="REVIEW">Review</option>
+                                <option value="DONE">Done</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="pd-task-modal-footer">
+                        <button type="submit" id="taskDetailUpdateBtn" class="pd-btn-primary">
+                            Update
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        
+        <!-- AI Suggest Tasks Modal -->
+<div id="pdAiSuggestModal" class="pd-task-modal-overlay" style="display: none;">
+    <div class="pd-task-modal">
+        <div class="pd-task-modal-header">
+            <div>
+                <span class="pd-task-modal-title">AI suggested tasks</span>
+                <span class="pd-task-status-pill">Support only</span>
+            </div>
+            <button type="button" id="pdAiSuggestClose" class="pd-task-modal-close">✕</button>
+        </div>
+
+        <div class="pd-task-modal-body">
+            <div class="pd-form-row">
+                <label class="pd-form-label">Note for AI (optional)</label>
+                <textarea id="pdAiNoteInput" class="pd-input"
+                          placeholder="Ví dụ: chia nhỏ phần backend login, permission, dashboard..."></textarea>
+            </div>
+
+            <div class="pd-form-row">
+                <button type="button" id="pdAiGenerateBtn" class="pd-btn-primary">
+                    Generate suggestions
+                </button>
+                <span id="pdAiLoadingText" style="margin-left: 8px; font-size: 13px; display: none;">
+                    Đang gọi AI...
+                </span>
+            </div>
+
+            <div class="pd-form-row">
+                <label class="pd-form-label">AI suggested tasks</label>
+                <div id="pdAiSuggestList" class="pd-ai-suggest-list">
+                    <!-- JS sẽ đổ card vào đây -->
+                </div>
+            </div>
+        </div>
+
+        <div class="pd-task-modal-footer">
+            <button type="button" id="pdAiSaveBtn" class="pd-btn-primary">
+                Save selected as tasks
+            </button>
+            <span style="font-size: 12px; margin-left: 8px;">
+                (Nếu không muốn lưu, chỉ cần xem gợi ý rồi tự bấm +Create để tạo task thủ công)
+            </span>
+        </div>
+    </div>
+</div>
+        
+
+    </div> <!-- /.pd-tab-content -->
+    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const boardEl = document.querySelector('.pd-kanban-board');
+    if (!boardEl) return;
+
+    const projectId = boardEl.getAttribute('data-project-id');
+
+    // ========== TASK DETAIL MODAL ==========
+    const modalOverlay = document.getElementById('pdTaskDetailModal');
+    const closeBtn = document.getElementById('pdTaskDetailClose');
+    const form = document.getElementById('pdTaskStatusForm');
+
+    const titleInput = document.getElementById('taskDetailSummary');
+    const typeInput = document.getElementById('taskDetailType');
+    const priorityInput = document.getElementById('taskDetailPriority');
+    const dueDateInput = document.getElementById('taskDetailDueDate');
+    const assigneesSelect = document.getElementById('taskDetailAssigneesSelect');
+    const statusSelect = document.getElementById('taskDetailStatusSelect');
+    const statusBadge = document.getElementById('taskDetailStatusBadge');
+    const updateBtn = document.getElementById('taskDetailUpdateBtn');
+
+    function openModalForTask(cardEl) {
+        const taskId = cardEl.getAttribute('data-task-id');
+        const summary = cardEl.getAttribute('data-task-summary') || '';
+        const status = cardEl.getAttribute('data-task-status') || 'To Do';
+        const type = cardEl.getAttribute('data-task-type') || '';
+        const priority = cardEl.getAttribute('data-task-priority') || '';
+        const dueDate = cardEl.getAttribute('data-task-due-date') || '';
+        const assigneeIdsStr = cardEl.getAttribute('data-task-assignee-ids') || '';
+        const canChange = cardEl.getAttribute('data-can-change-status') === 'true';
+
+        // Fill info
+        titleInput.value = summary;
+        typeInput.value = type;
+        priorityInput.value = priority;
+        dueDateInput.value = dueDate;
+        statusBadge.textContent = status;
+
+        if (assigneesSelect) {
+            for (let opt of assigneesSelect.options) {
+                opt.selected = false;
+            }
+            if (assigneeIdsStr) {
+                const selectedIds = assigneeIdsStr.split(',');
+                for (let opt of assigneesSelect.options) {
+                    if (selectedIds.includes(opt.value)) {
+                        opt.selected = true;
+                    }
+                }
+            }
+        }
+
+        // Map status text -> code for select
+        let statusCode = 'TODO';
+        if (status === 'In Progress') statusCode = 'IN_PROGRESS';
+        else if (status === 'Review') statusCode = 'REVIEW';
+        else if (status === 'Done') statusCode = 'DONE';
+
+        statusSelect.value = statusCode;
+
+        // Set form action
+        form.action = '/projects/' + projectId + '/tasks/' + taskId + '/status';
+
+        // Quyền đổi status
+        if (canChange) {
+            statusSelect.disabled = false;
+            updateBtn.disabled = false;
+            updateBtn.classList.remove('pd-btn-disabled');
+            assigneesSelect.disabled = false;
+        } else {
+            statusSelect.disabled = true;
+            updateBtn.disabled = true;
+            updateBtn.classList.add('pd-btn-disabled');
+            assigneesSelect.disabled = true;
+        }
+
+        modalOverlay.style.display = 'flex';
+    }
+
+    function closeModal() {
+        modalOverlay.style.display = 'none';
+    }
+
+    // Click vào card (trừ card create)
+    boardEl.addEventListener('click', function (e) {
+        const cardEl = e.target.closest('.pd-card');
+        if (!cardEl) return;
+
+        if (cardEl.classList.contains('pd-card-create')) {
+            // card create: để script create task xử lý riêng
+            return;
+        }
+
+        openModalForTask(cardEl);
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+            closeModal();
+        });
+    }
+
+    // Click ra nền tối cũng đóng modal
+    modalOverlay.addEventListener('click', function (e) {
+        if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+
+    // ========== CREATE TASK MODAL (để AI autofill) ==========
+    const createModal = document.getElementById('pdTaskModalOverlay');
+    const createForm = document.getElementById('pdTaskCreateForm');
+    let createTitleInput, createDescInput, createTypeSelect, createPrioritySelect,
+        createDueDateInput, createStatusInput, createStatusBadge, createAssigneesSelect;
+
+    if (createForm && createModal) {
+        createStatusInput = document.getElementById('pdTaskStatusInput');
+        createStatusBadge = document.getElementById('pdTaskModalStatusBadge');
+        createTitleInput = createForm.querySelector('input[name="title"]');
+        createDescInput = createForm.querySelector('textarea[name="description"]');
+        createTypeSelect = createForm.querySelector('select[name="type"]');
+        createPrioritySelect = createForm.querySelector('select[name="priority"]');
+        createDueDateInput = createForm.querySelector('input[name="dueDate"]');
+        createAssigneesSelect = createForm.querySelector('select[name="assigneeIds"]');
+    }
+
+    function mapAiTypeToFormType(aiType) {
+        if (!aiType) return 'Task';
+        const t = aiType.toLowerCase();
+        if (t.includes('bug')) return 'Bug';
+        if (t.includes('story') || t.includes('feature')) return 'Story';
+        return 'Task';
+    }
+
+    function mapAiPriorityToFormPriority(aiPriority) {
+        if (!aiPriority) return 'MEDIUM';
+        const p = aiPriority.toLowerCase();
+        if (p.startsWith('h')) return 'HIGH';
+        if (p.startsWith('l')) return 'LOW';
+        return 'MEDIUM';
+    }
+
+    function openCreateModalWithSuggestion(suggestedTask) {
+        if (!createModal || !createForm) {
+            console.warn('Create task modal not found in DOM.');
+            return;
+        }
+
+        // Default status = TODO
+        if (createStatusInput) {
+            createStatusInput.value = 'TODO';
+        }
+        if (createStatusBadge) {
+            createStatusBadge.textContent = 'TODO';
+        }
+
+        // Đổ data từ AI
+        if (createTitleInput) {
+            createTitleInput.value = suggestedTask.title || '';
+        }
+        if (createDescInput) {
+            createDescInput.value = suggestedTask.description || '';
+        }
+        if (createTypeSelect) {
+            createTypeSelect.value = mapAiTypeToFormType(suggestedTask.taskType);
+        }
+        if (createPrioritySelect) {
+            createPrioritySelect.value = mapAiPriorityToFormPriority(suggestedTask.priority);
+        }
+
+        if (createDueDateInput) {
+            createDueDateInput.value = '';
+        }
+        if (createAssigneesSelect) {
+            for (let opt of createAssigneesSelect.options) {
+                opt.selected = false;
+            }
+        }
+
+        createModal.style.display = 'flex';
+    }
+
+    // ========== AI SUGGEST TASKS ==========
+    const aiBtn = document.querySelector('.pd-ai-suggest-btn');
+    const aiModal = document.getElementById('pdAiSuggestModal');
+    const aiCloseBtn = document.getElementById('pdAiSuggestClose');
+    const aiNoteInput = document.getElementById('pdAiNoteInput');
+    const aiGenerateBtn = document.getElementById('pdAiGenerateBtn');
+    const aiLoadingText = document.getElementById('pdAiLoadingText');
+    const aiList = document.getElementById('pdAiSuggestList');
+    const aiSaveBtn = document.getElementById('pdAiSaveBtn');
+
+    function openAiModal() {
+        if (!aiModal) return;
+        aiNoteInput.value = '';
+        aiList.innerHTML = '';
+        aiModal.style.display = 'flex';
+    }
+
+    function closeAiModal() {
+        if (!aiModal) return;
+        aiModal.style.display = 'none';
+    }
+
+    if (aiBtn) {
+        aiBtn.addEventListener('click', function () {
+            openAiModal();
+        });
+    }
+
+    if (aiCloseBtn) {
+        aiCloseBtn.addEventListener('click', function () {
+            closeAiModal();
+        });
+    }
+
+    if (aiModal) {
+        aiModal.addEventListener('click', function (e) {
+            if (e.target === aiModal) {
+                closeAiModal();
+            }
+        });
+    }
+
+    // Gọi API AI để lấy gợi ý task
+    if (aiGenerateBtn) {
+        aiGenerateBtn.addEventListener('click', function () {
+            aiLoadingText.style.display = 'inline';
+            aiList.innerHTML = '';
+
+            const note = aiNoteInput.value || '';
+
+            fetch('/api/ai/projects/' + projectId + '/suggest-tasks?note=' + encodeURIComponent(note), {
+                method: 'POST'
+            })
+                .then(resp => {
+                    if (!resp.ok) {
+                        throw new Error('AI API error: ' + resp.status);
+                    }
+                    return resp.json();
+                })
+                .then(data => {
+                    if (!Array.isArray(data) || data.length === 0) {
+                        aiList.innerHTML = '<p style="font-size: 13px;">AI chưa gợi ý được task nào.</p>';
+                        return;
+                    }
+
+                    const frag = document.createDocumentFragment();
+
+                    data.forEach((task, index) => {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'pd-ai-task-card';
+
+                        const title = task.title || 'Untitled task';
+                        const description = task.description || '';
+                        const priority = task.priority || 'Medium';
+                        const type = task.taskType || 'Task';
+                        const estO = task.estimateOptimistic ?? '';
+                        const estL = task.estimateLikely ?? '';
+                        const estP = task.estimatePessimistic ?? '';
+
+
+                        const priorityUpper = (task.priority || 'MEDIUM').toUpperCase();
+                        wrapper.innerHTML = `
+                            <div class="pd-ai-task-header">
+                                <input type="checkbox" class="pd-ai-task-checkbox" data-index="${index}">
+                                <span class="pd-ai-task-title">${title}</span>
+                                <span class="pd-ai-task-priority ${priorityUpper}">${priorityUpper}</span>
+                            </div>
+
+                            <div class="pd-ai-task-desc">${description}</div>
+
+                            <div class="pd-ai-task-meta">
+                                Estimation (O/L/P):
+                                <strong>${estO} / ${estL} / ${estP} h</strong>
+                            </div>
+
+                            <div class="pd-ai-task-actions">
+                                <button type="button"
+                                        class="pd-ai-use-btn"
+                                        data-index="${index}">
+                                    <span>Use in create form</span>
+                                    <span class="pd-ai-use-btn-arrow">↗</span>
+                                </button>
+                            </div>
+                        `;
+
+
+
+                        frag.appendChild(wrapper);
+                    });
+
+                    aiList.appendChild(frag);
+                    aiList.__aiData = data;
+                })
+                .catch(err => {
+                    console.error(err);
+                    aiList.innerHTML = '<p style="color: #f66; font-size: 13px;">Có lỗi khi gọi AI. Vui lòng thử lại sau.</p>';
+                })
+                .finally(() => {
+                    aiLoadingText.style.display = 'none';
+                });
+        });
+    }
+
+    // Click "Use in create form"
+    if (aiList) {
+        aiList.addEventListener('click', function (e) {
+            const btn = e.target.closest('.pd-ai-use-btn');
+            if (!btn) return;
+
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            const data = aiList.__aiData;
+            if (!data || isNaN(idx) || !data[idx]) return;
+
+            const task = data[idx];
+            openCreateModalWithSuggestion(task);
+        });
+    }
+
+    // Nếu còn giữ chức năng "Save selected as tasks" thì để; không thì có thể bỏ đoạn này:
+    if (aiSaveBtn) {
+        aiSaveBtn.addEventListener('click', function () {
+            const data = aiList.__aiData;
+            if (!data || !Array.isArray(data) || data.length === 0) {
+                alert('Chưa có gợi ý nào để lưu.');
+                return;
+            }
+
+            const checkboxes = aiList.querySelectorAll('.pd-ai-task-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Hãy chọn ít nhất 1 gợi ý để lưu.');
+                return;
+            }
+
+            const selected = [];
+            checkboxes.forEach(cb => {
+                const idx = parseInt(cb.getAttribute('data-index'), 10);
+                if (!isNaN(idx) && data[idx]) {
+                    selected.push(data[idx]);
+                }
+            });
+
+            fetch('/projects/' + projectId + '/tasks/from-ai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selected)
+            })
+                .then(resp => {
+                    if (!resp.ok) throw new Error('Save error ' + resp.status);
+                    return resp.json();
+                })
+                .then(res => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Lưu task thất bại, coi log console.');
+                });
+        });
+    }
+});
+</script>
+
+</div> <!-- /fragment -->
+
+<style>
+/* Lớp nền tối phủ toàn màn hình */
+.pd-task-modal-overlay {
+    position: fixed;
+    inset: 0; /* tương đương top:0; right:0; bottom:0; left:0 */
+    background: rgba(0, 0, 0, 0.4); /* nền mờ */
+    display: flex;
+    align-items: center;     /* canh giữa theo chiều dọc */
+    justify-content: center; /* canh giữa theo chiều ngang */
+    z-index: 1000;
+}
+
+/* Hộp form chi tiết task */
+.pd-task-modal {
+    background: #050816;        /* hoặc màu background ông đang dùng */
+    border-radius: 16px;
+    padding: 24px 28px;
+    width: min(700px, 90vw);    /* max 700px, còn lại fit theo viewport */
+    max-height: 90vh;
+    overflow-y: auto;           /* nếu form cao quá thì cho scroll */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+
+/* Card từng task */
+.pd-ai-task-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    transition: 0.2s ease;
+}
+
+.pd-ai-task-card:hover {
+    border-color: #6d5dfc;
+    background: rgba(109, 93, 252, 0.06);
+}
+
+/* Header chứa checkbox + title + priority */
+.pd-ai-task-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.pd-ai-task-title {
+    font-size: 15px;
+    font-weight: 600;
+    flex: 1;
+}
+
+.pd-ai-task-priority {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    text-transform: uppercase;
+}
+
+.pd-ai-task-priority.HIGH {
+    background: rgba(255, 59, 59, 0.2);
+    color: #ff5c5c;
+}
+
+.pd-ai-task-priority.MEDIUM {
+    background: rgba(255, 200, 50, 0.2);
+    color: #ffda6b;
+}
+
+.pd-ai-task-priority.LOW {
+    background: rgba(100, 255, 100, 0.15);
+    color: #80ff80;
+}
+
+/* Description */
+.pd-ai-task-desc {
+    font-size: 14px;
+    color: #ddd;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+/* Meta info (Estimation) */
+.pd-ai-task-meta {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 4px;
+}
+
+.pd-ai-use-btn {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #6d5dfc;
+    cursor: pointer;
+}
+.pd-ai-use-btn:hover {
+    text-decoration: underline;
+}
+
+/* List card AI – cách nhau cho thoáng */
+.pd-ai-suggest-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Card AI */
+.pd-ai-task-card {
+    background: #060b1a;
+    border: 1px solid rgba(109, 93, 252, 0.45);
+    padding: 14px 18px;
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    transition: 0.18s ease;
+}
+
+.pd-ai-task-card:hover {
+    transform: translateY(-1px);
+    border-color: #8f7bff;
+    background: #070f24;
+}
+
+/* Hàng chứa nút */
+.pd-ai-task-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+/* Nút "Use in create form" */
+.pd-ai-use-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid #8f7bff;
+    background: rgba(143, 123, 255, 0.12);
+    font-size: 12px;
+    color: #e4e0ff;
+    cursor: pointer;
+}
+
+.pd-ai-use-btn-arrow {
+    font-size: 12px;
+    line-height: 1;
+}
+
+.pd-ai-use-btn:hover {
+    background: rgba(143, 123, 255, 0.2);
+    border-color: #b6a7ff;
+}
+
+
+
+
+</style>
+</body>
+</html>
