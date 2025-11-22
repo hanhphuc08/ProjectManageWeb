@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.example.projectmanageweb.dto.MemberSkillProfile;
 import com.example.projectmanageweb.dto.ProjectListItem;
 import com.example.projectmanageweb.dto.ProjectMemberDto;
 import com.example.projectmanageweb.model.ProjectMember;
@@ -26,12 +27,14 @@ public class ProjectMembersRepository {
 	}
 
 	public void addMember(int projectId, int userId, int projectRoleId) {
-		jdbc.update("""
-				    INSERT INTO project_members(project_id, user_id, project_role_id,
-				                                allocation_pct, availability, added_at)
-				    VALUES (?,?,?,100,'FULL_TIME', NOW())
-				""", projectId, userId, projectRoleId);
+	    jdbc.update("""
+	            INSERT INTO project_members
+	               (project_id, user_id, role_in_project, project_role_id,
+	                allocation_pct, availability, added_at)
+	            VALUES (?, ?, 'PM', ?, 100,'FULL_TIME', NOW())
+	        """, projectId, userId, projectRoleId);
 	}
+
 
 	public boolean isPmOfProject(int projectId, int userId) {
 		Integer c = jdbc.queryForObject("""
@@ -207,5 +210,34 @@ public class ProjectMembersRepository {
 	    String sql = "DELETE FROM project_members WHERE project_member_id = ?";
 	    jdbc.update(sql, projectMemberId);
 	}
+	
+	public List<MemberSkillProfile> findMemberProfiles(int projectId) {
+	    String sql = """
+	        SELECT pm.user_id, u.full_name, pm.allocation_pct, pm.availability,
+	               GROUP_CONCAT(pms.skill_name) AS skills
+	        FROM project_members pm
+	        JOIN users u ON u.user_id = pm.user_id
+	        LEFT JOIN project_member_skills pms ON pms.project_member_id = pm.project_member_id
+	        WHERE pm.project_id = ?
+	        GROUP BY pm.user_id, u.full_name, pm.allocation_pct, pm.availability
+	    """;
+
+	    return jdbc.query(sql, (rs, i) -> {
+	        MemberSkillProfile p = new MemberSkillProfile();
+	        p.setUserId(rs.getInt("user_id"));
+	        p.setFullName(rs.getString("full_name"));
+	        p.setAllocationPct(rs.getInt("allocation_pct"));
+	        p.setAvailability(rs.getString("availability"));
+
+	        String skillsStr = rs.getString("skills");
+	        if (skillsStr == null || skillsStr.isBlank()) {
+	            p.setSkills(List.of());
+	        } else {
+	            p.setSkills(List.of(skillsStr.split(",")));
+	        }
+	        return p;
+	    }, projectId);
+	}
+
 
 }

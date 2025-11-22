@@ -10,11 +10,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.projectmanageweb.dto.BoardViewDto;
 import com.example.projectmanageweb.dto.MemberDto;
+import com.example.projectmanageweb.dto.SuggestedAssignment;
 import com.example.projectmanageweb.dto.TaskCardDto;
 import com.example.projectmanageweb.dto.TaskCreateForm;
+import com.example.projectmanageweb.dto.TaskUpdateForm;
 import com.example.projectmanageweb.dto.board.BoardTaskItem;
 import com.example.projectmanageweb.dto.board.ProjectBoardView;
 import com.example.projectmanageweb.model.Task;
@@ -33,10 +36,12 @@ public class BoardService {
     private final UserRepository usersRepo;
     private final ProjectsRepository projectsRepo;
     private final BoardRepository boardRepository;
+    private final TasksRepository tasksRepository;
     
+	
 	public BoardService(ProjectMembersRepository membersRepo, TasksRepository tasksRepo,
 			TaskAssigneesRepository assigneesRepo, UserRepository usersRepo, ProjectsRepository projectsRepo,
-			BoardRepository boardRepository) {
+			BoardRepository boardRepository, TasksRepository tasksRepository) {
 		super();
 		this.membersRepo = membersRepo;
 		this.tasksRepo = tasksRepo;
@@ -44,6 +49,7 @@ public class BoardService {
 		this.usersRepo = usersRepo;
 		this.projectsRepo = projectsRepo;
 		this.boardRepository = boardRepository;
+		this.tasksRepository = tasksRepository;
 	}
 	public BoardViewDto loadBoard(int projectId, int currentUserId) {
 
@@ -285,6 +291,40 @@ public class BoardService {
 	        }
 	    }
 	}
+	
+	public void updateTaskFull(int projectId, int userId, int taskId, TaskUpdateForm form) {
+
+	    boolean isPm = membersRepo.isPmOfProject(projectId, userId);
+	    boolean isAssignee = assigneesRepo.isAssignee(taskId, userId);
+
+	    if (!isPm && !isAssignee) {
+	        throw new AccessDeniedException("Bạn không có quyền chỉnh sửa task này.");
+	    }
+
+	    tasksRepo.updateTaskFull(taskId, form);
+
+	    // cập nhật assignees
+	    if (isPm) {
+ 	       assigneesRepo.syncAssignees(taskId, form.getAssigneeIds());
+	    }
+	}
+	
+	@Transactional
+	public void applyAssignments(int projectId, int pmUserId, List<SuggestedAssignment> assigns) {
+
+	    if (!membersRepo.isPmOfProject(projectId, pmUserId)) {
+	        throw new AccessDeniedException("Only PM can apply AI assignments.");
+	    }
+
+	    for (SuggestedAssignment a : assigns) {
+	        if (a.getTaskId() == null || a.getAssigneeIds() == null) continue;
+	        assigneesRepo.syncAssignees(a.getTaskId(), a.getAssigneeIds());
+	    }
+	}
+	public void syncAssignees(int taskId, List<Integer> assigneeIds){
+	    assigneesRepo.syncAssignees(taskId, assigneeIds);
+	}
+
 
 
 }

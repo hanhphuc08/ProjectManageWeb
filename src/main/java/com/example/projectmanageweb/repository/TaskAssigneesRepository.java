@@ -1,6 +1,9 @@
 package com.example.projectmanageweb.repository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -63,6 +66,30 @@ public class TaskAssigneesRepository {
         String sql = "DELETE FROM task_assignees WHERE task_id = ? AND user_id = ?";
         jdbc.update(sql, taskId, userId);
     }
+    
+    public void syncAssignees(int taskId, List<Integer> newAssigneeIds) {
+
+        if (newAssigneeIds == null) newAssigneeIds = List.of();
+
+        List<Integer> current = findUserIdsByTask(taskId);
+
+        Set<Integer> cur = new HashSet<>(current);
+        Set<Integer> neu = newAssigneeIds.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        for (Integer uid : neu) {
+            if (!cur.contains(uid)) addAssignee(taskId, uid);
+        }
+
+        for (Integer uid : cur) {
+            if (!neu.contains(uid)) removeAssignee(taskId, uid);
+        }
+    }
+
+    
+    
+
 
     
 }

@@ -8,6 +8,14 @@ public class SuggestedTask {
     private Integer estimateLikely;     // giờ ước lượng khả dĩ
     private Integer estimatePessimistic;// giờ ước lượng bi quan
     private String taskType;
+    private Integer durationDays;
+    
+	public Integer getDurationDays() {
+		return durationDays;
+	}
+	public void setDurationDays(Integer durationDays) {
+		this.durationDays = durationDays;
+	}
 	public String getTitle() {
 		return title;
 	}

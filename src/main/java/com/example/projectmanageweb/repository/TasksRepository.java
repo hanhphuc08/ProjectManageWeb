@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.projectmanageweb.dto.TaskCardDto;
+import com.example.projectmanageweb.dto.TaskUpdateForm;
 import com.example.projectmanageweb.model.Task;
 
 @Repository
@@ -100,6 +101,61 @@ public class TasksRepository {
 	            """;
 	    jdbc.update(sql, statusDb, taskId);
 	}
+	public void updateTaskFull(int taskId, TaskUpdateForm f) {
+	    String sql = """
+	        UPDATE tasks 
+	        SET title=?, description=?, priority=?, due_date=?, status=?
+	        WHERE task_id=?
+	    """;
+
+	    LocalDate due = null;
+	    if (f.getDueDate() != null && !f.getDueDate().isBlank())
+	        due = LocalDate.parse(f.getDueDate());
+
+	    jdbc.update(sql,
+	            f.getTitle(),
+	            f.getDescription(),
+	            f.getPriority(),
+	            due,
+	            mapStatus(f.getStatus()),
+	            taskId
+	    );
+	}
+	
+	private String mapStatus(String code) {
+	    if (code == null) return "To Do";
+
+	    return switch (code) {
+	        case "IN_PROGRESS" -> "In Progress";
+	        case "REVIEW"      -> "Review";
+	        case "DONE"        -> "Done";
+	        case "TODO"        -> "To Do";
+	        default            -> "To Do"; 
+	    };
+	}
+	
+	public List<Task> findBasicByProject(int projectId) {
+	    String sql = """
+	        SELECT task_id, title, description, priority, status, type, due_date
+	        FROM tasks
+	        WHERE project_id = ?
+	        ORDER BY task_id ASC
+	    """;
+	    return jdbc.query(sql, (rs, i) -> {
+	        Task t = new Task();
+	        t.setTaskId(rs.getInt("task_id"));
+	        t.setTitle(rs.getString("title"));
+	        t.setDescription(rs.getString("description"));
+	        t.setPriority(rs.getString("priority"));
+	        t.setStatus(rs.getString("status"));
+	        t.setType(rs.getString("type"));
+	        t.setDueDate(rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null);
+	        return t;
+	    }, projectId);
+	}
+
+
+
 
 
 }

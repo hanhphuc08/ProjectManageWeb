@@ -2,14 +2,18 @@ package com.example.projectmanageweb.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.projectmanageweb.dto.TaskUpdateForm;
 import com.example.projectmanageweb.service.BoardService;
 import com.example.projectmanageweb.service.UserService;
 
@@ -26,20 +30,21 @@ public class ProjectTaskController {
     
     @PostMapping("/projects/{projectId}/tasks/{taskId}/status")
     @PreAuthorize("isAuthenticated()")
-    public String changeStatus(@PathVariable int projectId,
-                               @PathVariable int taskId,
-                               @RequestParam("status") String statusCode,
-                               @RequestParam(name = "assigneeIds", required = false)
-                               List<Integer> assigneeIds,
-                               Authentication auth,
-                               RedirectAttributes ra) {
+    public String changeStatus(
+            @PathVariable int projectId,
+            @PathVariable int taskId,
+            @RequestParam("status") String statusCode,
+            @RequestParam(name = "assigneeIds", required = false)
+            List<Integer> assigneeIds,
+            Authentication auth,
+            RedirectAttributes ra) {
 
-        var email = auth.getName();
-        var me = userService.findByEmail(email).orElseThrow();
-        int currentUserId = me.getUserId();
+        var me = userService.findByEmail(auth.getName()).orElseThrow();
 
         try {
-            boardService.updateTaskStatusAndAssignees(projectId, currentUserId, taskId, statusCode, assigneeIds);
+            boardService.updateTaskStatusAndAssignees(
+                    projectId, me.getUserId(), taskId, statusCode, assigneeIds
+            );
             ra.addFlashAttribute("successMessage", "Cập nhật trạng thái task thành công!");
         } catch (Exception ex) {
             ra.addFlashAttribute("errorMessage", ex.getMessage());
@@ -47,5 +52,27 @@ public class ProjectTaskController {
 
         return "redirect:/projects/" + projectId + "#board-content";
     }
+
+    @PostMapping("/projects/{projectId}/tasks/{taskId}/update")
+    @PreAuthorize("isAuthenticated()")
+    public String updateTaskFull(
+            @PathVariable int projectId,
+            @PathVariable int taskId,
+            @ModelAttribute TaskUpdateForm form,
+            Authentication auth,
+            RedirectAttributes ra
+    ) {
+        var me = userService.findByEmail(auth.getName()).orElseThrow();
+
+        try {
+            boardService.updateTaskFull(projectId, me.getUserId(), taskId, form);
+            ra.addFlashAttribute("successMessage", "Cập nhật task thành công!");
+        } catch (Exception ex) {
+            ra.addFlashAttribute("errorMessage", ex.getMessage());
+        }
+
+        return "redirect:/projects/" + projectId + "#board-content";
+    }
+    
 
 }

@@ -82,5 +82,14 @@ public class ProjectMembersService {
         // (optional) nếu muốn xóa cả assignment ở task_assignees thì code thêm
         // chứ DB hiện tại không cascade theo project_members
     }
+	public void requirePm(int projectId, int userId) {
+        if (!membersRepo.isPmOfProject(projectId, userId)) {
+            throw new AccessDeniedException("Only PM can do this action.");
+        }
+    }
+	public boolean isPm(int projectId, int userId) {
+        return membersRepo.isPmOfProject(projectId, userId);
+    }
+	
 
 }

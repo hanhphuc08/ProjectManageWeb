@@ -1,5 +1,8 @@
 package com.example.projectmanageweb.controller;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -7,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.projectmanageweb.dto.BoardViewDto;
 import com.example.projectmanageweb.dto.TaskCreateForm;
 import com.example.projectmanageweb.service.BoardService;
+import com.example.projectmanageweb.service.ProjectMembersService;
 import com.example.projectmanageweb.service.UserService;
 
 @Controller
@@ -22,14 +27,16 @@ public class ProjectBoardController {
 
 	 private final BoardService boardService;
 	 private final UserService userService;
+	 private final ProjectMembersService membersService;
 
-	
-	public ProjectBoardController(BoardService boardService, UserService userService) {
+
+	public ProjectBoardController(BoardService boardService, UserService userService,
+			ProjectMembersService membersService) {
 		super();
 		this.boardService = boardService;
 		this.userService = userService;
+		this.membersService = membersService;
 	}
-
 
 	@PostMapping("/{projectId}/tasks")
 	public String createTask(@PathVariable int projectId,
@@ -52,6 +59,24 @@ public class ProjectBoardController {
 
 	    return "redirect:/projects/" + projectId;
 	}
+	
+	@PostMapping("/{projectId}/tasks/{taskId}/assignees")
+    public ResponseEntity<?> updateAssignees(
+            @PathVariable int projectId,
+            @PathVariable int taskId,
+            @RequestBody List<Integer> assigneeIds,
+            Authentication auth
+    ) {
+        var me = userService.findByEmail(auth.getName()).orElseThrow();
+
+        // ✅ check PM
+        membersService.requirePm(projectId, me.getUserId());
+
+        // ✅ sync assignees
+        boardService.syncAssignees(taskId, assigneeIds);
+
+        return ResponseEntity.ok().build();
+    }
 
 
 	    
