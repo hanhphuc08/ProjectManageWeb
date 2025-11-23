@@ -1,5 +1,7 @@
 package com.example.projectmanageweb.controller;
 
+import java.nio.file.attribute.UserPrincipal;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ import com.example.projectmanageweb.repository.ProjectsRepository;
 import com.example.projectmanageweb.service.AuthService;
 import com.example.projectmanageweb.service.BoardService;
 import com.example.projectmanageweb.service.ProjectService;
+import com.example.projectmanageweb.service.ProjectSummaryService;
 import com.example.projectmanageweb.service.UserService;
 
 import jakarta.validation.Valid;
@@ -35,10 +38,13 @@ public class ProjectController {
 	private final BoardService boardService;
 	private final AuthService authService;
 	private final ProjectMembersRepository membersRepo;
+	private final ProjectSummaryService projectSummaryService;
 
 	
+	
 	public ProjectController(ProjectService projectsService, UserService userService, ProjectTypesRepository typesRepo,
-			BoardService boardService, AuthService authService, ProjectMembersRepository membersRepo) {
+			BoardService boardService, AuthService authService, ProjectMembersRepository membersRepo,
+			ProjectSummaryService projectSummaryService) {
 		super();
 		this.projectsService = projectsService;
 		this.userService = userService;
@@ -46,6 +52,7 @@ public class ProjectController {
 		this.boardService = boardService;
 		this.authService = authService;
 		this.membersRepo = membersRepo;
+		this.projectSummaryService = projectSummaryService;
 	}
 	@GetMapping("/projects")
 	public String home(@RequestParam(required = false) String q, Authentication auth, Model model)
@@ -123,11 +130,13 @@ public class ProjectController {
 	        ra.addFlashAttribute("error", "Project không tồn tại hoặc bạn không có quyền truy cập.");
 	        return "redirect:/user/home";
 	    }
+	    var summary = projectSummaryService.buildSummary(projectId);
 	   
         BoardViewDto board = boardService.loadBoard(projectId, currentUserId);
         model.addAttribute("board", board);
 
 	    model.addAttribute("project", project); 
+	    model.addAttribute("summary", summary);
 	    
 	    // ==== DỮ LIỆU CHO MODAL ADD MEMBER ====
 	    var allUsers = authService.findAll(); 
@@ -144,6 +153,26 @@ public class ProjectController {
 	    model.addAttribute("memberForm", new ProjectMemberAddForm());
 	    return "users/projectmanage";           
 	}
+	
+	
+	// ===== Fragment Timeline (load khi bấm tab) =====
+	@GetMapping("/projects/{projectId}/timeline")
+	@PreAuthorize("isAuthenticated()")
+	public String timelineFragment(@PathVariable int projectId,
+	                               Authentication auth,
+	                               Model model) {
+
+	    var email = auth.getName();
+	    var me = userService.findByEmail(email).orElseThrow();
+	    int currentUserId = me.getUserId();
+
+	    model.addAttribute("board",
+	            boardService.buildBoard(projectId, currentUserId));
+
+	    return "users/project/fragments/timeline";
+	}
+    
+	
 	
 	
 

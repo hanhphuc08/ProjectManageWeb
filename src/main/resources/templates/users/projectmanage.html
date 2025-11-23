@@ -76,7 +76,11 @@
             <th:block th:replace="~{users/project/fragments/summary :: summaryContent}"></th:block>
 
             <!-- TIMELINE TAB -->
-            <th:block th:replace="~{users/project/fragments/timeline :: timelineContent}"></th:block>
+            <div id="timeline-content"
+     class="pd-tab-content"
+     style="display:none;"
+     data-loaded="0">
+</div>
 
             <!-- CALENDAR TAB -->
             <th:block th:replace="~{users/project/fragments/calendar :: calendarContent}"></th:block>
@@ -248,7 +252,7 @@
 
 
 
-<script>
+<script th:inline="javascript">
 /* =============================
    1. Avatar Menu Toggle
    ============================= */
@@ -307,6 +311,131 @@
 	 })();
 
 
+// ===== helper parse local date (yyyy-MM-dd) tránh lệch timezone =====
+   function parseLocalDate(ymd) {
+  if (!ymd) return null;
+  const part = ymd.trim().slice(0, 10);
+  const [y, m, d] = part.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d); // local midnight
+}
+
+window.initTimeline = function () {
+  const gridEl   = document.getElementById("timelineGrid");
+  const monthsEl = document.getElementById("timelineMonths");
+  const taskEls  = document.querySelectorAll("#timelineTaskList .pd-timeline-task");
+  if (!gridEl || !monthsEl || !taskEls.length) return;
+
+  const tasks = Array.from(taskEls).map(el => {
+    const start = parseLocalDate(el.dataset.start);
+    const end   = parseLocalDate(el.dataset.end);
+    return {
+      id: el.dataset.taskId,
+      title: el.querySelector(".pd-timeline-task-title")?.textContent.trim() || "",
+      start,
+      end,
+      status: (el.dataset.status || "to_do")
+    };
+  }).filter(t => t.start && t.end);
+
+  if (!tasks.length) return;
+
+  const CELL_W = 40;
+  const ROW_H  = 44;
+  const PAD_DAYS = 7;
+
+  function daysBetween(a, b) {
+    const ms = 24*60*60*1000;
+    return Math.round((b - a)/ms);
+  }
+  function addDays(d, n){
+    const x = new Date(d);
+    x.setDate(x.getDate() + n);
+    return x;
+  }
+
+  // range chuẩn theo min start / max end
+  let minStart = tasks[0].start;
+  let maxEnd   = tasks[0].end;
+  tasks.forEach(t=>{
+    if(t.start < minStart) minStart = t.start;
+    if(t.end > maxEnd) maxEnd = t.end;
+  });
+
+  const rangeStart = addDays(minStart, -PAD_DAYS);
+  const rangeEnd   = addDays(maxEnd, PAD_DAYS);
+  const totalDays  = daysBetween(rangeStart, rangeEnd) + 1;
+
+  // months header theo đúng số ngày mỗi tháng trong range
+  function renderMonths(){
+    monthsEl.innerHTML = "";
+    let cur = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+    const end = addDays(rangeStart, totalDays);
+
+    while(cur < end){
+      const monthStart = new Date(cur.getFullYear(), cur.getMonth(), 1);
+      const monthEnd   = new Date(cur.getFullYear(), cur.getMonth()+1, 0);
+
+      const visibleStart = monthStart < rangeStart ? rangeStart : monthStart;
+      const visibleEnd   = monthEnd > end ? end : monthEnd;
+
+      const days = daysBetween(visibleStart, visibleEnd) + 1;
+
+      const mEl = document.createElement("div");
+      mEl.className="pd-timeline-month";
+      mEl.style.minWidth = `${days * CELL_W}px`;
+      mEl.textContent = visibleStart.toLocaleString("vi-VN", {month:"long", year:"numeric"});
+      monthsEl.appendChild(mEl);
+
+      cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1);
+    }
+  }
+
+  function renderGrid(){
+    gridEl.innerHTML="";
+    const today = new Date(); today.setHours(0,0,0,0);
+
+    for(let i=0;i<totalDays;i++){
+      const d = addDays(rangeStart, i); d.setHours(0,0,0,0);
+      const cell=document.createElement("div");
+      cell.className="pd-timeline-cell";
+      if(d.getTime()===today.getTime()) cell.classList.add("is-today");
+      gridEl.appendChild(cell);
+    }
+  }
+
+  function renderBars(){
+    document.querySelectorAll(".pd-timeline-bar").forEach(e=>e.remove());
+
+    tasks.forEach((t, idx)=>{
+      const offset   = daysBetween(rangeStart, t.start);
+      const duration = daysBetween(t.start, t.end) + 1;
+
+      const bar=document.createElement("div");
+      bar.className=`pd-timeline-bar status-${t.status.toLowerCase().replace(/\s+/g,"_")}`;
+      bar.style.left=`${offset * CELL_W}px`;
+      bar.style.width=`${duration * CELL_W}px`;
+      bar.style.top=`${idx * ROW_H + 8}px`;
+
+      // bar chỉ hiện title
+      bar.textContent = t.title;
+      gridEl.appendChild(bar);
+    });
+
+    gridEl.style.height = `${tasks.length * ROW_H + 30}px`;
+  }
+
+  renderMonths();
+  renderGrid();
+  renderBars();
+
+  // auto scroll tới today
+  const todayCell = gridEl.querySelector(".is-today");
+  if(todayCell) todayCell.scrollIntoView({behavior:"smooth", inline:"center"});
+};
+
+
+
 
 
 /* =============================
@@ -314,23 +443,69 @@
    ============================= */
    (function(){
 	   const tabs = document.querySelectorAll('.pd-tab[data-tab]');
-	   const contents = document.querySelectorAll('.pd-tab-content');
 
-	   function showTab(name) {
-	     // 1. Tắt hết
+	   async function showTab(name) {
+	     // ✅ re-query contents mỗi lần vì DOM có thể đổi
+	     const contents = document.querySelectorAll('.pd-tab-content');
+
+	     // 1) tắt hết
 	     tabs.forEach(t => t.classList.remove('is-active'));
 	     contents.forEach(c => c.style.display = 'none');
 
-	     // 2. Bật tab được chọn
+	     // 2) bật tab được chọn
 	     const activeTab = document.querySelector(`.pd-tab[data-tab="${name}"]`);
-	     const target = document.getElementById(name + '-content');
+	     let target = document.getElementById(name + '-content');
 
 	     if (activeTab) activeTab.classList.add('is-active');
 	     if (target) target.style.display = 'block';
-	     console.log('Switch to tab:', name, '=>', !!target);
+
+	     // 3) Lazy load timeline
+		if (name === "timeline" && target && target.dataset.loaded !== "1") {
+  try {
+    const projectId = /*[[${board.projectId}]]*/ 0;
+    const html = await fetch(`/projects/${projectId}/timeline`)
+      .then(r => r.text());
+
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+
+    const fragmentRoot = tmp.querySelector("#timeline-content");
+
+    if (fragmentRoot) {
+      // remove style khỏi ruột trước khi nhét
+      fragmentRoot.querySelectorAll("style").forEach(st => st.remove());
+      target.innerHTML = fragmentRoot.innerHTML;
+    } else {
+      target.innerHTML = html;
+    }
+
+    // rồi mới lấy style append head
+    const styleTag = tmp.querySelector("style");
+    if (styleTag && !document.getElementById("timeline-style")) {
+      const s = document.createElement("style");
+      s.id = "timeline-style";
+      s.textContent = styleTag.textContent;
+      document.head.appendChild(s);
+    }
+
+    target.dataset.loaded = "1";
+
+    document.querySelectorAll(".pd-tab-content")
+      .forEach(c => c.style.display = "none");
+    target.style.display = "block";
+
+    if (window.initTimeline) window.initTimeline();
+
+  } catch (e) {
+    console.error("Load timeline failed:", e);
+  }
+}
+
+
+	     console.log('Switch to tab:', name);
 	   }
 
-	   // Gắn sự kiện click cho các tab
+	   // click tabs
 	   tabs.forEach(tab => {
 	     tab.addEventListener('click', function (e) {
 	       e.preventDefault();
@@ -340,9 +515,15 @@
 	     });
 	   });
 
-	   // Khởi tạo: luôn mở BOARD khi load
-	   showTab('board');
+	   const hash = (location.hash || "").replace("#", "");
+	   const initialTab = hash.endsWith("-content")
+	       ? hash.replace("-content", "")
+	       : (hash || "board");
+
+	   showTab(initialTab);
 	 })();
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.example.projectmanageweb.dto.board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectBoardView {
@@ -79,7 +80,14 @@ public class ProjectBoardView {
 	public void setMembers(List<BoardMemberItem> members) {
 		this.members = members;
 	}
-    
+	public List<BoardTaskItem> getAllTasks() {
+        List<BoardTaskItem> res = new ArrayList<>();
+        if (todo != null) res.addAll(todo);
+        if (inProgress != null) res.addAll(inProgress);
+        if (review != null) res.addAll(review);
+        if (done != null) res.addAll(done);
+        return res;
+    }
     
     
 }

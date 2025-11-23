@@ -24,13 +24,27 @@ public class BoardRepository {
     public List<BoardTaskItem> findTasksByProjectId(int projectId) {
         String sql = """
             SELECT t.task_id,
+        		   t.project_id,
                    t.title,
                    t.type,
                    t.status,
                    t.priority,
-                   t.due_date
+                   t.start_date,
+                   
+                   t.due_date,
+                   DATE(t.created_at) AS created_at,
+
+                   GROUP_CONCAT(u.full_name SEPARATOR ', ') AS assignees,
+                   GROUP_CONCAT(ta.user_id SEPARATOR ',') AS assignee_ids
+
             FROM tasks t
+            LEFT JOIN task_assignees ta ON ta.task_id = t.task_id
+            LEFT JOIN users u ON u.user_id = ta.user_id
+
             WHERE t.project_id = ?
+
+            GROUP BY t.task_id
+
             ORDER BY
                 CASE t.status
                     WHEN 'To Do' THEN 1
@@ -43,8 +57,10 @@ public class BoardRepository {
                 t.due_date,
                 t.created_at DESC
             """;
+
         return jdbc.query(sql, taskRowMapper, projectId);
     }
+
     
     public List<BoardMemberItem> findMembersByProjectId(int projectId) {
         String sql = """

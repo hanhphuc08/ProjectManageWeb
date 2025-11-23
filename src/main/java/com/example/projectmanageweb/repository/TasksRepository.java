@@ -12,6 +12,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.example.projectmanageweb.dto.CountDto;
+import com.example.projectmanageweb.dto.MetricDto;
+import com.example.projectmanageweb.dto.RecentActivityDto;
 import com.example.projectmanageweb.dto.TaskCardDto;
 import com.example.projectmanageweb.dto.TaskUpdateForm;
 import com.example.projectmanageweb.model.Task;
@@ -155,7 +158,123 @@ public class TasksRepository {
 	}
 
 
+	// ===== SUMMARY QUERIES =====
 
+	public MetricDto getMetricsByProject(int projectId) {
+	    String sql = """
+	        SELECT
+	          COUNT(*) AS total,
+	          SUM(status = 'Done') AS completed,
+	          SUM(
+	              due_date IS NOT NULL
+	              AND due_date <= CURDATE() + INTERVAL 7 DAY
+	              AND status <> 'Done'
+	          ) AS due_soon,
+	          SUM(DATE(created_at) = CURDATE()) AS created_today,
+	          SUM(
+	              DATE(updated_at) = CURDATE()
+	              AND (updated_at IS NOT NULL)
+	              AND (updated_at <> created_at)
+	          ) AS updated_today
+	        FROM tasks
+	        WHERE project_id = ?
+	    """;
+
+	    return jdbc.queryForObject(sql, (rs, i) -> {
+	        MetricDto m = new MetricDto();
+	        m.setTotal(rs.getInt("total"));
+	        m.setCompleted(rs.getInt("completed"));
+	        m.setDueSoon(rs.getInt("due_soon"));
+	        m.setCreatedToday(rs.getInt("created_today"));
+	        m.setUpdatedToday(rs.getInt("updated_today"));
+	        return m;
+	    }, projectId);
+	}
+
+	public List<CountDto> countByStatus(int projectId) {
+	    String sql = """
+	        SELECT status AS label, COUNT(*) AS cnt
+	        FROM tasks
+	        WHERE project_id = ?
+	        GROUP BY status
+	        ORDER BY cnt DESC
+	    """;
+	    return jdbc.query(sql, (rs, i) ->
+	        new CountDto(rs.getString("label"), rs.getInt("cnt"))
+	    , projectId);
+	}
+
+	public List<CountDto> countByPriority(int projectId) {
+	    String sql = """
+	        SELECT priority AS label, COUNT(*) AS cnt
+	        FROM tasks
+	        WHERE project_id = ?
+	        GROUP BY priority
+	        ORDER BY cnt DESC
+	    """;
+	    return jdbc.query(sql, (rs, i) ->
+	        new CountDto(rs.getString("label"), rs.getInt("cnt"))
+	    , projectId);
+	}
+
+	public List<CountDto> countByType(int projectId) {
+	    String sql = """
+	        SELECT COALESCE(type, task_type, 'Task') AS label, COUNT(*) AS cnt
+	        FROM tasks
+	        WHERE project_id = ?
+	        GROUP BY COALESCE(type, task_type, 'Task')
+	        ORDER BY cnt DESC
+	    """;
+	    return jdbc.query(sql, (rs, i) ->
+	        new CountDto(rs.getString("label"), rs.getInt("cnt"))
+	    , projectId);
+	}
+
+	public List<RecentActivityDto> findRecentActivities(int projectId, int limit) {
+	    String sql = """
+	        SELECT *
+	        FROM (
+	            SELECT
+	                t.task_id,
+	                t.title,
+	                t.status,
+	                t.created_at AS time,
+	                'created' AS action,
+	                u.full_name AS actor
+	            FROM tasks t
+	            LEFT JOIN users u ON u.user_id = t.created_by
+	            WHERE t.project_id = ?
+
+	            UNION ALL
+
+	            SELECT
+	                t.task_id,
+	                t.title,
+	                t.status,
+	                t.updated_at AS time,
+	                'updated' AS action,
+	                u.full_name AS actor
+	            FROM tasks t
+	            LEFT JOIN users u ON u.user_id = t.created_by
+	            WHERE t.project_id = ?
+	              AND t.updated_at IS NOT NULL
+	              AND t.updated_at <> t.created_at
+	        ) x
+	        ORDER BY time DESC
+	        LIMIT ?
+	    """;
+
+	    return jdbc.query(sql, (rs, i) -> {
+	        RecentActivityDto a = new RecentActivityDto();
+	        a.setTaskId(rs.getInt("task_id"));
+	        a.setTitle(rs.getString("title"));
+	        a.setStatus(rs.getString("status"));
+	        a.setAction(rs.getString("action"));
+	        a.setActor(rs.getString("actor"));
+	        a.setTime(rs.getTimestamp("time").toLocalDateTime());
+	        return a;
+	    }, projectId, projectId, limit);
+	}
 
 
 }

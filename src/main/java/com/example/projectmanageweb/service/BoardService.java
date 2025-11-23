@@ -190,6 +190,15 @@ public class BoardService {
 
 	    // 1. Lấy toàn bộ task của project
 	    List<BoardTaskItem> tasks = boardRepository.findTasksByProjectId(projectId);
+	    System.out.println("BUILD TIMELINE projectId=" + projectId
+	            + " tasks.size=" + tasks.size());
+
+	    // in thử 5 task đầu
+	    tasks.stream().limit(5).forEach(t ->
+	        System.out.println("taskId=" + t.getTaskId()
+	            + " title=" + t.getSummary()
+	            + " status=" + t.getStatus())
+	    );
 
 	    // 2. Lấy danh sách members
 	    var members = boardRepository.findMembersByProjectId(projectId);

@@ -1,60 +1,217 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
 <div th:fragment="timelineContent">
-    <div class="pd-tab-content" id="timeline-content" style="display:none;">
-        
-        <!-- Header -->
-        <div class="pd-timeline-header">
-            <div class="pd-timeline-controls">
-                <div class="pd-timeline-search-wrap">
-                    <i class="fas fa-search pd-timeline-search-icon"></i>
-                    <input type="text" placeholder="Search timeline" class="pd-timeline-search-input" />
-                </div>
-                <div class="pd-timeline-filter-group">
-                    <img src="/images/face1.jpg" class="pd-timeline-avatar" />
-                    <button class="pd-timeline-status-category">Status <i class="fas fa-chevron-down"></i></button>
-                    <button class="pd-timeline-more-options"><i class="fas fa-ellipsis-h"></i></button>
-                </div>
-            </div>
+  <!-- TAB CONTENT -->
+  <div id="timeline-content" class="pd-tab-content" style="display:none;">
+
+    <!-- Header -->
+    <div class="pd-timeline-header">
+      <div class="pd-timeline-controls">
+
+        <!-- Search -->
+        <div class="pd-timeline-search-wrap">
+          <i class="fas fa-search pd-timeline-search-icon"></i>
+          <input id="timelineSearchInput" type="text"
+                 placeholder="Search tasks"
+                 class="pd-timeline-search-input" />
         </div>
 
-        <!-- Main timeline -->
-        <div class="pd-timeline-main">
-            <div class="pd-timeline-left-panel">
-                <div class="pd-timeline-left-header">Work</div>
-                <button class="pd-timeline-create-epic">
-                    <i class="fas fa-plus"></i> Create Epic
-                </button>
-            </div>
-
-            <div class="pd-timeline-right-panel">
-                <div class="pd-timeline-months">
-                    <div class="pd-timeline-month">September</div>
-                    <div class="pd-timeline-month">October</div>
-                    <div class="pd-timeline-month">November</div>
-                </div>
-
-                <div class="pd-timeline-grid">
-                    <div class="pd-timeline-today-line"></div>
-                </div>
-
-            </div>
+        <!-- Zoom buttons -->
+        <div class="pd-timeline-filter-group">
+          <button id="zoomMonthBtn"
+                  class="pd-timeline-status-category is-active">Month</button>
         </div>
+      </div>
+    </div>
 
-        <!-- Bottom -->
-        <div class="pd-timeline-bottom-bar">
-            <div class="pd-timeline-bottom-controls">
-                <button class="pd-timeline-bottom-button">Today</button>
-                <button class="pd-timeline-bottom-button">Weeks</button>
-                <button class="pd-timeline-bottom-button is-active">Months</button>
-                <button class="pd-timeline-bottom-button">Quarters</button>
-                <button class="pd-timeline-bottom-button"><i class="fas fa-info-circle"></i></button>
-                <button class="pd-timeline-bottom-button"><i class="fas fa-chevron-right"></i></button>
-            </div>
-        </div>
+    <!-- Main -->
+    <div class="pd-timeline-main">
+
+      <!-- Left task list -->
+      <div class="pd-timeline-left-panel">
+        <div class="pd-timeline-left-header">Tasks</div>
+
+        <div id="timelineTaskList" th:with="allTasks=${board.allTasks}">
+  <div class="pd-timeline-task"
+       th:each="t : ${allTasks}"
+       th:attr="
+         data-task-id=${t.taskId},
+         data-start=${t.safeStartDate},
+         data-end=${t.safeEndDate},
+         data-status=${t.status},
+         data-assignees=${#strings.arrayJoin(t.assignees, ', ')}
+       ">
+
+    <!-- trái chỉ hiện title -->
+    <div class="pd-timeline-task-title" th:text="${t.summary}">Task</div>
+
+    <!-- meta: TASK-ID + dueDate -->
+    <div class="pd-timeline-task-meta">
+      <span class="pd-timeline-task-id"
+            th:text="${'TASK-' + t.taskId}">TASK-1</span>
+
+      <span class="pd-timeline-task-due"
+            th:text="${t.safeEndDate}">2025-12-02</span>
+    </div>
+
+  </div>
+</div>
+
+      </div>
+
+      <!-- Right timeline -->
+      <div class="pd-timeline-right-panel">
+        <div id="timelineMonths" class="pd-timeline-months"></div>
+        <div id="timelineGrid" class="pd-timeline-grid"></div>
+      </div>
 
     </div>
+  </div>
+
+  <!-- TEMP: style có thể để tạm ở đây -->
+<style>
+/* ==== MAIN LAYOUT ==== */
+.pd-timeline-main{
+  display:flex;
+  height:560px;
+  align-items:stretch;
+  gap:0;
+}
+
+/* ==== LEFT PANEL ==== */
+.pd-timeline-left-panel{
+  flex:0 0 280px;
+  padding:12px;
+  background:#0b0f1d;
+  border-right:1px solid rgba(255,255,255,0.07);
+  overflow-y:auto;
+}
+.pd-timeline-left-header{
+  font-weight:700;
+  font-size:14px;
+  margin-bottom:12px;
+  color:#e9ecff;
+}
+.pd-timeline-task{
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.04);
+  margin-bottom:10px;
+}
+.pd-timeline-task:hover{
+  background:rgba(255,255,255,0.10);
+}
+.pd-timeline-task-title{
+  font-weight:600;
+  font-size:14px;
+  line-height:1.35;
+}
+.pd-timeline-task-meta{
+  margin-top:6px;
+  font-size:12px;
+  opacity:.8;
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+}
+.pd-timeline-task-due{
+  color:#9aa3ff;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+/* ==== HEADER ==== */
+.pd-timeline-header{
+  margin-bottom:10px;
+}
+.pd-timeline-controls{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content:flex-start; /* không cho nút bay sang phải */
+}
+.pd-timeline-search-wrap{
+  position:relative;
+  flex:0 0 420px;
+}
+.pd-timeline-search-input{
+  width:100%;
+}
+.pd-timeline-filter-group{
+  display:flex;
+  gap:6px;
+  margin-left:6px;
+}
+
+/* ==== RIGHT PANEL ==== */
+.pd-timeline-right-panel{
+  flex:1;
+  position:relative;
+  overflow:hidden;
+  background:#0f152b;
+}
+
+/* Months header sticky */
+.pd-timeline-months{
+  display:flex;
+  height:32px;
+  background:#0d1325;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  position:sticky;
+  top:0;
+  z-index:3;
+}
+.pd-timeline-month{
+  padding:6px 12px;
+  font-weight:600;
+  color:#d5d7ff;
+  border-right:1px solid rgba(255,255,255,0.08);
+  white-space:nowrap;
+}
+
+/* ==== GRID ==== */
+.pd-timeline-grid{
+  position:relative;
+  display:flex;            /* tạo line day */
+  overflow:auto;           /* scroll cả ngang + dọc */
+  height:calc(560px - 32px);
+  background:#0f152b;
+}
+.pd-timeline-cell{
+  width:40px;
+  border-right:1px solid rgba(255,255,255,0.05);
+  flex:0 0 40px;
+}
+.pd-timeline-cell.is-today{
+  background:rgba(255,80,80,0.25)!important;
+}
+
+/* ==== TASK BARS ==== */
+.pd-timeline-bar{
+  position:absolute;
+  height:32px;
+  border-radius:7px;
+  padding:5px 8px;
+  font-size:13px;
+  box-sizing:border-box;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  color:white;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  z-index:2;
+}
+.status-to_do{background:rgba(255,255,255,.18);}
+.status-in_progress{background:rgba(255,210,67,.45);}
+.status-review{background:rgba(67,105,255,.45);}
+.status-done{background:rgba(115,235,120,.4);}
+
+/* Scrollbar */
+.pd-timeline-grid::-webkit-scrollbar{height:8px;width:8px;}
+.pd-timeline-grid::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,0.15);
+  border-radius:4px;
+}
+
+
+</style>
 </div>
-</body>
-</html>

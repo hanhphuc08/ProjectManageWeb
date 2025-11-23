@@ -20,6 +20,7 @@ public class BoardViewDto {
     private boolean currentUserIsPm;
     
     
+    
 	public boolean isCurrentUserIsPm() {
 		return currentUserIsPm;
 	}
