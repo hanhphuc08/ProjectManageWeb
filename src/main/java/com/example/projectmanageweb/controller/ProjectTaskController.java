@@ -15,20 +15,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.projectmanageweb.dto.TaskUpdateForm;
 import com.example.projectmanageweb.service.BoardService;
+import com.example.projectmanageweb.service.TaskService;
 import com.example.projectmanageweb.service.UserService;
 
 @Controller
 public class ProjectTaskController {
 	private final BoardService boardService;
     private final UserService userService;
+    private final TaskService taskService;
 
-    public ProjectTaskController(BoardService boardService,
-                                 UserService userService) {
-        this.boardService = boardService;
-        this.userService = userService;
-    }
     
-    @PostMapping("/projects/{projectId}/tasks/{taskId}/status")
+    
+    public ProjectTaskController(BoardService boardService, UserService userService, TaskService taskService) {
+		super();
+		this.boardService = boardService;
+		this.userService = userService;
+		this.taskService = taskService;
+	}
+
+	@PostMapping("/projects/{projectId}/tasks/{taskId}/status")
     @PreAuthorize("isAuthenticated()")
     public String changeStatus(
             @PathVariable int projectId,
@@ -73,6 +78,35 @@ public class ProjectTaskController {
 
         return "redirect:/projects/" + projectId + "#board-content";
     }
+    
+    @PostMapping("/projects/{projectId}/tasks/{taskId}/delete")
+    @PreAuthorize("isAuthenticated()")  // ai cũng được vào, nhưng xử lý trong code
+    public String deleteTask(
+            @PathVariable int projectId,
+            @PathVariable int taskId,
+            Authentication auth,
+            RedirectAttributes ra
+    ) {
+
+        var me = userService.findByEmail(auth.getName()).orElseThrow();
+
+        boolean isPm = boardService.isProjectPm(projectId, me.getUserId());
+        if (!isPm) {
+            ra.addFlashAttribute("errorMessage", "Bạn không có quyền xoá task.");
+            return "redirect:/projects/" + projectId + "#board-content";
+        }
+
+        try {
+            taskService.deleteTask(projectId, taskId);
+            ra.addFlashAttribute("successMessage", "Xoá task thành công!");
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/projects/" + projectId + "#board-content";
+    }
+
+
     
 
 }

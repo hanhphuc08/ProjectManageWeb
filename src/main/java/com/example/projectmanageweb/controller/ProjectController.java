@@ -17,11 +17,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.projectmanageweb.dto.BoardViewDto;
 import com.example.projectmanageweb.dto.ProjectCreateRequest;
 import com.example.projectmanageweb.dto.ProjectMemberAddForm;
+import com.example.projectmanageweb.dto.calendar.CalendarViewDto;
 import com.example.projectmanageweb.repository.ProjectMembersRepository;
 import com.example.projectmanageweb.repository.ProjectTypesRepository;
 import com.example.projectmanageweb.repository.ProjectsRepository;
+import com.example.projectmanageweb.repository.TasksRepository;
 import com.example.projectmanageweb.service.AuthService;
 import com.example.projectmanageweb.service.BoardService;
+import com.example.projectmanageweb.service.CalendarService;
+import com.example.projectmanageweb.service.GoalService;
 import com.example.projectmanageweb.service.ProjectService;
 import com.example.projectmanageweb.service.ProjectSummaryService;
 import com.example.projectmanageweb.service.UserService;
@@ -39,12 +43,14 @@ public class ProjectController {
 	private final AuthService authService;
 	private final ProjectMembersRepository membersRepo;
 	private final ProjectSummaryService projectSummaryService;
-
-	
+	private final CalendarService calendarService;
+	private final GoalService goalService;
+	private final TasksRepository tasksRepository;
 	
 	public ProjectController(ProjectService projectsService, UserService userService, ProjectTypesRepository typesRepo,
 			BoardService boardService, AuthService authService, ProjectMembersRepository membersRepo,
-			ProjectSummaryService projectSummaryService) {
+			ProjectSummaryService projectSummaryService, CalendarService calendarService, GoalService goalService,
+			TasksRepository tasksRepository) {
 		super();
 		this.projectsService = projectsService;
 		this.userService = userService;
@@ -53,6 +59,9 @@ public class ProjectController {
 		this.authService = authService;
 		this.membersRepo = membersRepo;
 		this.projectSummaryService = projectSummaryService;
+		this.calendarService = calendarService;
+		this.goalService = goalService;
+		this.tasksRepository = tasksRepository;
 	}
 	@GetMapping("/projects")
 	public String home(@RequestParam(required = false) String q, Authentication auth, Model model)
@@ -147,10 +156,21 @@ public class ProjectController {
 	    var availableUsers = allUsers.stream()
 	            .filter(u -> !currentMembers.contains(u.getUserId()))
 	            .toList();
-
+	    
+	    var goals = goalService.listGoals(projectId);
+	    
+	    
+	    model.addAttribute("goals", goals);
+	    model.addAttribute("projectTasks", tasksRepository.findBasicByProject(projectId));
+	    
 	    model.addAttribute("availableUsers", availableUsers);
 	    model.addAttribute("projectRoles", membersRepo.findProjectRoles(projectId));
 	    model.addAttribute("memberForm", new ProjectMemberAddForm());
+	    
+	    CalendarViewDto calendar = calendarService.build(projectId, null);
+	    model.addAttribute("calendar", calendar);
+	    model.addAttribute("currentMonthLabel",
+	            calendarService.getMonthLabel(calendar.getYear(), calendar.getMonth()));
 	    return "users/projectmanage";           
 	}
 	
@@ -171,11 +191,37 @@ public class ProjectController {
 
 	    return "users/project/fragments/timeline";
 	}
-    
 	
+	@GetMapping("/projects/{projectId}/calendar")
+	public String projectCalendar(
+	        @PathVariable int projectId,
+	        @RequestParam(required = false) String month,
+	        Model model
+	) {
+	    CalendarViewDto calendar = calendarService.build(projectId, month);
+
+	    model.addAttribute("projectId", projectId);
+	    model.addAttribute("calendar", calendar);
+
+	    model.addAttribute("currentMonthLabel",
+	            calendarService.getMonthLabel(calendar.getYear(), calendar.getMonth())
+	    );
+
+	    return "users/project/fragments/calendar";  
+	}
 	
+	@GetMapping("/projects/{projectId}/goals")
+	@PreAuthorize("isAuthenticated()")
+	public String goalsFragment(@PathVariable int projectId,
+	                            org.springframework.ui.Model model) {
+
+	    var goals = goalService.listGoals(projectId);
+	    model.addAttribute("goals", goals);
+	    model.addAttribute("projectId", projectId);
+
+	    return "users/project/fragments/goals";
+	}
 	
 
-
-	  
+  
 }

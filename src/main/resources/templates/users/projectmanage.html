@@ -10,6 +10,8 @@
     <link href="/assets/css/project-detail.css" rel="stylesheet" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/css/pd-calendar.css"/>
+
 </head>
 <body class="uh-dark">
 <div class="uh-app">
@@ -77,10 +79,10 @@
 
             <!-- TIMELINE TAB -->
             <div id="timeline-content"
-     class="pd-tab-content"
-     style="display:none;"
-     data-loaded="0">
-</div>
+			     class="pd-tab-content"
+			     style="display:none;"
+			     data-loaded="0">
+			</div>
 
             <!-- CALENDAR TAB -->
             <th:block th:replace="~{users/project/fragments/calendar :: calendarContent}"></th:block>
@@ -90,6 +92,10 @@
 
             <!-- BOARD TAB -->
             <th:block th:replace="~{users/project/fragments/board :: boardContent}"></th:block>
+            
+            <!-- Goals -->
+           	<th:block th:replace="~{users/project/fragments/goals :: goalsContent}"></th:block>
+            
 
         </section>
     </main>
@@ -251,8 +257,10 @@
 </div>
 
 
-
+<script src="/assets/js/calendar.js"></script>
 <script th:inline="javascript">
+
+const PROJECT_ID = /*[[${board.projectId}]]*/ 0;
 /* =============================
    1. Avatar Menu Toggle
    ============================= */
@@ -458,6 +466,7 @@ window.initTimeline = function () {
 
 	     if (activeTab) activeTab.classList.add('is-active');
 	     if (target) target.style.display = 'block';
+	     
 
 	     // 3) Lazy load timeline
 		if (name === "timeline" && target && target.dataset.loaded !== "1") {
@@ -722,6 +731,7 @@ window.initTimeline = function () {
 	  const btnCancel = document.getElementById('pdTaskModalCancel');
 
 	  if (!overlay || !form) return;
+	  overlay.style.display = 'none';
 
 	  function open(status) {
 	    statusInput.value = status;
@@ -812,6 +822,335 @@ window.initTimeline = function () {
         });
     });
 })();
+
+
+
+/* =============================
+GOALS – Create, Link, View, Unlink
+============================= */
+(function () {
+// Lấy projectId từ global hoặc từ Thymeleaf
+const projectId = window.PROJECT_ID || /*[[${board.projectId}]]*/ 0;
+
+/* ---------- A. Create Goal Modal ---------- */
+const goalCreateBtn   = document.getElementById('pdGoalCreateBtn');
+const goalModal       = document.getElementById('pdGoalModalOverlay');
+const goalModalClose  = document.getElementById('pdGoalModalClose');
+const goalModalCancel = document.getElementById('pdGoalModalCancel');
+
+function openGoalCreate() {
+ if (!goalModal) return;
+ goalModal.style.display = 'flex';
+}
+function closeGoalCreate() {
+ if (!goalModal) return;
+ goalModal.style.display = 'none';
+}
+
+goalCreateBtn?.addEventListener('click', openGoalCreate);
+goalModalClose?.addEventListener('click', closeGoalCreate);
+goalModalCancel?.addEventListener('click', closeGoalCreate);
+goalModal?.addEventListener('click', e => {
+ if (e.target === goalModal) closeGoalCreate();
+});
+
+/* ---------- B. Link Tasks to Goal (modal) ---------- */
+
+const overlay     = document.getElementById('pdGoalTaskOverlay');
+const titleSpan   = document.getElementById('pdGoalTaskTitle');
+const listEl      = document.getElementById('pdGoalTaskList');
+const emptyEl     = document.getElementById('pdGoalTaskEmpty');
+const searchInput = document.getElementById('pdGoalTaskSearch');
+const closeBtn    = document.getElementById('pdGoalTaskClose');
+const cancelBtn   = document.getElementById('pdGoalTaskCancel');
+const saveBtn     = document.getElementById('pdGoalTaskSave');
+
+let currentGoalId = null;
+let rawTasks      = [];
+
+// Render danh sách task trong modal Link
+function renderLinkTaskList(filterText) {
+ const q = (filterText || '').toLowerCase();
+ listEl.innerHTML = '';
+
+ const filtered = rawTasks.filter(t => {
+   const s = ((t.title || '') + ' ' + (t.status || '') + ' ' + (t.taskId || '')).toLowerCase();
+   return s.includes(q);
+ });
+
+ if (!filtered.length) {
+   emptyEl.style.display = 'block';
+   return;
+ }
+ emptyEl.style.display = 'none';
+
+ const frag = document.createDocumentFragment();
+
+ filtered.forEach(t => {
+   const row = document.createElement('label');
+   row.className = 'pd-goal-task-row';
+
+   const due = t.dueDate ? ` · Due: ${t.dueDate}` : '';
+   const status = t.status || 'TO DO';
+   const statusSlug = status.toLowerCase().replace(/\s+/g, '-');
+
+   row.innerHTML = `
+     <input type="checkbox" class="pd-goal-task-checkbox" value="${t.taskId}">
+     <div class="pd-goal-task-info">
+       <div class="pd-goal-task-title">
+         [TASK-${t.taskId}] ${t.title || 'Untitled'}
+       </div>
+       <div class="pd-goal-task-meta">
+         <span class="st-pill st-${statusSlug}">
+           ${status}
+         </span>
+         ${due}
+       </div>
+     </div>
+   `;
+
+   frag.appendChild(row);
+ });
+
+ listEl.appendChild(frag);
+}
+
+function openLinkModal(goalId, goalTitle) {
+ if (!overlay) return;
+ currentGoalId = goalId;
+ titleSpan.textContent = goalTitle || 'Goal';
+
+ searchInput.value = '';
+ listEl.innerHTML = '';
+ emptyEl.style.display = 'none';
+ overlay.style.display = 'flex';
+
+ // Gọi API lấy task chưa gán cho goal
+ fetch(`/api/projects/${projectId}/goals/${goalId}/available-tasks`)
+   .then(r => {
+     if (!r.ok) throw new Error('Failed to load tasks');
+     return r.json();
+   })
+   .then(data => {
+     rawTasks = Array.isArray(data) ? data : [];
+     if (!rawTasks.length) {
+       emptyEl.textContent = 'All tasks are already linked to this goal, or no tasks in project.';
+       emptyEl.style.display = 'block';
+       listEl.innerHTML = '';
+     } else {
+       renderLinkTaskList('');
+     }
+   })
+   .catch(err => {
+     console.error(err);
+     emptyEl.textContent = 'Error while loading tasks. Please try again later.';
+     emptyEl.style.display = 'block';
+   });
+}
+
+function closeLinkModal() {
+ if (!overlay) return;
+ overlay.style.display = 'none';
+ currentGoalId = null;
+ rawTasks = [];
+ listEl.innerHTML = '';
+}
+
+// Open từ nút "+ Link tasks"
+document.querySelectorAll('.pd-goal-link-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+   const goalId = btn.dataset.goalId;
+   const goalTitle = btn.dataset.goalTitle || 'Goal';
+   if (!goalId) return;
+   openLinkModal(goalId, goalTitle);
+ });
+});
+
+closeBtn?.addEventListener('click', closeLinkModal);
+cancelBtn?.addEventListener('click', closeLinkModal);
+overlay?.addEventListener('click', e => {
+ if (e.target === overlay) closeLinkModal();
+});
+
+searchInput?.addEventListener('input', () => {
+ renderLinkTaskList(searchInput.value);
+});
+
+// Save: POST danh sách taskIds
+saveBtn?.addEventListener('click', () => {
+ if (!currentGoalId) return;
+
+ const checked = listEl.querySelectorAll('.pd-goal-task-checkbox:checked');
+ if (!checked.length) {
+   alert('Please select at least one task.');
+   return;
+ }
+
+ const formData = new URLSearchParams();
+ checked.forEach(ch => formData.append('taskIds', ch.value));
+
+ fetch(`/projects/${projectId}/goals/${currentGoalId}/tasks`, {
+   method: 'POST',
+   body: formData
+ })
+   .then(r => {
+     if (!r.ok) throw new Error('Save failed');
+     // Reload để cập nhật progress & ẩn task đã gán
+  // Đảm bảo đang ở tab Goals
+     window.location.hash = '#goals';
+     // Reload để server render lại goals + progress
+     window.location.reload();
+   })
+   .catch(err => {
+     console.error(err);
+     alert('Có lỗi khi gán task vào goal.');
+   });
+});
+
+/* ---------- C. View linked tasks + Remove khỏi goal ---------- */
+
+function formatDate(ymd) {
+ if (!ymd) return '';
+ try {
+   return new Date(ymd).toLocaleDateString('vi-VN');
+ } catch {
+   return ymd;
+ }
+}
+
+document.querySelectorAll('.pd-goal-view-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+   const goalId = btn.dataset.goalId;
+   if (!goalId) return;
+
+   const container = document.getElementById('goal-tasks-' + goalId);
+   if (!container) return;
+
+   // Toggle đóng / mở
+   if (container.style.display === 'block') {
+     container.style.display = 'none';
+     return;
+   }
+
+   // Nếu đã load trước rồi thì chỉ mở lại
+   if (container.dataset.loaded === '1') {
+     container.style.display = 'block';
+     return;
+   }
+
+   container.innerHTML = '<div class="pd-subtext">Loading tasks...</div>';
+   container.style.display = 'block';
+
+   fetch(`/api/projects/${projectId}/goals/${goalId}/tasks`)
+     .then(r => {
+       if (!r.ok) throw new Error('Failed to load goal tasks');
+       return r.json();
+     })
+     .then(data => {
+       if (!Array.isArray(data) || data.length === 0) {
+         container.innerHTML = '<div class="pd-subtext">No tasks linked yet.</div>';
+         container.dataset.loaded = '1';
+         return;
+       }
+
+       const wrapper = document.createElement('div');
+       wrapper.className = 'pd-goal-task-inline-wrapper';
+
+       data.forEach(t => {
+         const row = document.createElement('div');
+         row.className = 'pd-goal-task-inline-row';
+
+         const title = t.title || 'Untitled';
+         const status = t.status || 'TO DO';
+         const statusSlug = status.toLowerCase().replace(/\s+/g, '_');
+         const assignee = t.assigneeName || 'Unassigned';
+         const due = t.dueDate ? formatDate(t.dueDate) : '';
+
+         row.innerHTML = `
+           <div class="pd-goal-task-inline-main">
+             <div class="pd-goal-task-inline-title">
+               [TASK-${t.taskId}] ${title}
+             </div>
+             <div class="pd-goal-task-inline-meta">
+               <span class="st-pill st-${statusSlug}">${status}</span>
+               <span class="pd-goal-task-inline-assignee">
+                 <i class="fas fa-user"></i> ${assignee}
+               </span>
+               ${
+                 due
+                   ? `<span class="pd-goal-task-inline-due">
+                        <i class="fas fa-calendar-alt"></i> ${due}
+                      </span>`
+                   : ''
+               }
+             </div>
+           </div>
+           <div class="pd-goal-task-inline-actions">
+             <button type="button"
+                     class="pd-goal-task-unlink"
+                     data-goal-id="${goalId}"
+                     data-task-id="${t.taskId}">
+               Remove
+             </button>
+           </div>
+         `;
+
+         wrapper.appendChild(row);
+       });
+
+       container.innerHTML = '';
+       container.appendChild(wrapper);
+       container.dataset.loaded = '1';
+
+       // Gắn event Remove
+       container.querySelectorAll('.pd-goal-task-unlink').forEach(unlinkBtn => {
+         unlinkBtn.addEventListener('click', async function () {
+           const gid = this.dataset.goalId;
+           const tid = this.dataset.taskId;
+           if (!gid || !tid) return;
+
+           if (!confirm('Remove this task from goal?')) return;
+
+           try {
+             const resp = await fetch(`/projects/${projectId}/goals/${gid}/tasks/${tid}/unlink`, {
+               method: 'POST'
+             });
+             if (!resp.ok) {
+               throw new Error('HTTP ' + resp.status);
+             }
+
+             const row = this.closest('.pd-goal-task-inline-row');
+             if (row) row.remove();
+
+             // Nếu không còn task → hiển thị empty
+             if (!container.querySelector('.pd-goal-task-inline-row')) {
+               container.innerHTML = '<div class="pd-subtext">No tasks linked yet.</div>';
+             }
+             
+             if (!resp.ok) throw new Error('Unlink failed');
+
+             window.location.hash = '#goals';
+             window.location.reload();
+
+             // Optional: reload để progress cập nhật:
+             // window.location.href = `/projects/${projectId}#goals`;
+           } catch (e) {
+             console.error('Unlink task error:', e);
+             alert('Có lỗi khi gỡ task khỏi goal.');
+           }
+         });
+       });
+     })
+     .catch(err => {
+       console.error(err);
+       container.innerHTML =
+         '<div class="pd-subtext" style="color:#f97373;">Error loading tasks.</div>';
+     });
+ });
+});
+
+})();
+
 
 
 </script>

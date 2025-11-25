@@ -1,6 +1,7 @@
 package com.example.projectmanageweb.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class TaskCardDto {
@@ -14,9 +15,23 @@ public class TaskCardDto {
     private List<String> assignees;
     private boolean canChangeStatus;
     private List<Integer> assigneeIds;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     
     
     
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 	public List<Integer> getAssigneeIds() {
 		return assigneeIds;
 	}

@@ -37,11 +37,13 @@ public class BoardService {
     private final ProjectsRepository projectsRepo;
     private final BoardRepository boardRepository;
     private final TasksRepository tasksRepository;
+    private final ProjectMembersRepository projectMembersRepository;
     
 	
 	public BoardService(ProjectMembersRepository membersRepo, TasksRepository tasksRepo,
 			TaskAssigneesRepository assigneesRepo, UserRepository usersRepo, ProjectsRepository projectsRepo,
-			BoardRepository boardRepository, TasksRepository tasksRepository) {
+			BoardRepository boardRepository, TasksRepository tasksRepository,
+			ProjectMembersRepository projectMembersRepository) {
 		super();
 		this.membersRepo = membersRepo;
 		this.tasksRepo = tasksRepo;
@@ -50,6 +52,7 @@ public class BoardService {
 		this.projectsRepo = projectsRepo;
 		this.boardRepository = boardRepository;
 		this.tasksRepository = tasksRepository;
+		this.projectMembersRepository = projectMembersRepository;
 	}
 	public BoardViewDto loadBoard(int projectId, int currentUserId) {
 
@@ -106,6 +109,8 @@ public class BoardService {
             card.setPriority(t.getPriority());
             card.setType(t.getType());
             card.setDueDate(t.getDueDate() == null ? null : t.getDueDate().toString());
+            card.setCreatedAt(t.getCreatedAt());
+            card.setUpdatedAt(t.getUpdatedAt());
 
             // Lấy assignees
             var assigns = assigneesRepo.findByTask(t.getTaskId());
@@ -333,6 +338,11 @@ public class BoardService {
 	public void syncAssignees(int taskId, List<Integer> assigneeIds){
 	    assigneesRepo.syncAssignees(taskId, assigneeIds);
 	}
+	
+	public boolean isProjectPm(int projectId, int userId) {
+	    return projectMembersRepository.isPmOfProject(projectId, userId);
+	}
+
 
 
 

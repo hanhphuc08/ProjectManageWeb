@@ -1,133 +1,220 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="listContent">
-    <div class="pd-tab-content" id="list-content" style="display:none;">
+	<div th:fragment="listContent">
+		<div class="pd-tab-content" id="list-content" style="display: none;">
+			<!-- ================= HEADER ================= -->
+			<div class="pd-list-header">
+				<div class="pd-list-controls">
+					<!-- Search -->
+					<div class="pd-list-search-wrap">
+						<i class="fas fa-search pd-list-search-icon"></i> <input
+							type="text" placeholder="Search list"
+							class="pd-list-search-input" />
+					</div>
+					<!-- Filters -->
+					<div class="pd-list-filters">
+						<button class="pd-list-filter">
+							Filter <i class="fas fa-chevron-down"></i>
+						</button>
+						<div class="pd-list-avatar">
+							<i class="fas fa-user"></i>
+						</div>
+					</div>
+					<!-- Actions -->
+					<div class="pd-list-actions">
+						<button class="pd-list-action">
+							Group <i class="fas fa-chevron-down"></i>
+						</button>
+						<button class="pd-list-action">
+							<i class="fas fa-th"></i>
+						</button>
+						<button class="pd-list-action">
+							<i class="fas fa-ellipsis-h"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<!-- ================= TABLE ================= -->
+			<div class="pd-list-table">
+				<!-- Header -->
+				<div class="pd-list-table-header">
+					<div class="pd-list-column" th:if="${board.currentUserIsPm}">Type</div>
+					<div class="pd-list-column" th:if="${!board.currentUserIsPm}"></div>
+					<div class="pd-list-column">Key</div>
+					<div class="pd-list-column">Title</div>
+					<div class="pd-list-column">Status</div>
+					<div class="pd-list-column">Descriptions</div>
+					<div class="pd-list-column">Assignee</div>
+					<div class="pd-list-column">Due date</div>
+					<div class="pd-list-column">Created</div>
+					<div class="pd-list-column">Updated</div>
+				</div>
+				<!-- Body -->
+				<div id="pdListBody" class="pd-list-table-body"
+					th:with="allTasks=${board.allTasks}">
+					<!-- EMPTY -->
+					<div class="pd-list-empty" th:if="${#lists.isEmpty(allTasks)}">
+						Chưa có task nào. Bấm <b>Create</b> để tạo nha fen.
+					</div>
+					<!-- ROWS -->
+					<div class="pd-list-row" th:each="task: ${allTasks}"
+						th:attr=" data-task-id=${task.taskId}, data-title=${task.summary}, data-key=${'TASK-' + task.taskId} ">
+						<!-- Checkbox -->
+						<div class="pd-list-cell" th:if="${board.currentUserIsPm}">
+						    <button type="button"
+					        class="pd-list-delete-btn"
+					        th:attr="data-task-id=${task.taskId}">
+					    <i class="fas fa-trash"></i>
+					</button>
+						</div>
 
-        <!-- List Controls -->
-        <div class="pd-list-header">
-            <div class="pd-list-controls">
-                <div class="pd-list-search-wrap">
-                    <i class="fas fa-search pd-list-search-icon"></i>
-                    <input type="text" placeholder="Search list" class="pd-list-search-input" />
-                </div>
+<!-- Nếu không phải PM thì vẫn chừa slot để không lệch cột -->
+<div class="pd-list-cell" th:if="${!board.currentUserIsPm}"></div>
 
-                <div class="pd-list-filters">
-                    <button class="pd-list-filter">
-                        Filter <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="pd-list-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
+						<!-- Key -->
+						<div class="pd-list-cell pd-list-key"
+							th:text="${'TASK-' + task.taskId}"></div>
+						<!-- Title -->
+						<div class="pd-list-cell pd-list-summary">
+							<span th:text="${task.summary}"></span>
+						</div>
+						<!-- Status -->
+						<div class="pd-list-cell" th:with="st=${task.status}">
+							<span class="pd-list-status" th:text="${st}"
+								th:classappend=" ${st=='To Do' || st=='TODO'} ? ' pd-list-status-todo' : (${st=='In Progress' || st=='IN_PROGRESS'} ? ' pd-list-status-progress' : (${st=='Review' || st=='REVIEW'} ? ' pd-list-status-review' : (${st=='Done' || st=='DONE'} ? ' pd-list-status-done' : '')))">
+							</span>
+						</div>
+						<!-- Description -->
+						<div class="pd-list-cell">—</div>
+						<!-- Assignee -->
+						<div class="pd-list-cell pd-list-assignee">
+							<span th:if="${#lists.isEmpty(task.assignees)}">-</span>
+							<div class="pd-assignee-wrap"
+								th:if="${!#lists.isEmpty(task.assignees)}">
+								<span class="pd-assignee-pill" th:each="a: ${task.assignees}"
+									th:text="${a}"> </span>
+							</div>
+						</div>
+						<!-- Due Date -->
+						<div class="pd-list-cell pd-list-due-date"
+							th:text="${task.dueDate != null ? task.dueDate : '-'}"></div>
+						<!-- Created -->
+						<div class="pd-list-cell"
+							th:text="${task.createdAt != null ? #temporals.format(task.createdAt,'dd MMM, yyyy') : '-'}"></div>
+						<!-- Updated -->
+						<div class="pd-list-cell"
+							th:text="${task.updatedAt != null ? #temporals.format(task.updatedAt,'dd MMM, yyyy') : '-'}"></div>
+					</div>
+				</div>
+			</div>
+			<!-- CREATE -->
+			<div class="pd-list-create">
+				<button type="button" class="pd-list-create-btn pd-create-task-open"
+					th:if="${board.currentUserIsPm}" data-status="TODO">
+					<i class="fas fa-plus"></i> Create
+				</button>
+			</div>
+		</div>
+	</div>
+	<!-- ==================== JS ==================== -->
+	<script th:inline="javascript">
+/* ================= Search ================= */
+function initListSearch() {
+  const input = document.querySelector(".pd-list-search-input");
+  const body  = document.getElementById("pdListBody");
+  if (!input || !body || body.__searchBound) return;
+  body.__searchBound = true;
 
-                <div class="pd-list-actions">
-                    <button class="pd-list-action">
-                        Group <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <button class="pd-list-action"><i class="fas fa-th"></i></button>
-                    <button class="pd-list-action"><i class="fas fa-ellipsis-h"></i></button>
-                </div>
-            </div>
-        </div>
+  input.addEventListener("input", () => {
+    const q = input.value.toLowerCase().trim();
+    body.querySelectorAll(".pd-list-row").forEach(row => {
+      const title = (row.dataset.title || "").toLowerCase();
+      const key   = (row.dataset.key || "").toLowerCase();
+      row.style.display = (title.includes(q) || key.includes(q)) ? "grid" : "none";
+    });
+  });
+}
 
-        <!-- List Table -->
-        <div class="pd-list-table">
-            <div class="pd-list-table-header">
-                <div class="pd-list-column">Type</div>
-                <div class="pd-list-column">Key</div>
-                <div class="pd-list-column">Title</div>
-                <div class="pd-list-column">Status</div>
-                <div class="pd-list-column">Descriptions</div>
-                <div class="pd-list-column">Assignee</div>
-                <div class="pd-list-column">Due date</div>
-                <div class="pd-list-column">Created</div>
-                <div class="pd-list-column">Updated</div>
-            </div>
+/* ============= Jump to Board + Highlight ============= */
+function jumpToBoardTask(taskId) {
+  document.querySelector('.pd-tab[data-tab="board"]')?.click();
 
-            <div class="pd-list-table-body">
+  setTimeout(() => {
+    const card = document.querySelector(`.pd-card[data-task-id='${taskId}']`);
+    if (card) {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      card.classList.add("pd-card-highlight");
+      setTimeout(() => card.classList.remove("pd-card-highlight"), 1500);
+    }
+  }, 200);
+}
+window.jumpToBoardTask = jumpToBoardTask;
 
-                <!-- Row 1 -->
-                <div class="pd-list-row">
-                    <div class="pd-list-cell">
-                        <input type="checkbox" checked>
-                    </div>
-                    <div class="pd-list-cell pd-list-key">LEARNJIRA-1</div>
-                    <div class="pd-list-cell pd-list-summary">
-                        Security & permissions: How to control who can edit or...
-                    </div>
-                    <div class="pd-list-cell">
-                        <span class="pd-list-status pd-list-status-todo">TO DO</span>
-                    </div>
-                    <div class="pd-list-cell">
-                        <a href="#" class="pd-list-comment">
-                            Add Descriptions <i class="fas fa-comment"></i>
-                        </a>
-                    </div>
-                    <div class="pd-list-cell pd-list-assignee"></div>
-                    <div class="pd-list-cell pd-list-due-date"></div>
-                    <div class="pd-list-cell">Sep 24, 2025</div>
-                    <div class="pd-list-cell">Sep 24, 2025</div>
-                </div>
+/* ============= Click row → open on board ============= */
+function initListRowClick() {
+  const body = document.getElementById("pdListBody");
+  if (!body || body.__clickBound) return;
+  body.__clickBound = true;
 
-                <!-- Row 2 -->
-                <div class="pd-list-row">
-                    <div class="pd-list-cell">
-                        <input type="checkbox" checked>
-                    </div>
-                    <div class="pd-list-cell pd-list-key">LEARNJIRA-2</div>
-                    <div class="pd-list-cell pd-list-summary">
-                        Plans: How to use detailed roadmaps to plan out your work...
-                    </div>
-                    <div class="pd-list-cell">
-                        <span class="pd-list-status pd-list-status-todo">TO DO</span>
-                    </div>
-                    <div class="pd-list-cell">
-                        <a href="#" class="pd-list-comment">
-                            Add Descriptions <i class="fas fa-comment"></i>
-                        </a>
-                    </div>
-                    <div class="pd-list-cell pd-list-assignee"></div>
-                    <div class="pd-list-cell pd-list-due-date"></div>
-                    <div class="pd-list-cell">Sep 24, 2025</div>
-                    <div class="pd-list-cell">Sep 24, 2025</div>
-                </div>
+  body.addEventListener("click", e => {
+    if (e.target.tagName === 'INPUT' || e.target.closest("button")) return;
+    const row = e.target.closest(".pd-list-row");
+    if (!row) return;
 
-                <!-- Row 3 -->
-                <div class="pd-list-row">
-                    <div class="pd-list-cell">
-                        <input type="checkbox" checked>
-                    </div>
-                    <div class="pd-list-cell pd-list-key">LEARNJIRA-3</div>
-                    <div class="pd-list-cell pd-list-summary">
-                        Atlassian Intelligence: How to work smarter with AI 🤖
-                    </div>
-                    <div class="pd-list-cell">
-                        <span class="pd-list-status pd-list-status-todo">TO DO</span>
-                    </div>
-                    <div class="pd-list-cell">
-                        <a href="#" class="pd-list-comment">
-                            Add descriptions <i class="fas fa-comment"></i>
-                        </a>
-                    </div>
-                    <div class="pd-list-cell pd-list-assignee"></div>
-                    <div class="pd-list-cell pd-list-due-date"></div>
-                    <div class="pd-list-cell">Sep 24, 2025</div>
-                    <div class="pd-list-cell">Sep 24, 2025</div>
-                </div>
+    const taskId = row.dataset.taskId;
+    if (taskId) jumpToBoardTask(taskId);
+  });
+}
 
-            </div>
-        </div>
+/* ================= Delete Task ================= */
+function getProjectId(){
+  return document.querySelector('.pd-kanban-board')?.dataset.projectId;
+}
 
-        <!-- Create Button -->
-        <div class="pd-list-create">
-            <button class="pd-list-create-btn">
-                <i class="fas fa-plus"></i>
-                Create
-            </button>
-        </div>
+function initListDeleteButtons() {
+	  const listBody = document.getElementById("pdListBody");
+	  if (!listBody || listBody.__deleteBound) return;
+	  listBody.__deleteBound = true;
 
-    </div>
-</div>
+	  listBody.addEventListener("click", e => {
+	    const deleteBtn = e.target.closest(".pd-list-delete-btn");
+	    if (!deleteBtn) return;
+	    
+	    e.stopPropagation(); // Ngăn trigger row click
+	    
+	    const taskId = deleteBtn.dataset.taskId;
+	    const projectId = getProjectId();
+	    if (!taskId || !projectId) return;
+
+	    if (!confirm("🗑️ Delete this task permanently?")) return;
+
+	    const form = document.createElement("form");
+	    form.method = "POST";
+	    form.action = `/projects/${projectId}/tasks/${taskId}/delete`;
+
+	    const csrfParam = /*[[${_csrf?.parameterName}]]*/ null;
+	    const csrfToken = /*[[${_csrf?.token}]]*/ null;
+	    if (csrfParam && csrfToken) {
+	      const input = document.createElement("input");
+	      input.type = "hidden";
+	      input.name = csrfParam;
+	      input.value = csrfToken;
+	      form.appendChild(input);
+	    }
+
+	    document.body.appendChild(form);
+	    form.submit();
+	  });
+	}
+
+	// Init
+	document.addEventListener("DOMContentLoaded", () => {
+	  initListSearch();
+	  initListRowClick();
+	  initListDeleteButtons();
+	});
+</script>
+
 </body>
 </html>

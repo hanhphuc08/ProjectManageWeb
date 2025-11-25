@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
+<input type="hidden" id="csrfToken" name="_csrf" th:value="${_csrf.token}">
+
 <div th:fragment="boardContent">
     <div class="pd-tab-content" id="board-content" style="display: none;">
 
@@ -290,6 +292,7 @@
                         <button type="submit" id="taskDetailUpdateBtn" class="pd-btn-primary">
                             Update
                         </button>
+                        <button id="taskDetailDeleteBtn" class="pd-task-delete-btn">Delete</button>
                     </div>
                 </form>
 
@@ -713,7 +716,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const note = aiNoteInput.value || '';
 
-            fetch('/api/ai/projects/' + projectId + '/suggest-tasks?note=' + encodeURIComponent(note), {
+            fetch('/api/ai/projects/' + projectId + '/suggest-new-tasks?note=' + encodeURIComponent(note), {
                 method: 'POST'
             })
                 .then(resp => {
@@ -722,65 +725,64 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     return resp.json();
                 })
-                .then(data => {
-                    if (!Array.isArray(data) || data.length === 0) {
-                        aiList.innerHTML = '<p style="font-size: 13px;">AI chưa gợi ý được task nào.</p>';
-                        return;
-                    }
+                .then(result => {
+				    const data = result.newTasks || [];
+				
+				    if (!Array.isArray(data) || data.length === 0) {
+				        aiList.innerHTML = '<p style="font-size: 13px;">AI chưa gợi ý được task nào.</p>';
+				        return;
+				    }
+				
+				    const frag = document.createDocumentFragment();
+				
+				    data.forEach((task, index) => {
+				        const wrapper = document.createElement('div');
+				        wrapper.className = 'pd-ai-task-card';
+				
+				        const title = task.title || 'Untitled task';
+				        const description = task.description || '';
+				        const priorityUpper = (task.priority || 'MEDIUM').toUpperCase();
+				        const estO = task.estimateOptimistic ?? '';
+				        const estL = task.estimateLikely ?? '';
+				        const estP = task.estimatePessimistic ?? '';
+				        const durationDays = task.durationDays ?? '';
+				
+				        wrapper.innerHTML = `
+				            <div class="pd-ai-task-header">
+				                <input type="checkbox" class="pd-ai-task-checkbox" data-index="${index}">
+				                <span class="pd-ai-task-title">${title}</span>
+				                <span class="pd-ai-task-priority ${priorityUpper}">${priorityUpper}</span>
+				            </div>
+				
+				            <div class="pd-ai-task-desc">${description}</div>
+				
+				            <div class="pd-ai-task-meta">
+				                Estimation (O/L/P):
+				                <strong>${estO} / ${estL} / ${estP} h</strong>
+				            </div>
+				
+				            <div class="pd-ai-task-meta">
+				                Duration:
+				                <strong>${durationDays || '?'} days</strong>
+				            </div>
+				
+				            <div class="pd-ai-task-actions">
+				                <button type="button"
+				                        class="pd-ai-use-btn"
+				                        data-index="${index}">
+				                    <span>Use in create form</span>
+				                    <span class="pd-ai-use-btn-arrow">↗</span>
+				                </button>
+				            </div>
+				        `;
+				
+				        frag.appendChild(wrapper);
+				    });
+				
+				    aiList.appendChild(frag);
+				    aiList.__aiData = data;  // vẫn lưu list tasks thôi
+				})
 
-                    const frag = document.createDocumentFragment();
-
-                    data.forEach((task, index) => {
-                        const wrapper = document.createElement('div');
-                        wrapper.className = 'pd-ai-task-card';
-
-                        const title = task.title || 'Untitled task';
-                        const description = task.description || '';
-                        const priority = task.priority || 'Medium';
-                        const type = task.taskType || 'Task';
-                        const estO = task.estimateOptimistic ?? '';
-                        const estL = task.estimateLikely ?? '';
-                        const estP = task.estimatePessimistic ?? '';
-                        const durationDays = task.durationDays ?? '';
-
-
-                        const priorityUpper = (task.priority || 'MEDIUM').toUpperCase();
-                        wrapper.innerHTML = `
-                            <div class="pd-ai-task-header">
-                                <input type="checkbox" class="pd-ai-task-checkbox" data-index="${index}">
-                                <span class="pd-ai-task-title">${title}</span>
-                                <span class="pd-ai-task-priority ${priorityUpper}">${priorityUpper}</span>
-                            </div>
-
-                            <div class="pd-ai-task-desc">${description}</div>
-
-                            <div class="pd-ai-task-meta">
-                                Estimation (O/L/P):
-                                <strong>${estO} / ${estL} / ${estP} h</strong>
-                            </div>
-                            <div class="pd-ai-task-meta">
-	                            Duration:
-	                            <strong>${durationDays || '?'} days</strong>
-                        	</div>
-
-                            <div class="pd-ai-task-actions">
-                                <button type="button"
-                                        class="pd-ai-use-btn"
-                                        data-index="${index}">
-                                    <span>Use in create form</span>
-                                    <span class="pd-ai-use-btn-arrow">↗</span>
-                                </button>
-                            </div>
-                        `;
-
-
-
-                        frag.appendChild(wrapper);
-                    });
-
-                    aiList.appendChild(frag);
-                    aiList.__aiData = data;
-                })
                 .catch(err => {
                     console.error(err);
                     aiList.innerHTML = '<p style="color: #f66; font-size: 13px;">Có lỗi khi gọi AI. Vui lòng thử lại sau.</p>';
@@ -1064,292 +1066,36 @@ assignApplyBtn?.addEventListener("click", function(){
   });
 });
 });
+
+
+document.getElementById("taskDetailDeleteBtn")?.addEventListener("click", function (e) {
+    e.preventDefault(); // tránh submit form update
+    if (!confirm("Delete this task permanently?")) return;
+
+    const form = document.getElementById("pdTaskStatusForm");
+    const url = form.action.replace("/update", "/delete");
+
+    const csrf = document.getElementById("csrfToken")?.value;
+
+    const deleteForm = document.createElement("form");
+    deleteForm.method = "POST";
+    deleteForm.action = url;
+
+    // csrf
+    const csrfField = document.createElement("input");
+    csrfField.type = "hidden";
+    csrfField.name = "_csrf";
+    csrfField.value = csrf;
+    deleteForm.appendChild(csrfField);
+
+    document.body.appendChild(deleteForm);
+    deleteForm.submit();
+});
+
+
 </script>
 
 </div> <!-- /fragment -->
 
-<style>
-/* Lớp nền tối phủ toàn màn hình */
-.pd-task-modal-overlay {
-    position: fixed;
-    inset: 0; /* tương đương top:0; right:0; bottom:0; left:0 */
-    background: rgba(0, 0, 0, 0.4); /* nền mờ */
-    display: flex;
-    align-items: center;     /* canh giữa theo chiều dọc */
-    justify-content: center; /* canh giữa theo chiều ngang */
-    z-index: 1000;
-}
-
-/* Hộp form chi tiết task */
-.pd-task-modal {
-    background: #050816;        /* hoặc màu background ông đang dùng */
-    border-radius: 16px;
-    padding: 24px 28px;
-    width: min(700px, 90vw);    /* max 700px, còn lại fit theo viewport */
-    max-height: 90vh;
-    overflow-y: auto;           /* nếu form cao quá thì cho scroll */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
-}
-
-
-/* Card từng task */
-
-.pd-ai-task-card:hover {
-    border-color: #6d5dfc;
-    background: rgba(109, 93, 252, 0.06);
-}
-
-/* Header chứa checkbox + title + priority */
-.pd-ai-task-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-}
-
-.pd-ai-task-title {
-    font-size: 15px;
-    font-weight: 600;
-    flex: 1;
-}
-
-.pd-ai-task-priority {
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 8px;
-    text-transform: uppercase;
-}
-
-.pd-ai-task-priority.HIGH {
-    background: rgba(255, 59, 59, 0.2);
-    color: #ff5c5c;
-}
-
-.pd-ai-task-priority.MEDIUM {
-    background: rgba(255, 200, 50, 0.2);
-    color: #ffda6b;
-}
-
-.pd-ai-task-priority.LOW {
-    background: rgba(100, 255, 100, 0.15);
-    color: #80ff80;
-}
-
-/* Description */
-.pd-ai-task-desc {
-    font-size: 14px;
-    color: #ddd;
-    line-height: 1.5;
-    margin-bottom: 10px;
-}
-
-/* Meta info (Estimation) */
-.pd-ai-task-meta {
-    font-size: 13px;
-    color: #aaa;
-    margin-top: 4px;
-}
-
-.pd-ai-use-btn {
-    margin-top: 10px;
-    font-size: 13px;
-    color: #6d5dfc;
-    cursor: pointer;
-}
-.pd-ai-use-btn:hover {
-    text-decoration: underline;
-}
-
-/* List card AI – cách nhau cho thoáng */
-.pd-ai-suggest-list {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Card AI */
-.pd-ai-task-card {
-    background: #060b1a;
-    border: 1px solid rgba(109, 93, 252, 0.45);
-    padding: 14px 18px;
-    border-radius: 14px;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
-    transition: 0.18s ease;
-}
-
-.pd-ai-task-card:hover {
-    transform: translateY(-1px);
-    border-color: #8f7bff;
-    background: #070f24;
-}
-
-/* Hàng chứa nút */
-.pd-ai-task-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
-
-/* Nút "Use in create form" */
-.pd-ai-use-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    border: 1px solid #8f7bff;
-    background: rgba(143, 123, 255, 0.12);
-    font-size: 12px;
-    color: #e4e0ff;
-    cursor: pointer;
-}
-
-.pd-ai-use-btn-arrow {
-    font-size: 12px;
-    line-height: 1;
-}
-
-.pd-ai-use-btn:hover {
-    background: rgba(143, 123, 255, 0.2);
-    border-color: #b6a7ff;
-}
-
-.pd-ai-assign-btn{
-  margin-left:8px;
-  padding:4px 10px;
-  font-size:11px;
-  border-radius:999px;
-  border:1px solid rgba(143,123,255,0.7);
-  background:rgba(143,123,255,0.12);
-  color:#e4e0ff;
-  cursor:pointer;
-  transition:0.15s;
-}
-.pd-ai-assign-btn:hover{
-  background:rgba(143,123,255,0.22);
-  border-color:#b6a7ff;
-}
-
-/* ===== Board controls row spacing ===== */
-.pd-board-controls{
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* dùng style giống pd-ai-suggest-btn */
-.pd-ai-suggest-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 14px;
-  border-radius:999px;
-  border:1px solid rgba(143,123,255,0.65);
-  background: rgba(143,123,255,0.12);
-  color:#eae6ff;
-  font-weight:600;
-  font-size:13px;
-  letter-spacing:0.2px;
-  cursor:pointer;
-  transition:0.18s ease;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
-}
-
-.pd-ai-suggest-btn i{
-  font-size:13px;
-  opacity:0.9;
-}
-
-.pd-ai-suggest-btn:hover{
-  transform: translateY(-1px);
-  background: rgba(143,123,255,0.2);
-  border-color:#b6a7ff;
-  box-shadow: 0 8px 20px rgba(143,123,255,0.25);
-}
-
-.pd-ai-suggest-btn:active{
-  transform: translateY(0);
-  opacity:0.9;
-}
-.pd-ai-assign-project-btn{
-  background: linear-gradient(90deg,
-      rgba(113,97,255,0.25),
-      rgba(143,123,255,0.12));
-}
-
-
-
-/* container list */
-.pd-ai-suggest-list{
-  margin-top: 10px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-/* card từng task AI assign */
-.pd-ai-assign-card{
-  background: rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  padding:12px 14px;
-  border-radius:12px;
-}
-
-.pd-ai-assign-card:hover{
-  border-color: rgba(143,123,255,0.7);
-  background: rgba(143,123,255,0.08);
-}
-
-/* header của card */
-.pd-ai-assign-card__head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:6px;
-}
-
-.pd-ai-assign-card__task{
-  font-weight:700;
-  font-size:13px;
-  color:#fff;
-  letter-spacing:0.3px;
-}
-
-/* list assignees */
-.pd-ai-assign-people{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:6px;
-}
-
-.pd-ai-assign-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:12px;
-  border:1px solid rgba(143,123,255,0.55);
-  background:rgba(143,123,255,0.12);
-  color:#eae6ff;
-}
-
-.pd-ai-assign-pill .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:#8f7bff;
-  box-shadow:0 0 6px rgba(143,123,255,0.9);
-}
-
-/* lý do */
-.pd-ai-assign-reason{
-  font-size:12px;
-  color:#b9b9c9;
-  margin-top:6px;
-  line-height:1.4;
-}
-
-
-</style>
 </body>
 </html>

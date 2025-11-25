@@ -1,9 +1,11 @@
 package com.example.projectmanageweb.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.projectmanageweb.dto.MemberDto;
 import com.example.projectmanageweb.dto.TaskCardDto;
+import com.example.projectmanageweb.dto.board.BoardTaskItem;
 
 public class BoardViewDto {
 	private int projectId;
@@ -76,5 +78,15 @@ public class BoardViewDto {
 	public void setDone(List<TaskCardDto> done) {
 		this.done = done;
 	}
+
+	public List<TaskCardDto> getAllTasks() {
+	    List<TaskCardDto> res = new ArrayList<>();
+	    if (todo != null) res.addAll(todo);
+	    if (inProgress != null) res.addAll(inProgress);
+	    if (review != null) res.addAll(review);
+	    if (done != null) res.addAll(done);
+	    return res;
+	}
+
 
 }

@@ -86,6 +86,11 @@ public class TaskAssigneesRepository {
             if (!neu.contains(uid)) removeAssignee(taskId, uid);
         }
     }
+    public void deleteByTask(int taskId) {
+        String sql = "DELETE FROM task_assignees WHERE task_id = ?";
+        jdbc.update(sql, taskId);
+    }
+
 
     
     

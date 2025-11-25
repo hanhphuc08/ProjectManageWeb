@@ -1,0 +1,405 @@
+/* ================================
+   Project Calendar (pd-calendar.css)
+   Dark Jira-like Month View
+   ================================ */
+
+/* ===== Calendar header / controls ===== */
+.pd-calendar-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: var(--pd-surface, #111);
+}
+
+.pd-calendar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Search */
+.pd-calendar-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.pd-calendar-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.6;
+  color: #cbd5e1;
+}
+
+.pd-calendar-search-input {
+  width: 100%;
+  padding: 8px 10px 8px 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #0b0b0b;
+  color: #eee;
+  outline: none;
+}
+
+/* Filters */
+.pd-calendar-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pd-calendar-filter {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #ddd;
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.pd-calendar-filter i {
+  margin-left: 6px;
+  opacity: 0.7;
+}
+
+/* Navigation */
+.pd-calendar-navigation {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pd-calendar-nav-btn,
+.pd-calendar-view-btn {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #eee;
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.pd-calendar-month {
+  padding: 6px 10px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+}
+
+
+/* ===== Grid wrapper ===== */
+.pd-calendar-grid {
+  padding: 12px 10px;
+}
+
+/* Weekdays row */
+.pd-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.pd-calendar-weekday {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.75;
+  padding: 6px 0;
+  color: #cbd5e1;
+  border-radius: 8px;
+  background: #0e0e0e;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Dates grid 7 columns */
+.pd-calendar-dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+
+/* ===== Day cell ===== */
+.pd-calendar-date {
+  position: relative;
+  height: 140px;                 /* ✅ ép chiều cao đồng đều */
+  padding: 6px;
+  border-radius: 12px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;        /* ✅ ngăn today phình */
+}
+
+.pd-calendar-date[data-in-month="false"] {
+  opacity: 0.45;
+}
+
+/* Today cell */
+.pd-calendar-date.current {
+  outline: 2px solid #3b82f6 !important;
+  background: #0e1628;
+  box-sizing: border-box;
+}
+
+/* Day number */
+.pd-calendar-date-number {
+  font-weight: 700;
+  font-size: 13px;
+  opacity: 0.9;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+
+/* ===== Tasks list ===== */
+.pd-calendar-tasks {
+  flex: 1;              /* ✅ chiếm phần giữa */
+  min-height: 0;        /* ✅ bắt buộc để scroll đúng */
+  overflow-y: auto;     /* ✅ task nhiều thì scroll */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 2px;
+}
+
+/* scrollbar đẹp nhẹ */
+.pd-calendar-tasks::-webkit-scrollbar {
+  width: 4px;
+}
+.pd-calendar-tasks::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 99px;
+}
+.pd-calendar-tasks::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Task chip */
+.pd-calendar-task {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #2563eb;
+  border-radius: 6px;
+  color: #fff;
+
+  font-size: 11px;
+  padding: 0 8px;
+
+  height: 22px;             /* ✅ đồng nhất chiều cao */
+  line-height: 22px;
+
+  white-space: nowrap;      /* ✅ không wrap */
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.pd-calendar-task-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+  background: #94a3b8;
+  flex-shrink: 0;
+}
+
+.pd-calendar-task-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pd-calendar-task-meta {
+  font-size: 10px;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+/* status color dots (slugged: todo / inprogress / review / done) */
+.pd-calendar-task-dot.st-todo { background: #94a3b8; }
+.pd-calendar-task-dot.st-inprogress { background: #f59e0b; }
+.pd-calendar-task-dot.st-review { background: #a78bfa; }
+.pd-calendar-task-dot.st-done { background: #22c55e; }
+
+
+/* ===== Add task inline ===== */
+.pd-calendar-add-task {
+  margin-top: 4px;         /* ✅ giữ dưới cùng */
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  background: transparent;
+  color: #93c5fd;
+  border: 1px dashed rgba(147,197,253,0.5);
+  cursor: pointer;
+}
+
+/* Inline form */
+.pd-calendar-task-form {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 8px;
+  background: #0b0b0b;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.pd-calendar-task-form.is-open {
+  display: flex;
+}
+
+.pd-calendar-task-input {
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #131313;
+  color: #eee;
+  font-size: 12px;
+  outline: none;
+}
+
+.pd-calendar-task-type {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  opacity: 0.8;
+  color: #cbd5e1;
+}
+
+.pd-calendar-task-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.pd-calendar-task-create {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.pd-calendar-task-cancel {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #222;
+  color: #eee;
+  border: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#calendar-content .pd-calendar-date {
+  height: 140px !important;
+  padding: 6px !important;
+  background: #0f0f0f !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  box-sizing: border-box !important;
+}
+#calendar-content .pd-calendar-tasks {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}
+#calendar-content .pd-calendar-task {
+  height: 22px !important;
+  line-height: 22px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+/* ===== FORCE equal columns ===== */
+#calendar-content .pd-calendar-weekdays,
+#calendar-content .pd-calendar-dates {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+}
+
+/* mỗi ô không được tự co lại */
+#calendar-content .pd-calendar-date {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* text/task không được kéo cột */
+#calendar-content .pd-calendar-task,
+#calendar-content .pd-calendar-task-title {
+  min-width: 0 !important;
+}
+/* ===== Filter dropdown UI ===== */
+#calendar-content .pd-filter-wrap{
+  position: relative;
+  display: inline-block;
+}
+
+#calendar-content .pd-filter-dropdown{
+  position: absolute;
+  top: 110%;
+  left: 0;
+  min-width: 180px;
+  max-height: 220px;
+  overflow: auto;
+  background: #0b0b0b;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 6px;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+#calendar-content .pd-filter-dropdown.open{
+  display: block;
+}
+
+#calendar-content .pd-filter-item{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#calendar-content .pd-filter-item:hover{
+  background: #141414;
+}
+
+#calendar-content .pd-filter-item input{
+  accent-color: #3b82f6;
+}
+
+#calendar-content .pd-filter-item.disabled{
+  opacity: .6;
+  cursor: default;
+}
+

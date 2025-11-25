@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="goalsContent">
+
+    <!-- TAB CONTENT -->
+    <div class="pd-tab-content" id="goals-content" style="display:none;">
+
+        <!-- HEADER -->
+        <div class="pd-goals-header">
+            <div class="pd-goals-title-block">
+                <h2 class="pd-goals-heading">Goals</h2>
+                <p class="pd-goals-subtext">
+                    Đặt các mục tiêu chính cho dự án và theo dõi tiến độ hoàn thành.
+                </p>
+            </div>
+
+            <button id="pdGoalCreateBtn" type="button" class="pd-goal-create-btn">
+                <i class="fas fa-plus"></i>
+                <span>Create goal</span>
+            </button>
+        </div>
+
+        <!-- Empty state -->
+        <div class="pd-goal-empty" th:if="${#lists.isEmpty(goals)}">
+            <p>
+                Chưa có goal nào. Nhấn
+                <strong>+ Create goal</strong>
+                để tạo mục tiêu đầu tiên.
+            </p>
+        </div>
+
+        <!-- List goals -->
+        <div class="pd-goal-list" th:if="${!#lists.isEmpty(goals)}">
+            <div class="pd-goal-card" th:each="g : ${goals}">
+                <div class="pd-goal-main">
+                    <!-- Title + status -->
+                    <div class="pd-goal-title-row">
+                        <span class="pd-goal-title"
+                              th:text="${g.title}">
+                            Hoàn thành FE
+                        </span>
+
+                        <span class="pd-goal-status"
+                              th:with="st=${#strings.toLowerCase(g.status)}"
+                              th:classappend="' st-' + ${st}"
+                              th:text="${g.status}">
+                            NOT_STARTED
+                        </span>
+                    </div>
+
+                    <!-- Meta (owner + target date) -->
+                    <div class="pd-goal-meta">
+                        <span class="pd-goal-owner">
+                            <i class="fas fa-user"></i>
+                            <span th:text="${g.ownerName}">Tuong</span>
+                        </span>
+
+                        <span class="pd-goal-target" th:if="${g.targetDate != null}">
+                            <i class="fas fa-flag-checkered"></i>
+                            Target:
+                            <span th:text="${#temporals.format(g.targetDate, 'yyyy-MM-dd')}">
+                                2025-12-18
+                            </span>
+                        </span>
+
+                        <span class="pd-goal-target" th:if="${g.targetDate == null}">
+                            <i class="fas fa-flag-checkered"></i>
+                            No target date
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="pd-goal-progress">
+                    <div class="pd-goal-progress-bar">
+                        <div class="pd-goal-progress-fill"
+                             th:style="|width:${g.progressPercent}%|">
+                        </div>
+                    </div>
+                    <div class="pd-goal-progress-text">
+                        <span th:text="${g.doneTasks}">0</span> /
+                        <span th:text="${g.totalTasks}">0</span> tasks
+                        (<span th:text="${g.progressPercent}">0</span>%)
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="pd-goal-actions">
+                    <button type="button"
+                            class="pd-goal-link-btn"
+                            th:attr="data-goal-id=${g.goalId},
+                                     data-goal-title=${g.title}">
+                        + Link tasks
+                    </button>
+
+                    <button type="button"
+                            class="pd-goal-view-btn"
+                            th:attr="data-goal-id=${g.goalId}">
+                        View tasks
+                    </button>
+                </div>
+
+                <!-- Linked tasks (collapsed, JS sẽ fill nội dung) -->
+                <div class="pd-goal-linked-tasks"
+                     th:attr="id=${'goal-tasks-' + g.goalId}"
+                     style="display:none;">
+                    <!-- JS sẽ render danh sách task của goal này -->
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- /pd-tab-content -->
+
+    <!-- =========================
+         GOAL – LINK TASKS MODAL
+         ========================= -->
+    <div id="pdGoalTaskOverlay" class="pd-task-modal-overlay" style="display:none;">
+        <div class="pd-task-modal" style="max-width:720px;">
+
+            <div class="pd-task-modal-header">
+                <div>
+                    <span class="pd-task-modal-title">
+                        Link tasks to goal:
+                        <span id="pdGoalTaskTitle">Goal name</span>
+                    </span>
+                </div>
+                <button type="button" id="pdGoalTaskClose" class="pd-task-modal-close">✕</button>
+            </div>
+
+            <div class="pd-task-modal-body">
+
+                <div class="pd-form-row">
+                    <label class="pd-form-label">Search tasks</label>
+                    <input type="text"
+                           id="pdGoalTaskSearch"
+                           class="pd-input"
+                           placeholder="Search by title, status...">
+                </div>
+
+                <div id="pdGoalTaskEmpty" class="pd-subtext" style="display:none;">
+                    All tasks are already linked to this goal, or no tasks in project.
+                </div>
+
+                <div id="pdGoalTaskList" class="pd-goal-task-list">
+                    <!-- JS sẽ render các checkbox task ở đây -->
+                </div>
+            </div>
+
+            <div class="pd-task-modal-footer">
+                <button type="button" id="pdGoalTaskCancel" class="pd-btn-secondary">
+                    Cancel
+                </button>
+                <button type="button" id="pdGoalTaskSave" class="pd-btn-primary">
+                    Link selected tasks
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =========================
+         GOAL CREATE MODAL
+         ========================= -->
+    <div id="pdGoalModalOverlay" class="pd-task-modal-overlay" style="display:none;">
+        <div class="pd-task-modal" style="max-width:640px;">
+
+            <div class="pd-task-modal-header">
+                <div>
+                    <span class="pd-task-modal-title">Create goal</span>
+                    <span class="pd-task-status-pill">Project goal</span>
+                </div>
+                <button type="button" id="pdGoalModalClose" class="pd-task-modal-close">✕</button>
+            </div>
+
+            <form th:action="@{|/projects/${project.projectId}/goals|}"
+                  method="post">
+                <div class="pd-task-modal-body">
+
+                    <div class="pd-form-row">
+                        <label class="pd-form-label">Goal title</label>
+                        <input type="text"
+                               name="title"
+                               class="pd-input"
+                               placeholder="VD: Hoàn thành FE, Hoàn thiện API..."
+                               required/>
+                    </div>
+
+                    <div class="pd-form-row">
+                        <label class="pd-form-label">Description</label>
+                        <textarea name="description"
+                                  rows="3"
+                                  class="pd-input"
+                                  placeholder="Mô tả ngắn về mục tiêu này..."></textarea>
+                    </div>
+
+                    <div class="pd-form-row pd-form-row-inline">
+                        <div class="pd-date-col">
+                            <label class="pd-form-label">Target date</label>
+                            <input type="date"
+                                   name="targetDate"
+                                   class="pd-input"/>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="pd-task-modal-footer">
+                    <button type="button" id="pdGoalModalCancel" class="pd-btn-secondary">
+                        Cancel
+                    </button>
+                    <button type="submit" class="pd-btn-primary">
+                        Create goal
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

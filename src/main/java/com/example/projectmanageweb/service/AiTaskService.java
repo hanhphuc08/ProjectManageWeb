@@ -1,6 +1,7 @@
 package com.example.projectmanageweb.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.projectmanageweb.dto.AiSuggestResult;
 import com.example.projectmanageweb.dto.MemberSkillProfile;
 import com.example.projectmanageweb.dto.ProjectSummary;
 import com.example.projectmanageweb.dto.SuggestedAssignment;
@@ -40,76 +42,70 @@ public class AiTaskService {
 	}
 
 	// 🌟 Gợi ý task cho cả project (chưa dùng WBS)
-    public List<SuggestedTask> suggestTasksForProject(
-            Integer projectId,
-            String noteFromPm
-    ) {
-        // 1. Lấy thông tin dự án từ DB
-        ProjectSummary project = metadataRepository.findProjectSummary(projectId);
+    public List<SuggestedTask> suggestTasksForProject(Integer projectId, String noteFromPm) {
 
-        String projectName = project.getProjectName();
-        String projectType = project.getProjectTypeName();
-        String projectDesc = project.getDescription();
+        ProjectSummary project = metadataRepository.findProjectSummary(projectId);
+        List<Task> existingTasks = tasksRepository.findBasicByProject(projectId);
+
+        // gom title cũ cho AI nhìn thấy
+        String existingTitles = existingTasks.stream()
+            .map(t -> "- " + ns(t.getTitle()))
+            .collect(Collectors.joining("\n"));
 
         String systemPrompt = """
-                Bạn là trợ lý AI giúp Project Manager phân rã công việc cho một dự án phần mềm
-                (website quản lý dự án giống Jira / ClickUp).
+    Bạn là AI trợ lý PM phân rã công việc cho dự án TLCN hệ thống quản lý dự án giống Jira/ClickUp.
+    Tech stack: Spring Boot + Thymeleaf + JDBC + MySQL.
 
-                MỤC TIÊU
-                - Đề xuất danh sách các task triển khai cụ thể cho dự án.
-                - Task phải mô tả công việc thật, có thể code được.
-                - Đây là dự án tốt nghiệp của sinh viên (TLCN).
+    MỤC TIÊU
+    - Chỉ đề xuất các task mới còn thiếu.
+    - TUYỆT ĐỐI KHÔNG lặp lại hoặc tương tự các task đã có.
+    - Task phải cụ thể, code/test được.
 
-                YÊU CẦU VỀ ĐỊNH DẠNG
-                - Chỉ trả về DUY NHẤT một mảng JSON hợp lệ.
-                - Không giải thích, không markdown, không text bên ngoài JSON.
+    OUTPUT
+    - Chỉ trả về 1 mảng JSON hợp lệ, không text ngoài JSON.
 
-                Cấu trúc JSON:
+    FORMAT
+    [
+      {
+        "title": "Short English title <= 8 words",
+        "description": "1–3 câu mô tả rõ việc cần làm",
+        "priority": "LOW | MEDIUM | HIGH",
+        "estimateOptimistic": 2,
+        "estimateLikely": 4,
+        "estimatePessimistic": 6,
+        "durationDays": 3
+      }
+    ]
 
-                [
-                  {
-                    "title": "Tên task ngắn bằng tiếng Anh",
-                    "description": "Mô tả chi tiết 1–3 câu (có thể tiếng Việt).",
-                    "priority": "LOW | MEDIUM | HIGH",
-                    "estimateOptimistic": 2,
-                    "estimateLikely": 4,
-                    "estimatePessimistic": 6,
-                    "durationDays": 3
-                  }
-                ]
-
-                QUY TẮC
-                - priority phải viết HOA: LOW / MEDIUM / HIGH.
-                - estimateOptimistic ≤ estimateLikely ≤ estimatePessimistic.
-                - Tất cả estimate là số nguyên (giờ).
-                - durationDays là số nguyên (ngày) > 0, phản ánh thời gian thực hiện task.
-                - Không sinh `taskType`, mặc định luôn là "Task".
-                - Số lượng task: 8–15.
-
-                NGÔN NGỮ
-                - Title: tiếng Anh.
-                - Description: tiếng Việt hoặc Anh đều được nhưng phải dễ hiểu.
-                """;
+    RULES
+    - Không sinh task trùng/na ná task đã có.
+    - priority viết HOA.
+    - estimateOptimistic ≤ estimateLikely ≤ estimatePessimistic (giờ).
+    - durationDays: 1–5 ngày.
+    - Số lượng task mới: 5–12.
+    """;
 
         String userPrompt = """
-                Thông tin dự án:
-                - Tên dự án: %s
-                - Loại dự án: %s
-                - Mô tả: %s
+    Thông tin dự án:
+    - Tên: %s
+    - Loại: %s
+    - Mô tả: %s
 
-                Ghi chú thêm từ PM:
-                %s
+    Danh sách task HIỆN CÓ trong dự án (KHÔNG ĐƯỢC LẶP LẠI):
+    %s
 
-                Hãy đề xuất danh sách các task triển khai cho dự án,
-                tuân theo đúng cấu trúc JSON đã quy định ở trên.
-                Chỉ trả về JSON, không thêm giải thích.
-                """
-                .formatted(
-                        ns(projectName),
-                        ns(projectType),
-                        ns(projectDesc),
-                        ns(noteFromPm)
-                );
+    Ghi chú thêm từ PM:
+    %s
+
+    Hãy đề xuất danh sách task MỚI còn thiếu (không lặp lại task trên),
+    theo đúng JSON format. Chỉ trả về JSON.
+    """.formatted(
+            ns(project.getProjectName()),
+            ns(project.getProjectTypeName()),
+            ns(project.getDescription()),
+            existingTitles,
+            ns(noteFromPm)
+        );
 
         try {
             String json = groqService.chat(systemPrompt, userPrompt);
@@ -118,7 +114,8 @@ public class AiTaskService {
             e.printStackTrace();
             return Collections.emptyList();
         }
-  }
+    }
+
 
     private String ns(String s) { return s == null ? "" : s; }
     
@@ -160,7 +157,10 @@ public class AiTaskService {
     public List<SuggestedAssignment> suggestAssignmentsForProject(Integer projectId, String note) {
 
     	ProjectSummary project = metadataRepository.findProjectSummary(projectId);
-    	List<Task> tasks = tasksRepository.findBasicByProject(projectId);
+    	List<Task> tasks = tasksRepository.findUnassignedBasicByProject(projectId);
+    	if (tasks.isEmpty()) {
+    	    return Collections.emptyList();
+    	}
     	List<MemberSkillProfile> members = projectMembersRepository.findMemberProfiles(projectId);
         
 
@@ -271,6 +271,62 @@ public class AiTaskService {
         if (s == null) return "";
         return s.replace("\"", "\\\"");
     }
+    
+
+    public int calculateRemainingDaysSequential(Integer projectId, List<SuggestedTask> newTasks) {
+
+        List<Task> current = tasksRepository.findBasicByProject(projectId);
+
+        double totalHours = 0;
+
+        // 1) Task hiện có chưa Done
+        for (Task t : current) {
+            if (!"Done".equalsIgnoreCase(t.getStatus())) {
+
+                if (t.getDueDate() != null) {
+                    long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), t.getDueDate());
+                    totalHours += Math.max(daysLeft, 1) * 8.0;
+                } else {
+                    totalHours += 8.0; // fallback: 1 ngày
+                }
+            }
+        }
+
+        // 2) Task mới AI
+        for (SuggestedTask s : newTasks) {
+            Integer d = s.getDurationDays();
+            if (d != null && d > 0) {
+                totalHours += d * 8.0;
+            } else {
+                totalHours += 8.0;
+            }
+        }
+
+        return (int) Math.ceil(totalHours / 8.0);
+    }
+
+    public int calculateRemainingDaysParallel(Integer projectId, List<SuggestedTask> newTasks) {
+        int members = projectMembersRepository.findMemberProfiles(projectId).size();
+        if (members <= 0) members = 1;
+
+        int sequentialDays = calculateRemainingDaysSequential(projectId, newTasks);
+
+        return (int) Math.ceil(sequentialDays / (double) members);
+    }
+    
+    @Transactional(readOnly = true)
+    public AiSuggestResult suggestNewTasksAndEta(Integer projectId, String noteFromPm) {
+
+        List<SuggestedTask> newTasks = suggestTasksForProject(projectId, noteFromPm);
+
+        int seq = calculateRemainingDaysSequential(projectId, newTasks);
+        int par = calculateRemainingDaysParallel(projectId, newTasks);
+
+        return new AiSuggestResult(newTasks, seq, par);
+    }
+    
+    
+
 
 	
 

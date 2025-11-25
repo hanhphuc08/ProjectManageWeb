@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,6 +49,8 @@ public class TasksRepository {
 			t.setPriority(rs.getString("priority"));
 			t.setType(rs.getString("type"));
 			t.setDueDate(rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null);
+			t.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+	        t.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
 			return t;
 		}, projectId);
 	}
@@ -62,6 +66,9 @@ public class TasksRepository {
 			t.setStatus(rs.getString("status"));
 			t.setPriority(rs.getString("priority"));
 			t.setType(rs.getString("type"));
+			t.setDueDate(rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null);
+	        t.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+	        t.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
 			return t;
 		}, id);
 		return list.isEmpty() ? null : list.get(0);
@@ -153,9 +160,38 @@ public class TasksRepository {
 	        t.setStatus(rs.getString("status"));
 	        t.setType(rs.getString("type"));
 	        t.setDueDate(rs.getDate("due_date") != null ? rs.getDate("due_date").toLocalDate() : null);
+			/* t.setCreatedAt(rs.getObject("created_at", LocalDateTime.class)); */
+			/* t.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class)); */
 	        return t;
 	    }, projectId);
 	}
+
+	public List<Task> findUnassignedBasicByProject(int projectId) {
+	    final String sql = """
+	        SELECT t.task_id, t.project_id, t.title, t.description, t.priority, t.status, t.type
+	        FROM tasks t
+	        LEFT JOIN task_assignees ta ON ta.task_id = t.task_id
+	        WHERE t.project_id = ?
+	          AND LOWER(t.status) <> 'done'
+	        GROUP BY t.task_id
+	        HAVING COUNT(ta.user_id) = 0
+	        ORDER BY t.created_at ASC
+	    """;
+	    return jdbc.query(sql, (rs, i) -> {
+	        Task t = new Task();
+	        t.setTaskId(rs.getInt("task_id"));
+	        t.setTitle(rs.getString("title"));
+	        t.setDescription(rs.getString("description"));
+	        t.setPriority(rs.getString("priority"));
+	        t.setStatus(rs.getString("status"));
+	        t.setType(rs.getString("type"));
+	        
+			/* t.setCreatedAt(rs.getObject("created_at", LocalDateTime.class)); */
+			/* t.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class)); */
+	        return t;
+	    }, projectId);
+	}
+
 
 
 	// ===== SUMMARY QUERIES =====
@@ -275,6 +311,13 @@ public class TasksRepository {
 	        return a;
 	    }, projectId, projectId, limit);
 	}
+	
+	public void deleteById(int taskId) {
+	    String sql = "DELETE FROM tasks WHERE task_id = ?";
+	    jdbc.update(sql, taskId);
+	}
+
+
 
 
 }
