@@ -38,12 +38,14 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final TasksRepository tasksRepository;
     private final ProjectMembersRepository projectMembersRepository;
+    private final NotificationEmailService notificationEmailService;
     
+	
 	
 	public BoardService(ProjectMembersRepository membersRepo, TasksRepository tasksRepo,
 			TaskAssigneesRepository assigneesRepo, UserRepository usersRepo, ProjectsRepository projectsRepo,
 			BoardRepository boardRepository, TasksRepository tasksRepository,
-			ProjectMembersRepository projectMembersRepository) {
+			ProjectMembersRepository projectMembersRepository, NotificationEmailService notificationEmailService) {
 		super();
 		this.membersRepo = membersRepo;
 		this.tasksRepo = tasksRepo;
@@ -53,6 +55,7 @@ public class BoardService {
 		this.boardRepository = boardRepository;
 		this.tasksRepository = tasksRepository;
 		this.projectMembersRepository = projectMembersRepository;
+		this.notificationEmailService = notificationEmailService;
 	}
 	public BoardViewDto loadBoard(int projectId, int currentUserId) {
 
@@ -180,13 +183,28 @@ public class BoardService {
 	                    : form.getPriority(),
 	            due
 	    );
+	    String projectName = projectsRepo.findProjectNameById(projectId);
+	    var pmUser = usersRepo.findById(currentUserId); 
+	    String pmName = pmUser != null ? pmUser.getFullName() : "PM";
 
 	    // 4. Insert assignees
 	    if (form.getAssigneeIds() != null) {
 	        for (Integer uid : form.getAssigneeIds()) {
 	            if (uid != null) {
 	                assigneesRepo.addAssignee(taskId, uid);
+	             // 🔔 gửi email cho từng assignee
+	                var user = usersRepo.findById(uid);
+	                if (user != null && user.getEmail() != null) {
+	                    notificationEmailService.sendTaskMemberAdded(
+	                            user.getEmail(),
+	                            user.getFullName(),
+	                            projectName,
+	                            form.getTitle(),
+	                            pmName
+	                    );
+	                }
 	            }
+	            
 	        }
 	    }
 	}
@@ -293,7 +311,7 @@ public class BoardService {
 	    Set<Integer> newSet = assigneeIds.stream()
 	            .filter(Objects::nonNull)
 	            .collect(Collectors.toSet());
-		
+	    
 	    for (Integer uid : newSet) {
 	        if (!currentSet.contains(uid)) {
 	            assigneesRepo.addAssignee(taskId, uid);
@@ -304,6 +322,7 @@ public class BoardService {
 	            assigneesRepo.removeAssignee(taskId, uid);
 	        }
 	    }
+	    
 	}
 	
 	public void updateTaskFull(int projectId, int userId, int taskId, TaskUpdateForm form) {
@@ -315,13 +334,60 @@ public class BoardService {
 	        throw new AccessDeniedException("Bạn không có quyền chỉnh sửa task này.");
 	    }
 
+	    // 👉 Lấy assignee hiện tại trước khi update
+	    List<Integer> currentAssigneeIds = assigneesRepo.findUserIdsByTask(taskId);
+
+	    // update thông tin task
 	    tasksRepo.updateTaskFull(taskId, form);
 
-	    // cập nhật assignees
+	    // chỉ PM mới được sửa assignees
 	    if (isPm) {
- 	       assigneesRepo.syncAssignees(taskId, form.getAssigneeIds());
+	        // danh sách assignee mới từ form
+	        List<Integer> newAssigneeIds = form.getAssigneeIds() == null
+	                ? List.of()
+	                : form.getAssigneeIds().stream()
+	                    .filter(Objects::nonNull)
+	                    .distinct()
+	                    .toList();
+
+	        // tính danh sách user vừa được thêm
+	        Set<Integer> currentSet = new HashSet<>(currentAssigneeIds);
+	        Set<Integer> newSet = new HashSet<>(newAssigneeIds);
+
+	        Set<Integer> added = new HashSet<>(newSet);
+	        added.removeAll(currentSet); // added = new - current
+
+	        // đồng bộ assignees như cũ
+	        assigneesRepo.syncAssignees(taskId, newAssigneeIds);
+
+	        // 🔔 Gửi email cho các assignee mới
+	        if (!added.isEmpty()) {
+	            String projectName = projectsRepo.findProjectNameById(projectId);
+
+	            var task = tasksRepo.findById(taskId); // 👉 nếu chưa có method này thì thêm vào repo
+	            String taskTitle = (task != null && task.getTitle() != null)
+	                    ? task.getTitle()
+	                    : "Task";
+
+	            var pmUser = usersRepo.findById(userId); // user đang chỉnh sửa (PM)
+	            String pmName = pmUser != null ? pmUser.getFullName() : "PM";
+
+	            for (Integer uid : added) {
+	                var user = usersRepo.findById(uid);
+	                if (user != null && user.getEmail() != null) {
+	                    notificationEmailService.sendTaskMemberAdded(
+	                            user.getEmail(),
+	                            user.getFullName(),
+	                            projectName,
+	                            taskTitle,
+	                            pmName
+	                    );
+	                }
+	            }
+	        }
 	    }
 	}
+
 	
 	@Transactional
 	public void applyAssignments(int projectId, int pmUserId, List<SuggestedAssignment> assigns) {

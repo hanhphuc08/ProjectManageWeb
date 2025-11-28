@@ -1,6 +1,6 @@
 package com.example.projectmanageweb.repository;
 
-import java.beans.Statement;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Types;
@@ -15,16 +15,20 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.projectmanageweb.dto.CountDto;
+import com.example.projectmanageweb.dto.MemberTaskItem;
 import com.example.projectmanageweb.dto.MetricDto;
 import com.example.projectmanageweb.dto.RecentActivityDto;
+import com.example.projectmanageweb.dto.TaskBasic;
 import com.example.projectmanageweb.dto.TaskCardDto;
 import com.example.projectmanageweb.dto.TaskUpdateForm;
 import com.example.projectmanageweb.model.Task;
+import com.example.projectmanageweb.repository.rowmapper.MemberTaskItemRowMapper;
 
 @Repository
 public class TasksRepository {
 
 	private final JdbcTemplate jdbc;
+	 private final MemberTaskItemRowMapper memberTaskItemRowMapper = new MemberTaskItemRowMapper();
 
 	public TasksRepository(JdbcTemplate jdbc) {
 		this.jdbc = jdbc;
@@ -317,6 +321,107 @@ public class TasksRepository {
 	    jdbc.update(sql, taskId);
 	}
 
+
+	public List<MemberTaskItem> findByProjectAndAssignee(int projectId, int userId) {
+        final String sql = """
+            SELECT t.task_id,
+                   t.title,
+                   t.status,
+                   t.priority,
+                   t.type,
+                   t.due_date
+            FROM tasks t
+            JOIN task_assignees ta
+                 ON ta.task_id = t.task_id
+            WHERE t.project_id = ?
+              AND ta.user_id = ?
+            ORDER BY t.due_date IS NULL, t.due_date, t.created_at
+            """;
+
+        return jdbc.query(sql, memberTaskItemRowMapper, projectId, userId);
+    }
+	
+    // Đếm số task user này đang được assign (status != Done)
+    public int countOpenTasksOfUser(int userId) {
+        String sql = """
+            SELECT COUNT(*)
+            FROM tasks t
+            JOIN task_assignees ta ON ta.task_id = t.task_id
+            WHERE ta.user_id = ?
+              AND LOWER(t.status) <> 'done'
+        """;
+        Integer c = jdbc.queryForObject(sql, Integer.class, userId);
+        return c == null ? 0 : c;
+    }
+
+    // Activity của 1 user trên tất cả project
+    public List<RecentActivityDto> findRecentActivitiesByUser(int userId, int limit) {
+        String sql = """
+            SELECT *
+            FROM (
+                -- task do user này tạo
+                SELECT
+                    t.task_id,
+                    t.title,
+                    t.status,
+                    t.created_at AS time,
+                    'created' AS action,
+                    u.full_name AS actor
+                FROM tasks t
+                JOIN users u ON u.user_id = t.created_by
+                WHERE t.created_by = ?
+
+                UNION ALL
+
+                -- task user này được assign và có update
+                SELECT
+                    t.task_id,
+                    t.title,
+                    t.status,
+                    t.updated_at AS time,
+                    'updated' AS action,
+                    u.full_name AS actor
+                FROM tasks t
+                JOIN task_assignees ta ON ta.task_id = t.task_id
+                JOIN users u ON u.user_id = ta.user_id
+                WHERE ta.user_id = ?
+                  AND t.updated_at IS NOT NULL
+                  AND t.updated_at <> t.created_at
+            ) x
+            ORDER BY time DESC
+            LIMIT ?
+        """;
+
+        return jdbc.query(sql, (rs, i) -> {
+            RecentActivityDto a = new RecentActivityDto();
+            a.setTaskId(rs.getInt("task_id"));
+            a.setTitle(rs.getString("title"));
+            a.setStatus(rs.getString("status"));
+            a.setAction(rs.getString("action"));
+            a.setActor(rs.getString("actor"));
+            a.setTime(rs.getTimestamp("time").toLocalDateTime());
+            return a;
+        }, userId, userId, limit);
+    }
+
+    public TaskBasic findBasicById(int taskId) {
+        String sql = """
+            SELECT task_id, title, status, type
+            FROM tasks
+            WHERE task_id = ?
+        """;
+
+        List<TaskBasic> list = jdbc.query(sql, (rs, i) -> {
+            TaskBasic t = new TaskBasic();
+            t.setTaskId(rs.getInt("task_id"));
+            t.setTitle(rs.getString("title"));
+            t.setStatus(rs.getString("status"));
+            t.setType(rs.getString("type"));
+            return t;
+        }, taskId);
+
+        return list.isEmpty() ? null : list.get(0);
+    }
 
 
 

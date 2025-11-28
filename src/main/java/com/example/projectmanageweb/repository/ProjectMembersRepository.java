@@ -238,6 +238,48 @@ public class ProjectMembersRepository {
 	        return p;
 	    }, projectId);
 	}
+	
+	
+    // Đếm số project user này là PM
+    public int countPmProjects(int userId) {
+        String sql = """
+            SELECT COUNT(DISTINCT project_id)
+            FROM project_members
+            WHERE user_id = ? AND role_in_project = 'PM'
+        """;
+        Integer c = jdbc.queryForObject(sql, Integer.class, userId);
+        return c == null ? 0 : c;
+    }
+
+    // Lấy tất cả skill (distinct) của 1 user trên mọi project
+    public List<String> findAllSkillsOfUser(int userId) {
+        String sql = """
+            SELECT DISTINCT pms.skill_name
+            FROM project_member_skills pms
+            JOIN project_members pm
+              ON pm.project_member_id = pms.project_member_id
+            WHERE pm.user_id = ?
+            ORDER BY pms.skill_name
+        """;
+        return jdbc.query(sql, (rs, i) -> rs.getString("skill_name"), userId);
+    }
+    
+    public String findUserRoleInProject(int projectId, int userId) {
+        String sql = """
+            SELECT role_name
+            FROM project_members
+            WHERE project_id = ? AND user_id = ?
+            LIMIT 1
+        """;
+        List<String> list = jdbc.query(
+            sql,
+            (rs, i) -> rs.getString("role_name"),
+            projectId, userId
+        );
+        return list.isEmpty() ? "Member" : list.get(0);
+    }
+
+
 
 
 }

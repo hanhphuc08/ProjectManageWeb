@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="resourcesContent">
+    <div class="pd-tab-content" id="resources-content" style="display: none;">
+
+        <!-- ========== HEADER ========== -->
+        <div class="pr-header">
+            <div class="pr-header-left">
+                <h2 class="pr-title">Project resources</h2>
+                <p class="pr-subtitle">
+                    Tất cả file được upload từ các task trong dự án này.
+                </p>
+            </div>
+
+            <div class="pr-header-right">
+                <div class="pr-search-wrap">
+                    <i class="fas fa-search pr-search-icon"></i>
+                    <input id="prSearchInput" type="text"
+                           class="pr-search-input"
+                           placeholder="Search file, task, uploader...">
+                </div>
+                <div class="pr-view-toggle">
+                    <button type="button" class="pr-tab-btn is-active" data-view="all">Tất cả</button>
+                    <button type="button" class="pr-tab-btn" data-view="task">Theo task</button>
+                    <button type="button" class="pr-tab-btn" data-view="user">Theo người upload</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nếu BE chưa set resources thì hiện message nhẹ nhàng -->
+        <div th:if="${resources == null}" class="pr-empty-state">
+            <div class="pr-empty-icon">📁</div>
+            <div class="pr-empty-title">Resources đang được chuẩn bị</div>
+            <div class="pr-empty-desc">
+                Backend chưa trả dữ liệu resources. Sau khi cấu hình xong,
+                các file của dự án sẽ hiển thị tại đây.
+            </div>
+        </div>
+
+        <div th:if="${resources != null}">
+            <!-- ========== VIEW: ALL FILES ========== -->
+            <div class="pr-view pr-view-all is-active">
+                <div th:if="${#lists.isEmpty(resources.allFiles)}" class="pr-empty-state">
+                    <div class="pr-empty-icon">📁</div>
+                    <div class="pr-empty-title">Chưa có file nào</div>
+                    <div class="pr-empty-desc">
+                        Khi assignee upload file trong task detail, tài nguyên sẽ hiển thị ở đây.
+                    </div>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(resources.allFiles)}" class="pr-table-wrapper pr-card">
+                    <table class="pr-table">
+                        <thead>
+                        <tr>
+                            <th>File</th>
+                            <th>Task</th>
+                            <th>Uploader</th>
+                            <th>Uploaded at</th>
+                            <th>Size</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="f : ${resources.allFiles}"
+    class="pr-row-search"
+    th:attr="data-search=${(
+        (f.originalName == null ? '' : f.originalName) + ' ' +
+        (f.taskTitle    == null ? '' : f.taskTitle)    + ' ' +
+        (f.uploaderName == null ? '' : f.uploaderName)
+    ).toLowerCase()}">
+
+                            <!-- File name -->
+                            <td>
+                                <div class="pr-file-main">
+                                    <div class="pr-file-icon">📄</div>
+                                    <div class="pr-file-text">
+                                        <a class="pr-file-name"
+                                           th:href="@{|/projects/${project.projectId}/resources/${f.resourceId}/download|}"
+                                           th:text="${f.originalName}">
+                                            requirements.pdf
+                                        </a>
+                                        <div class="pr-file-meta"
+                                             th:text="${f.contentType}">
+                                            application/pdf
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Task -->
+                            <td>
+                                <div class="pr-task-cell" th:if="${f.taskId != null}">
+                                    <span class="pr-task-key"
+                                          th:text="${'TASK-' + f.taskId}">
+                                        TASK-1
+                                    </span>
+                                    <span class="pr-dot"></span>
+                                    <span class="pr-task-title"
+                                          th:text="${f.taskTitle}">
+                                        Thiết kế DB
+                                    </span>
+                                    <div class="pr-task-tags">
+                                        <span class="pr-tag pr-tag-status"
+                                              th:text="${f.taskStatus}">
+                                            In Progress
+                                        </span>
+                                        <span class="pr-tag pr-tag-type"
+                                              th:text="${f.taskType}">
+                                            Task
+                                        </span>
+                                    </div>
+                                </div>
+                                <div th:if="${f.taskId == null}" class="pr-task-cell pr-task-cell-empty">
+                                    <span class="pr-tag pr-tag-type">Project-level</span>
+                                </div>
+                            </td>
+
+                            <!-- Uploader -->
+                            <td>
+                                <div class="pr-user-cell"
+                                     th:text="${f.uploaderName}">
+                                    Tuong
+                                </div>
+                            </td>
+
+                            <!-- Uploaded at -->
+                            <td>
+                                <span th:text="${#temporals.format(f.uploadedAt,'dd/MM/yyyy HH:mm')}">
+                                    29/11/2025 00:15
+                                </span>
+                            </td>
+
+                            <!-- Size (KB) -->
+                            <td>
+                                <span th:text="${(f.sizeBytes / 1024) + ' KB'}">
+                                    120 KB
+                                </span>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="pr-actions-cell">
+                                <a class="pr-link"
+                                   th:href="@{|/projects/${project.projectId}/resources/${f.resourceId}/download|}">
+                                    Download
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ========== VIEW: BY TASK ========== -->
+            <div class="pr-view pr-view-task">
+                <div th:if="${#lists.isEmpty(resources.byTask)}" class="pr-empty-state">
+                    <div class="pr-empty-icon">🧩</div>
+                    <div class="pr-empty-title">Chưa có task nào có file đính kèm</div>
+                    <div class="pr-empty-desc">
+                        Khi có file upload trong task, chúng sẽ được nhóm theo task tại đây.
+                    </div>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(resources.byTask)}" class="pr-group-list">
+                    <div class="pr-task-group pr-card" th:each="g : ${resources.byTask}">
+                        <div class="pr-task-group-header">
+                            <div class="pr-task-group-main">
+                                <span class="pr-task-key"
+                                      th:text="${'TASK-' + g.taskId}">
+                                    TASK-10
+                                </span>
+                                <span class="pr-dot"></span>
+                                <span class="pr-task-title"
+                                      th:text="${g.taskTitle}">
+                                    API login
+                                </span>
+                            </div>
+                            <div class="pr-task-group-meta">
+                                <span class="pr-tag pr-tag-status"
+                                      th:text="${g.status}">In Progress</span>
+                                <span class="pr-tag pr-tag-type"
+                                      th:text="${g.type}">Task</span>
+                                <span class="pr-task-group-count"
+                                      th:text="${#lists.size(g.files) + ' files'}">
+                                    3 files
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="pr-task-group-body">
+                            <div class="pr-file-pill"
+                                 th:each="f : ${g.files}">
+                                <div class="pr-file-pill-main">
+                                    <span class="pr-file-pill-icon">📎</span>
+                                    <a class="pr-file-pill-name"
+                                       th:href="@{|/projects/${project.projectId}/resources/${f.resourceId}/download|}"
+                                       th:text="${f.originalName}">
+                                        postman_collection.json
+                                    </a>
+                                </div>
+                                <div class="pr-file-pill-meta">
+                                    <span th:text="${f.uploaderName}">Tuong</span>
+                                    <span class="pr-dot"></span>
+                                    <span th:text="${#temporals.format(f.uploadedAt,'dd/MM HH:mm')}">
+                                        29/11 00:15
+                                    </span>
+                                    <span class="pr-dot"></span>
+                                    <span th:text="${(f.sizeBytes / 1024) + ' KB'}">
+                                        350 KB
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- /pr-task-group -->
+                </div>
+            </div>
+
+            <!-- ========== VIEW: BY USER ========== -->
+            <div class="pr-view pr-view-user">
+                <div th:if="${#lists.isEmpty(resources.byUser)}" class="pr-empty-state">
+                    <div class="pr-empty-icon">👥</div>
+                    <div class="pr-empty-title">Chưa có ai upload file</div>
+                    <div class="pr-empty-desc">
+                        Khi thành viên upload file, bạn có thể xem theo từng người tại đây.
+                    </div>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(resources.byUser)}" class="pr-group-list">
+                    <div class="pr-user-group pr-card" th:each="u : ${resources.byUser}">
+                        <div class="pr-user-group-header">
+                            <div class="pr-user-avatar-circle">
+                                <span th:text="${#strings.substring(u.fullName,0,1)}">T</span>
+                            </div>
+                            <div class="pr-user-group-main">
+                                <div class="pr-user-name"
+                                     th:text="${u.fullName}">Tuong</div>
+                                <div class="pr-user-sub"
+                                     th:text="${u.roleInProject}">
+                                    Member
+                                </div>
+                            </div>
+                            <div class="pr-user-group-meta">
+                                <span class="pr-task-group-count"
+                                      th:text="${#lists.size(u.files) + ' files'}">
+                                    5 files
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="pr-user-group-body">
+                            <div class="pr-file-pill"
+                                 th:each="f : ${u.files}">
+                                <div class="pr-file-pill-main">
+                                    <span class="pr-file-pill-icon">📎</span>
+                                    <a class="pr-file-pill-name"
+                                       th:href="@{|/projects/${project.projectId}/resources/${f.resourceId}/download|}"
+                                       th:text="${f.originalName}">
+                                        demo.mp4
+                                    </a>
+                                </div>
+                                <div class="pr-file-pill-meta">
+                                    <span class="pr-task-key"
+                                          th:text="${'TASK-' + f.taskId}">
+                                        TASK-3
+                                    </span>
+                                    <span class="pr-dot"></span>
+                                    <span th:text="${f.taskTitle}">
+                                        Kiểm thử chức năng A
+                                    </span>
+                                    <span class="pr-dot"></span>
+                                    <span th:text="${#temporals.format(f.uploadedAt,'dd/MM HH:mm')}">
+                                        29/11 00:30
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- /pr-user-group -->
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- /pd-tab-content -->
+
+    <!-- ========== JS CHO TAB & SEARCH ========== -->
+    <script>
+        (function () {
+            const resourcesTab = document.getElementById('resources-content');
+            if (!resourcesTab) return;
+
+            // ---- Switch sub-view: all / task / user ----
+            const tabBtns = resourcesTab.querySelectorAll('.pr-tab-btn');
+            const views = resourcesTab.querySelectorAll('.pr-view');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const viewName = btn.getAttribute('data-view');
+
+                    tabBtns.forEach(b => b.classList.remove('is-active'));
+                    btn.classList.add('is-active');
+
+                    views.forEach(v => {
+                        if (v.classList.contains('pr-view-' + viewName)) {
+                            v.classList.add('is-active');
+                        } else {
+                            v.classList.remove('is-active');
+                        }
+                    });
+                });
+            });
+
+            // ---- Search (chỉ áp dụng cho view "All") ----
+            const searchInput = document.getElementById('prSearchInput');
+            if (searchInput) {
+                const rows = resourcesTab.querySelectorAll('.pr-view-all .pr-row-search');
+
+                searchInput.addEventListener('input', () => {
+                    const q = searchInput.value.trim().toLowerCase();
+                    rows.forEach(row => {
+                        const text = (row.getAttribute('data-search') || '').toLowerCase();
+                        row.style.display = (!q || text.includes(q)) ? '' : 'none';
+                    });
+                });
+            }
+
+        })();
+    </script>
+
+    <!-- OPTIONAL: chút CSS cho nó “xịn” hơn -->
+    <style>
+        .pr-card {
+            background: #151515;
+            border-radius: 12px;
+            border: 1px solid #2d2d2d;
+            padding: 14px 16px;
+            margin-top: 12px;
+        }
+        .pr-table th, .pr-table td { padding: 10px 12px; }
+        .pr-task-group, .pr-user-group { margin-bottom: 16px; }
+    </style>
+
+</div> <!-- /fragment -->
+
+</body>
+</html>

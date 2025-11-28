@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.example.projectmanageweb.dto.GoalStats;
 import com.example.projectmanageweb.dto.GoalTaskDto;
 import com.example.projectmanageweb.dto.GoalViewDto;
 import com.example.projectmanageweb.model.Task;
@@ -175,5 +176,60 @@ public class GoalsRepository {
             ps.setInt(2, taskId);
         });
     }
+    
+    
+    // Thống kê goal cho 1 user (owner_id)
+    public GoalStats getGoalStatsForUser(int userId) {
+        GoalStats stats = new GoalStats();
+
+        // 1) Active & completed
+        String sqlCount = """
+            SELECT
+              SUM(CASE WHEN status = 'DONE' THEN 1 ELSE 0 END) AS completed,
+              SUM(CASE WHEN status <> 'DONE' THEN 1 ELSE 0 END) AS active
+            FROM goals
+            WHERE owner_id = ?
+        """;
+
+        var map = jdbc.queryForMap(sqlCount, userId);
+        if (map != null) {
+            Number cCompleted = (Number) map.get("completed");
+            Number cActive    = (Number) map.get("active");
+            stats.setCompletedGoals(cCompleted == null ? 0 : cCompleted.intValue());
+            stats.setActiveGoals(cActive == null ? 0 : cActive.intValue());
+        }
+
+        // 2) Goal sắp tới (theo target_date nhỏ nhất, chưa DONE)
+        String sqlNext = """
+            SELECT title, target_date
+            FROM goals
+            WHERE owner_id = ?
+              AND status <> 'DONE'
+              AND target_date IS NOT NULL
+            ORDER BY target_date ASC
+            LIMIT 1
+        """;
+
+        var list = jdbc.query(sqlNext, (rs, i) -> {
+            GoalStats tmp = new GoalStats();
+            tmp.setNextGoalTitle(rs.getString("title"));
+            java.sql.Date d = rs.getDate("target_date");
+            if (d != null) {
+                tmp.setNextGoalDate(
+                    d.toLocalDate().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                );
+            }
+            return tmp;
+        }, userId);
+
+        if (!list.isEmpty()) {
+            GoalStats g = list.get(0);
+            stats.setNextGoalTitle(g.getNextGoalTitle());
+            stats.setNextGoalDate(g.getNextGoalDate());
+        }
+
+        return stats;
+    }
+
 
 }

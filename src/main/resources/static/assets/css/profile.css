@@ -35,3 +35,462 @@
 .pf-empty-illustration { font-size: 64px; }
 .pf-empty-title { font-weight: 800; margin-top: 8px; }
 .pf-empty-desc { color: #6b7280; }
+
+
+/* ===========================
+   GLOBAL LAYOUT – DARK MODE
+   =========================== */
+
+body.pf-dark {
+    background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+    color: #e5e7eb;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.pf-container {
+    padding-top: 80px; /* trừ header */
+    padding-bottom: 40px;
+}
+
+.pf-main.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 320px) minmax(0, 1.5fr);
+    gap: 24px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .pf-main.container {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ===========================
+   CARD & COMMON COMPONENTS
+   =========================== */
+
+.pf-card {
+    background: rgba(15, 23, 42, 0.95); /* slate-900 */
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.25); /* slate-400/25 */
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(15, 23, 42, 0.8);
+    padding: 18px 20px;
+    backdrop-filter: blur(20px);
+}
+
+.pf-section-title {
+    margin-top: 18px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    font-weight: 600;
+}
+
+.pf-section-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: 6px;
+}
+
+/* ===========================
+   LEFT COLUMN – PROFILE
+   =========================== */
+
+.pf-profile {
+    padding-top: 22px;
+}
+
+.pf-avatar-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.pf-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 2px solid rgba(96, 165, 250, 0.7); /* blue-400 */
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 1);
+}
+
+.pf-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.pf-subtitle {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+/* Fields */
+
+.pf-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pf-field {
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.8);
+}
+
+.pf-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    font-size: 1.1rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pf-body label {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.pf-static {
+    font-size: 0.9rem;
+}
+
+.pf-static.pf-muted {
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Contact */
+
+.pf-contact {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pf-contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.pf-contact-text {
+    word-break: break-all;
+}
+
+/* Skills */
+
+.pf-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.pf-skill-chip {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: radial-gradient(circle at top left, #38bdf8 0, #0f172a 60%);
+    font-size: 0.75rem;
+    color: white;
+    border: 1px solid rgba(56, 189, 248, 0.5);
+}
+
+.pf-empty-text {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* ===========================
+   METRICS CARD
+   =========================== */
+
+.pf-metrics {
+    margin-top: 14px;
+}
+
+.pf-metric-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.pf-metric {
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(17,24,39,1), rgba(15,23,42,0.5));
+    border: 1px solid rgba(55,65,81,0.8);
+}
+
+.pf-metric-label {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-bottom: 2px;
+}
+
+.pf-metric-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* ===========================
+   RIGHT COLUMN – CONTENT
+   =========================== */
+
+.pf-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pf-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.pf-block-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.pf-link {
+    font-size: 0.8rem;
+    color: #60a5fa;
+    text-decoration: none;
+}
+
+.pf-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== Recent Activity ===== */
+
+.pf-activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pf-activity-item {
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.pf-activity-text {
+    font-size: 0.9rem;
+}
+
+.pf-activity-meta {
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* ===== Projects ===== */
+
+.pf-project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pf-project-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(15,23,42,0.9);
+    border: 1px solid rgba(30,64,175,0.6);
+}
+
+@media (max-width: 640px) {
+    .pf-project-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.pf-project-main {
+    flex: 1;
+}
+
+.pf-project-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.pf-project-meta {
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+}
+
+.pf-tag {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(56,189,248,0.1);
+    color: #38bdf8;
+    border: 1px solid rgba(56,189,248,0.5);
+    font-size: 0.7rem;
+}
+
+.pf-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: #6b7280;
+}
+
+/* small numbers on the right */
+.pf-project-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 80px;
+    text-align: right;
+}
+
+.pf-project-stat-label {
+    font-size: 0.7rem;
+    color: #9ca3af;
+}
+
+.pf-project-stat-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* ===== Personal tasks & Goals ===== */
+
+.pf-personal-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.pf-personal-next {
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(15,23,42,0.85);
+    border: 1px dashed rgba(75,85,99,0.9);
+    font-size: 0.85rem;
+}
+
+.pf-personal-label {
+    color: #9ca3af;
+    margin-bottom: 2px;
+}
+
+.pf-personal-task {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.85rem;
+}
+
+.pf-personal-name {
+    font-weight: 500;
+}
+
+.pf-personal-date {
+    color: #f97316;
+}
+
+/* goals + perf block */
+
+.pf-goal-perf {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 14px;
+}
+
+@media (max-width: 640px) {
+    .pf-goal-perf {
+        grid-template-columns: minmax(0,1fr);
+    }
+}
+
+.pf-goal-col .pf-metric {
+    margin-bottom: 6px;
+}
+
+.pf-meta-text {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+/* ===========================
+   EMPTY STATE
+   =========================== */
+
+.pf-empty {
+    padding: 16px 8px 10px;
+    text-align: center;
+    color: #9ca3af;
+}
+
+.pf-empty-illustration {
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.pf-empty-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.pf-empty-desc {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+/* Nút quay lại */
+.pf-back-btn {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    color: #93c5fd;
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.25s;
+}
+
+.pf-back-btn:hover {
+    background: rgba(51, 65, 85, 0.8);
+    border-color: rgba(148, 163, 184, 0.45);
+}
+

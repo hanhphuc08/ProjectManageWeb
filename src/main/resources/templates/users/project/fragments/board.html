@@ -234,7 +234,7 @@
                 </div>
 
                 <!-- Form chỉ dùng để update STATUS (tạm thời) -->
-                <form id="pdTaskStatusForm" method="post">
+                <form id="pdTaskStatusForm" method="post" enctype="multipart/form-data">
                     <!-- action sẽ set bằng JS: /projects/{projectId}/tasks/{taskId}/status -->
 
                     <div class="pd-task-modal-body">
@@ -285,6 +285,13 @@
                                 <option value="DONE">Done</option>
                             </select>
                         </div>
+                        
+	                        <div class="pd-form-row">
+    <label class="pd-form-label">Attach file</label>
+    <input type="file" name="resourceFile" class="pd-input">
+    <input type="text" name="resourceNote" class="pd-input" placeholder="Mô tả file (optional)">
+</div>
+
 
                     </div>
 
@@ -460,6 +467,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const statusSelect = document.getElementById('taskDetailStatusSelect');
     const statusBadge = document.getElementById('taskDetailStatusBadge');
     const updateBtn = document.getElementById('taskDetailUpdateBtn');
+    const fileInput = document.getElementById('taskDetailFiles');
 
     function openModalForTask(cardEl) {
         const taskId = cardEl.getAttribute('data-task-id');
@@ -531,6 +539,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		        priorityInput.readOnly = true;
 		        dueDateInput.readOnly = true;
 		        if (descInput) descInput.readOnly = true;
+		     	// ✅ PM / assignee được phép chọn file
+		        if (fileInput) fileInput.disabled = false;
 		    }
 		} else {
 		    statusSelect.disabled = true;
@@ -542,6 +552,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		    priorityInput.readOnly = true;
 		    dueDateInput.readOnly = true;
 		    if (descInput) descInput.readOnly = true;
+		    
+		 	// ❌ Người không có quyền thì không upload
+            if (fileInput) fileInput.disabled = true;
 		}
 
 

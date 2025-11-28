@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="teamContent">
+
+  <div class="pd-tab-content" id="team-content" style="display:none;">
+
+    <!-- HEADER -->
+    <div class="pd-team-header">
+      <div class="pd-team-title-block">
+        <h2 class="pd-team-heading">Team</h2>
+        <p class="pd-team-subtext">
+          Xem nhanh thành viên, vai trò và kỹ năng trong dự án này.
+        </p>
+      </div>
+
+      <div class="pd-team-header-actions">
+        <!-- nếu fen muốn sau này thêm filter/search thì nhét vào đây -->
+        <span class="pd-team-count"
+              th:text="${#lists.size(board.members)} + ' members'">
+          0 members
+        </span>
+      </div>
+    </div>
+
+    <!-- EMPTY -->
+    <div class="pd-team-empty" th:if="${#lists.isEmpty(board.members)}">
+      <p>
+        Chưa có thành viên nào trong dự án.
+        Hãy dùng nút <strong>+ Add member</strong> ở phần Team modal để mời người khác.
+      </p>
+    </div>
+
+    <!-- LIST MEMBERS -->
+    <div class="pd-team-grid" th:if="${!#lists.isEmpty(board.members)}">
+      <div class="pd-team-card" th:each="m : ${board.members}">
+        <div class="pd-team-card-main">
+
+          <!-- LEFT: avatar + info -->
+          <div class="pd-team-card-left">
+            <div class="pd-team-avatar">
+              <span th:text="${#strings.substring(m.fullName,0,1)}">T</span>
+            </div>
+
+            <div class="pd-team-info">
+              <div class="pd-team-name-row">
+                <span class="pd-team-name" th:text="${m.fullName}">Tuong</span>
+                <span class="pd-team-role-badge" th:text="${m.role}">PM</span>
+              </div>
+
+              <div class="pd-team-skills"
+                   th:if="${m.skills != null and !m.skills.isEmpty()}">
+                <span class="pd-team-skill-pill"
+                      th:each="s : ${m.skills}"
+                      th:text="${s}">
+                  Java
+                </span>
+              </div>
+
+              <div class="pd-team-no-skill"
+                   th:if="${m.skills == null or m.skills.isEmpty()}">
+                <span>No skills set for this project</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: actions -->
+          <div class="pd-team-card-right">
+
+            <!-- Placeholder cho sau này xem tasks của member -->
+            <button type="button"
+                    class="pd-team-view-tasks-btn"
+                    th:attr="data-user-id=${m.userId}">
+              View tasks
+            </button>
+
+            <!-- Remove chỉ cho PM -->
+            <form th:if="${board.currentUserIsPm}"
+                  th:action="@{|/projects/${board.projectId}/members/${m.projectMemberId}/remove|}"
+                  method="post"
+                  class="pd-team-remove-form"
+                  onsubmit="return confirm('Xóa thành viên này khỏi dự án?');">
+              <button type="submit" class="pd-team-remove-btn">
+                Remove
+              </button>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  
+  <!-- MEMBER TASKS MODAL -->
+<div id="pdMemberTasksOverlay" class="pd-task-modal-overlay" style="display:none;">
+    <div class="pd-task-modal" style="max-width:780px;">
+
+        <div class="pd-task-modal-header">
+            <div>
+                <span class="pd-task-modal-title">
+                    Tasks of member:
+                    <span id="pdMemberTasksName">Member name</span>
+                </span>
+            </div>
+            <button type="button" id="pdMemberTasksClose" class="pd-task-modal-close">✕</button>
+        </div>
+
+        <div class="pd-task-modal-body">
+
+            <div id="pdMemberTasksEmpty" class="pd-subtext" style="display:none;">
+                Member này hiện chưa được assign task nào trong dự án.
+            </div>
+
+            <div id="pdMemberTasksList" class="pd-member-task-list">
+                <!-- JS render -->
+            </div>
+        </div>
+
+        <div class="pd-task-modal-footer">
+            <button type="button" id="pdMemberTasksCancel" class="pd-btn-secondary">
+                Close
+            </button>
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+
+
+</body>
+</html>

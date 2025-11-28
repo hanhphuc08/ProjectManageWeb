@@ -1,6 +1,10 @@
 package com.example.projectmanageweb.controller;
 
 import java.nio.file.attribute.UserPrincipal;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -17,7 +21,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.projectmanageweb.dto.BoardViewDto;
 import com.example.projectmanageweb.dto.ProjectCreateRequest;
 import com.example.projectmanageweb.dto.ProjectMemberAddForm;
+import com.example.projectmanageweb.dto.ProjectResourcesView;
+import com.example.projectmanageweb.dto.ResourceItemDto;
+import com.example.projectmanageweb.dto.TaskResourceGroupDto;
+import com.example.projectmanageweb.dto.UserResourceGroupDto;
 import com.example.projectmanageweb.dto.calendar.CalendarViewDto;
+import com.example.projectmanageweb.service.*;
 import com.example.projectmanageweb.repository.ProjectMembersRepository;
 import com.example.projectmanageweb.repository.ProjectTypesRepository;
 import com.example.projectmanageweb.repository.ProjectsRepository;
@@ -46,11 +55,13 @@ public class ProjectController {
 	private final CalendarService calendarService;
 	private final GoalService goalService;
 	private final TasksRepository tasksRepository;
+	private final ResourceService resourceService;
+	
 	
 	public ProjectController(ProjectService projectsService, UserService userService, ProjectTypesRepository typesRepo,
 			BoardService boardService, AuthService authService, ProjectMembersRepository membersRepo,
 			ProjectSummaryService projectSummaryService, CalendarService calendarService, GoalService goalService,
-			TasksRepository tasksRepository) {
+			TasksRepository tasksRepository, ResourceService resourceService) {
 		super();
 		this.projectsService = projectsService;
 		this.userService = userService;
@@ -62,6 +73,7 @@ public class ProjectController {
 		this.calendarService = calendarService;
 		this.goalService = goalService;
 		this.tasksRepository = tasksRepository;
+		this.resourceService = resourceService;
 	}
 	@GetMapping("/projects")
 	public String home(@RequestParam(required = false) String q, Authentication auth, Model model)
@@ -171,6 +183,72 @@ public class ProjectController {
 	    model.addAttribute("calendar", calendar);
 	    model.addAttribute("currentMonthLabel",
 	            calendarService.getMonthLabel(calendar.getYear(), calendar.getMonth()));
+	    
+	    
+	    List<ResourceItemDto> files = resourceService.listByProject(projectId);
+
+	    ProjectResourcesView resView = new ProjectResourcesView();
+	    resView.setAllFiles(files);
+	    resView.setTotalFiles(files.size());
+
+	    long totalSize = files.stream()
+	            .mapToLong(ResourceItemDto::getSizeBytes)
+	            .sum();
+	    resView.setTotalSizeBytes(totalSize);
+
+	    // ===== Group theo TASK =====
+	    Map<Integer, List<ResourceItemDto>> mapByTask =
+	            files.stream()
+	                 .collect(Collectors.groupingBy(ResourceItemDto::getTaskId));
+
+	    List<TaskResourceGroupDto> taskGroups = mapByTask.entrySet().stream()
+	            .map(e -> {
+	                int taskId = e.getKey();
+	                List<ResourceItemDto> taskFiles = e.getValue();
+	                ResourceItemDto first = taskFiles.get(0);
+
+	                TaskResourceGroupDto g = new TaskResourceGroupDto();
+	                g.setTaskId(taskId);
+	                g.setTaskTitle(first.getTaskTitle());
+	                g.setStatus(first.getTaskStatus());
+	                g.setType(first.getTaskType());
+	                g.setFiles(taskFiles);
+	                return g;
+	            })
+	            .sorted(Comparator.comparing(TaskResourceGroupDto::getTaskId))
+	            .toList();
+
+	    resView.setByTask(taskGroups);
+
+	    // ===== Group theo USER =====
+	    // yêu cầu ResourceItemDto có uploaderId, uploaderName, uploaderRoleInProject
+	    Map<Integer, List<ResourceItemDto>> mapByUser =
+	            files.stream()
+	                 .filter(f -> f.getUploaderId() != null)
+	                 .collect(Collectors.groupingBy(ResourceItemDto::getUploaderId));
+
+	    List<UserResourceGroupDto> userGroups = mapByUser.entrySet().stream()
+	            .map(e -> {
+	                List<ResourceItemDto> userFiles = e.getValue();
+	                ResourceItemDto first = userFiles.get(0);
+
+	                UserResourceGroupDto u = new UserResourceGroupDto();
+	                u.setUserId(first.getUploaderId());
+	                u.setFullName(first.getUploaderName());
+	                u.setRoleInProject(first.getUploaderRoleInProject());
+	                u.setFiles(userFiles);
+	                return u;
+	            })
+	            .sorted(Comparator.comparing(
+	                    UserResourceGroupDto::getFullName,
+	                    Comparator.nullsLast(String::compareToIgnoreCase)
+	            ))
+	            .toList();
+
+	    resView.setByUser(userGroups);
+
+	    model.addAttribute("resources", resView);
+	    
 	    return "users/projectmanage";           
 	}
 	

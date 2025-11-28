@@ -2,114 +2,383 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Hồ sơ cá nhân</title>
-    <link href="/assets/css/styles.css" rel="stylesheet" />
-    <link href="/assets/css/user-home.css" rel="stylesheet" />
-    <link href="/assets/css/profile.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title th:text="${profile != null ? 'Hồ sơ | ' + profile.fullName : 'Hồ sơ cá nhân'}">
+        Hồ sơ cá nhân
+    </title>
+
+    <link href="/assets/css/styles.css" rel="stylesheet"/>
+    <link href="/assets/css/user-home.css" rel="stylesheet"/>
+    <link href="/assets/css/profile.css" rel="stylesheet"/>
 </head>
 <body class="pf-dark">
-<th:block th:replace="~{commons/header :: header}"></th:block>
+
 <div class="pf-container">
     <main class="pf-main container">
+
+        <!-- ========== LEFT COLUMN ========== -->
         <section class="pf-left">
+            <a href="/projects" class="pf-back-btn">
+                ← Quay về
+            </a>
+
             <div class="pf-card pf-profile">
+                <!-- Avatar + name -->
                 <div class="pf-avatar-wrap">
-                    <img class="pf-avatar" src="/images/team/1.jpg" alt="avatar">
-                    <div class="pf-name">Hạnh Phúc Trần Huy</div>
+                    <img class="pf-avatar"
+                         th:src="${profile != null && profile.avatarUrl != null
+                                 ? profile.avatarUrl
+                                 : '/images/team/1.jpg'}"
+                         alt="avatar">
+                    <div class="pf-name" th:text="${profile.fullName}">User name</div>
+                    <div class="pf-subtitle">
+                        <span th:text="${profile.globalRole}">User</span>
+                        <span> • </span>
+                        <span th:text="${profile.workMode}">Online</span>
+                    </div>
                 </div>
+
+                <!-- Giới thiệu -->
                 <div class="pf-section-title">Giới thiệu</div>
                 <div class="pf-fields">
-                    <div class="pf-field" data-key="title">
+
+                    <!-- Chức danh -->
+                    <div class="pf-field">
                         <div class="pf-icon">💼</div>
                         <div class="pf-body">
-                            <label>Chức danh của bạn</label>
-                            <div class="pf-editable">
-                                <input type="text" class="pf-input" placeholder="Chức danh của bạn">
-                                <div class="pf-actions">
-                                    <button class="pf-btn pf-save" data-action="save">✓</button>
-                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
-                                </div>
+                            <label>Chức danh</label>
+                            <div class="pf-static"
+                                 th:if="${profile.title != null and !#strings.isEmpty(profile.title)}"
+                                 th:text="${profile.title}">
+                                Developer
+                            </div>
+                            <div class="pf-static pf-muted"
+                                 th:if="${profile.title == null or #strings.isEmpty(profile.title)}">
+                                Chưa cập nhật
                             </div>
                         </div>
                     </div>
-                    <div class="pf-field" data-key="department">
+
+                    <!-- Phòng ban -->
+                    <div class="pf-field">
                         <div class="pf-icon">🧩</div>
                         <div class="pf-body">
-                            <label>Phòng ban của bạn</label>
-                            <div class="pf-editable">
-                                <input type="text" class="pf-input" placeholder="Phòng ban của bạn">
-                                <div class="pf-actions">
-                                    <button class="pf-btn pf-save" data-action="save">✓</button>
-                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
-                                </div>
+                            <label>Phòng ban</label>
+                            <div class="pf-static"
+                                 th:if="${profile.department != null and !#strings.isEmpty(profile.department)}"
+                                 th:text="${profile.department}">
+                                Product
+                            </div>
+                            <div class="pf-static pf-muted"
+                                 th:if="${profile.department == null or #strings.isEmpty(profile.department)}">
+                                Chưa cập nhật
                             </div>
                         </div>
                     </div>
-                    <div class="pf-field" data-key="org">
+
+                    <!-- Tổ chức -->
+                    <div class="pf-field">
                         <div class="pf-icon">🏢</div>
                         <div class="pf-body">
-                            <label>Tổ chức của bạn</label>
-                            <div class="pf-editable">
-                                <input type="text" class="pf-input" placeholder="Tổ chức của bạn">
-                                <div class="pf-actions">
-                                    <button class="pf-btn pf-save" data-action="save">✓</button>
-                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
-                                </div>
+                            <label>Tổ chức</label>
+                            <div class="pf-static"
+                                 th:if="${profile.organization != null and !#strings.isEmpty(profile.organization)}"
+                                 th:text="${profile.organization}">
+                                Company
+                            </div>
+                            <div class="pf-static pf-muted"
+                                 th:if="${profile.organization == null or #strings.isEmpty(profile.organization)}">
+                                Chưa cập nhật
                             </div>
                         </div>
                     </div>
-                    <div class="pf-field" data-key="location">
+
+                    <!-- Vị trí -->
+                    <div class="pf-field">
                         <div class="pf-icon">📍</div>
                         <div class="pf-body">
-                            <label>Vị trí của bạn</label>
-                            <div class="pf-editable">
-                                <input type="text" class="pf-input" placeholder="Vị trí của bạn">
-                                <div class="pf-actions">
-                                    <button class="pf-btn pf-save" data-action="save">✓</button>
-                                    <button class="pf-btn pf-cancel" data-action="cancel">✕</button>
-                                </div>
+                            <label>Vị trí</label>
+                            <div class="pf-static"
+                                 th:if="${profile.location != null and !#strings.isEmpty(profile.location)}"
+                                 th:text="${profile.location}">
+                                Hồ Chí Minh
+                            </div>
+                            <div class="pf-static pf-muted"
+                                 th:if="${profile.location == null or #strings.isEmpty(profile.location)}">
+                                Chưa cập nhật
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Liên hệ -->
                 <div class="pf-section-title">Liên hệ</div>
                 <div class="pf-contact">
                     <div class="pf-contact-row">
                         <div class="pf-icon">✉️</div>
-                        <div class="pf-contact-text">lamngocnhaky8@gmail.com</div>
+                        <div class="pf-contact-text" th:text="${profile.email}">email@example.com</div>
+                    </div>
+                    <div class="pf-contact-row" th:if="${profile.phoneNumber != null}">
+                        <div class="pf-icon">📞</div>
+                        <div class="pf-contact-text" th:text="${profile.phoneNumber}">0123 456 789</div>
+                    </div>
+                </div>
+
+                <!-- Kỹ năng -->
+                <div class="pf-section-title">Kỹ năng</div>
+                <div th:if="${profile.skills != null and !#lists.isEmpty(profile.skills)}">
+                    <div class="pf-skills">
+                        <span class="pf-skill-chip" th:each="sk : ${profile.skills}"
+                              th:text="${sk}">
+                            Java
+                        </span>
+                    </div>
+                </div>
+                <div class="pf-empty-text"
+                     th:if="${profile.skills == null or #lists.isEmpty(profile.skills)}">
+                    Chưa khai báo kỹ năng trong các dự án.
+                </div>
+
+                <!-- Tổng quan nhanh -->
+                <div class="pf-section-title">Tổng quan</div>
+                <div class="pf-metric-list">
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Dự án đang tham gia</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.activeProjectsCount}">0</div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Task đang mở</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.openTasksCount}">0</div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Dự án làm PM</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.pmProjectsCount}">0</div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Giờ làm việc / tuần</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.workHoursPerWeek}">40</div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- ========== RIGHT COLUMN ========== -->
         <section class="pf-right">
+
+            <!-- Hoạt động gần đây -->
             <div class="pf-card">
-                <div class="pf-block-title">Công việc gần đây</div>
-                <a class="pf-link" href="#">Xem tất cả</a>
+                <div class="pf-block-header">
+                    <div class="pf-block-title">Hoạt động gần đây</div>
+                    <a class="pf-link" href="#">Xem tất cả</a>
+                </div>
+
+                <div th:if="${profile.recentActivities != null and !#lists.isEmpty(profile.recentActivities)}"
+                     class="pf-activity-list">
+                    <div class="pf-activity-item"
+                         th:each="act : ${profile.recentActivities}">
+                        <div class="pf-activity-text">
+                            <span th:text="${act.actor}">User</span>
+                            <span th:if="${act.action == 'created'}"> đã tạo task </span>
+                            <span th:if="${act.action == 'updated'}"> đã cập nhật task </span>
+                            "<span th:text="${act.title}">Task title</span>"
+                        </div>
+                        <div class="pf-activity-meta">
+                            <span th:text="${act.status}">To Do</span>
+                            •
+                            <span th:text="${#temporals.format(act.time,'dd/MM/yyyy HH:mm')}">
+                                25/11/2025 14:30
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pf-empty-text"
+                     th:if="${profile.recentActivities == null or #lists.isEmpty(profile.recentActivities)}">
+                    Chưa có hoạt động nào gần đây.
+                </div>
             </div>
-            <div class="pf-card pf-empty">
-                <div class="pf-block-title">Nơi làm việc</div>
-                <div class="pf-empty-illustration">📍</div>
-                <div class="pf-empty-title">Chúng tôi chưa có nơi làm việc nào để hiển thị ở đây</div>
-                <div class="pf-empty-desc">Bạn không làm việc trong bất kỳ dự án hoặc không gian nào trong 90 ngày qua.</div>
+
+            <!-- Dự án đang tham gia -->
+            <div class="pf-card">
+                <div class="pf-block-header">
+                    <div class="pf-block-title">Dự án đang tham gia</div>
+                    <a class="pf-link" href="/projects">Xem danh sách dự án</a>
+                </div>
+
+                <div th:if="${profile.activeProjects != null and !#lists.isEmpty(profile.activeProjects)}"
+                     class="pf-project-list">
+                    <div class="pf-project-item" th:each="p : ${profile.activeProjects}">
+                        <div class="pf-project-main">
+                            <div class="pf-project-name"
+                                 th:text="${p.projectName}">APT Project</div>
+                            <div class="pf-project-meta">
+                                <span class="pf-tag"
+                                      th:text="${p.roleInProject}">Member</span>
+                                <span class="pf-dot"></span>
+                                <span th:text="${p.status}">In Progress</span>
+                                <span class="pf-dot"
+                                      th:if="${p.dateRange != null and !#strings.isEmpty(p.dateRange)}"></span>
+                                <span th:text="${p.dateRange}"
+                                      th:if="${p.dateRange != null and !#strings.isEmpty(p.dateRange)}">
+                                    21/11/2025 - 30/11/2025
+                                </span>
+                            </div>
+                        </div>
+                        <div class="pf-project-stats">
+                            <div>
+                                <div class="pf-project-stat-label">Task mở</div>
+                                <div class="pf-project-stat-value"
+                                     th:text="${p.openTasks}">3</div>
+                            </div>
+                            <div>
+                                <div class="pf-project-stat-label">Task hoàn thành</div>
+                                <div class="pf-project-stat-value"
+                                     th:text="${p.doneTasks}">5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pf-empty-text"
+                     th:if="${profile.activeProjects == null or #lists.isEmpty(profile.activeProjects)}">
+                    Bạn chưa tham gia dự án nào hoặc tất cả dự án đã hoàn thành.
+                </div>
             </div>
+
+            <!-- Task của bạn (dùng personalTaskStats, null-safe) -->
+            <div class="pf-card">
+                <div class="pf-block-header">
+                    <div class="pf-block-title">Task của bạn</div>
+                </div>
+
+                <div class="pf-personal-stats">
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">To Do</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.personalTaskStats != null ? profile.personalTaskStats.todo : 0}">
+                            0
+                        </div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">In Progress</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.personalTaskStats != null ? profile.personalTaskStats.inProgress : 0}">
+                            0
+                        </div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Review</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.personalTaskStats != null ? profile.personalTaskStats.review : 0}">
+                            0
+                        </div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Done</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.personalTaskStats != null ? profile.personalTaskStats.done : 0}">
+                            0
+                        </div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Goal đang mở</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.goalStats != null ? profile.goalStats.activeGoals : 0}">
+                            0
+                        </div>
+                    </div>
+                    <div class="pf-metric">
+                        <div class="pf-metric-label">Goal hoàn thành</div>
+                        <div class="pf-metric-value"
+                             th:text="${profile.goalStats != null ? profile.goalStats.completedGoals : 0}">
+                            0
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mục tiêu & hiệu suất -->
+            <div class="pf-card">
+                <div class="pf-block-header">
+                    <div class="pf-block-title">Mục tiêu & hiệu suất</div>
+                </div>
+
+                <div class="pf-goal-perf">
+                    <!-- Goals -->
+                    <div class="pf-goal-col">
+                        <div class="pf-section-subtitle">Goals</div>
+                        <div class="pf-metric">
+                            <div class="pf-metric-label">Goal đang mở</div>
+                            <div class="pf-metric-value"
+                                 th:text="${profile.goalStats != null ? profile.goalStats.activeGoals : 0}">
+                                0
+                            </div>
+                        </div>
+                        <div class="pf-metric">
+                            <div class="pf-metric-label">Goal hoàn thành</div>
+                            <div class="pf-metric-value"
+                                 th:text="${profile.goalStats != null ? profile.goalStats.completedGoals : 0}">
+                                0
+                            </div>
+                        </div>
+                        <div class="pf-meta-text"
+                             th:if="${profile.goalStats != null and profile.goalStats.nextGoalTitle != null}">
+                            Goal kế tiếp:
+                            <span th:text="${profile.goalStats.nextGoalTitle}">Thiết kế UI</span>
+                            <span th:text="${' • hạn ' + profile.goalStats.nextGoalDate}"
+                                  th:if="${profile.goalStats.nextGoalDate != null}"> • hạn 30/11</span>
+                        </div>
+                        <div class="pf-meta-text"
+                             th:if="${profile.goalStats == null or profile.goalStats.nextGoalTitle == null}">
+                            Bạn chưa có goal cá nhân nào được giao.
+                        </div>
+                    </div>
+
+                    <!-- Performance / feedback -->
+                    <div>
+                        <div class="pf-section-subtitle">Feedback gần đây</div>
+                        <div class="pf-personal-next"
+                             th:if="${profile.lastFeedback != null and !#strings.isEmpty(profile.lastFeedback)}">
+                            <div class="pf-personal-label">Nhận xét</div>
+                            <div class="pf-meta-text" th:text="${profile.lastFeedback}">
+                                Bạn xử lý task khá nhanh và chủ động review cho team.
+                            </div>
+                        </div>
+                        <div class="pf-personal-next"
+                             th:if="${profile.lastFeedback == null or #strings.isEmpty(profile.lastFeedback)}">
+                            <div class="pf-personal-label">Chưa có feedback</div>
+                            <div class="pf-meta-text">
+                                Khi PM hoặc QA để lại nhận xét về hiệu suất, chúng sẽ hiển thị tại đây.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </section>
     </main>
 </div>
+
 <script src="/assets/js/profile.js"></script>
 <script>
-(function(){
-  const avatar = document.getElementById('uhAvatar');
-  const menu = document.getElementById('uhMenu');
-  function toggle(){ if(menu) menu.classList.toggle('is-open'); }
-  function close(e){ if(menu && !menu.contains(e.target) && !avatar.contains(e.target)) menu.classList.remove('is-open'); }
-  if(avatar){
-    avatar.addEventListener('click', toggle);
-    document.addEventListener('click', close);
-  }
-})();
+    (function () {
+        const avatar = document.getElementById('uhAvatar');
+        const menu = document.getElementById('uhMenu');
+        function toggle() { if (menu) menu.classList.toggle('is-open'); }
+        function close(e) {
+            if (menu && !menu.contains(e.target) && avatar && !avatar.contains(e.target)) {
+                menu.classList.remove('is-open');
+            }
+        }
+        if (avatar) {
+            avatar.addEventListener('click', toggle);
+            document.addEventListener('click', close);
+        }
+    })();
 </script>
 </body>
 </html>

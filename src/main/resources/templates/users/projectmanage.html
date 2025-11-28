@@ -11,6 +11,8 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/assets/css/pd-calendar.css"/>
+    
+    <link rel="stylesheet" th:href="@{/assets/css/project-resources.css}">
 
 </head>
 <body class="uh-dark">
@@ -95,6 +97,13 @@
             
             <!-- Goals -->
            	<th:block th:replace="~{users/project/fragments/goals :: goalsContent}"></th:block>
+           	
+           	<!-- TEAM TAB -->
+			<th:block th:replace="~{users/project/fragments/team :: teamContent}"></th:block>
+			
+			<th:block th:replace="~{users/project/fragments/resources :: resourcesContent}"></th:block>
+			
+           	
             
 
         </section>
@@ -1149,8 +1158,147 @@ document.querySelectorAll('.pd-goal-view-btn').forEach(btn => {
  });
 });
 
+
+//mở Add Member từ nút trong Team tab
+(function () {
+  const btn = document.getElementById('pdTeamAddBtn');
+  const addOverlay = document.getElementById('pdAddMemberOverlay');
+  if (!btn || !addOverlay) return;
+
+  btn.addEventListener('click', () => {
+    addOverlay.style.display = 'flex';
+  });
 })();
 
+
+})();
+
+/* =============================
+TEAM – View tasks of member
+============================= */
+(function(){
+const buttons = document.querySelectorAll('.pd-team-view-tasks-btn');
+if (!buttons.length) return;
+
+const overlay   = document.getElementById('pdMemberTasksOverlay');
+const closeBtn  = document.getElementById('pdMemberTasksClose');
+const cancelBtn = document.getElementById('pdMemberTasksCancel');
+const listEl    = document.getElementById('pdMemberTasksList');
+const emptyEl   = document.getElementById('pdMemberTasksEmpty');
+const nameSpan  = document.getElementById('pdMemberTasksName');
+
+function formatDate(ymd) {
+ if (!ymd) return '';
+ try {
+   return new Date(ymd).toLocaleDateString('vi-VN');
+ } catch {
+   return ymd;
+ }
+}
+
+function openModal(userId, memberName) {
+ if (!overlay) return;
+
+ nameSpan.textContent = memberName || ('User ' + userId);
+ listEl.innerHTML = '<div class="pd-subtext">Loading tasks...</div>';
+ emptyEl.style.display = 'none';
+
+ overlay.style.display = 'flex';
+
+ fetch(`/api/projects/${PROJECT_ID}/members/${userId}/tasks`)
+   .then(r => {
+     if (!r.ok) throw new Error('Failed to load tasks');
+     return r.json();
+   })
+   .then(data => {
+     if (!Array.isArray(data) || data.length === 0) {
+       listEl.innerHTML = '';
+       emptyEl.style.display = 'block';
+       return;
+     }
+
+     emptyEl.style.display = 'none';
+     listEl.innerHTML = '';
+
+     const frag = document.createDocumentFragment();
+
+     data.forEach(t => {
+       const row = document.createElement('div');
+       row.className = 'pd-member-task-row';
+
+       const main = document.createElement('div');
+       main.className = 'pd-member-task-main';
+
+       const title = document.createElement('div');
+       title.className = 'pd-member-task-title';
+       title.textContent = `[TASK-${t.taskId}] ${t.title || 'Untitled'}`;
+
+       const meta = document.createElement('div');
+       meta.className = 'pd-member-task-meta';
+
+       const statusSpan = document.createElement('span');
+       const status = (t.status || 'TO DO');
+       const statusKey = status.toLowerCase().replace(/\s+/g, '_');
+       statusSpan.className = `pd-member-task-status-pill st-${statusKey}`;
+       statusSpan.textContent = status;
+
+       const typeSpan = document.createElement('span');
+       typeSpan.textContent = t.type || 'Task';
+
+       const prioritySpan = document.createElement('span');
+       if (t.priority) {
+         prioritySpan.textContent = 'Priority: ' + t.priority;
+       }
+
+       const dueSpan = document.createElement('span');
+       if (t.dueDate) {
+         dueSpan.textContent = 'Due: ' + formatDate(t.dueDate);
+       }
+
+       meta.appendChild(statusSpan);
+       meta.appendChild(typeSpan);
+       if (t.priority) meta.appendChild(prioritySpan);
+       if (t.dueDate) meta.appendChild(dueSpan);
+
+       main.appendChild(title);
+       main.appendChild(meta);
+
+       row.appendChild(main);
+       frag.appendChild(row);
+     });
+
+     listEl.appendChild(frag);
+   })
+   .catch(err => {
+     console.error(err);
+     listEl.innerHTML = '<div class="pd-subtext" style="color:#f97373;">Error loading tasks.</div>';
+   });
+}
+
+function closeModal() {
+ if (!overlay) return;
+ overlay.style.display = 'none';
+}
+
+buttons.forEach(btn => {
+ btn.addEventListener('click', () => {
+   const userId = btn.dataset.userId;
+   if (!userId) return;
+
+   const card = btn.closest('.pd-team-card');
+   const nameEl = card?.querySelector('.pd-team-name');
+   const memberName = nameEl ? nameEl.textContent.trim() : '';
+
+   openModal(userId, memberName);
+ });
+});
+
+closeBtn?.addEventListener('click', closeModal);
+cancelBtn?.addEventListener('click', closeModal);
+overlay?.addEventListener('click', e => {
+ if (e.target === overlay) closeModal();
+});
+})();
 
 
 </script>

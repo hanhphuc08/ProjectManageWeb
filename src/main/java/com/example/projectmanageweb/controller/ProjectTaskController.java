@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.projectmanageweb.dto.TaskUpdateForm;
 import com.example.projectmanageweb.service.BoardService;
+import com.example.projectmanageweb.service.ResourceService;
+import com.example.projectmanageweb.service.TaskFileService;
 import com.example.projectmanageweb.service.TaskService;
 import com.example.projectmanageweb.service.UserService;
 
@@ -23,14 +26,15 @@ public class ProjectTaskController {
 	private final BoardService boardService;
     private final UserService userService;
     private final TaskService taskService;
+    private final ResourceService resourceService;
 
-    
-    
-    public ProjectTaskController(BoardService boardService, UserService userService, TaskService taskService) {
+	public ProjectTaskController(BoardService boardService, UserService userService, TaskService taskService,
+			ResourceService resourceService) {
 		super();
 		this.boardService = boardService;
 		this.userService = userService;
 		this.taskService = taskService;
+		this.resourceService = resourceService;
 	}
 
 	@PostMapping("/projects/{projectId}/tasks/{taskId}/status")
@@ -64,6 +68,8 @@ public class ProjectTaskController {
             @PathVariable int projectId,
             @PathVariable int taskId,
             @ModelAttribute TaskUpdateForm form,
+            @RequestParam(name = "resourceFile", required = false) MultipartFile resourceFile,
+            @RequestParam(name = "resourceNote", required = false) String resourceNote,
             Authentication auth,
             RedirectAttributes ra
     ) {
@@ -71,7 +77,10 @@ public class ProjectTaskController {
 
         try {
             boardService.updateTaskFull(projectId, me.getUserId(), taskId, form);
-            ra.addFlashAttribute("successMessage", "Cập nhật task thành công!");
+            if (resourceFile != null && !resourceFile.isEmpty()) {
+                resourceService.uploadForTask(projectId, taskId, me.getUserId(), resourceFile, resourceNote);
+            }
+            ra.addFlashAttribute("successMessage", "Cập nhật task & file thành công!");
         } catch (Exception ex) {
             ra.addFlashAttribute("errorMessage", ex.getMessage());
         }

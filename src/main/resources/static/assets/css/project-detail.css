@@ -3121,5 +3121,296 @@
 
 
 
+/* =============================
+   TEAM TAB
+   ============================= */
+
+.pd-team-header {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.pd-team-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pd-team-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f9fafb;
+  margin: 0;
+}
+
+.pd-team-subtext {
+  margin: 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.pd-team-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pd-team-count {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+}
+
+.pd-team-empty {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.pd-team-empty strong {
+  color: #e5e7eb;
+}
+
+/* grid card layout */
+.pd-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.pd-team-card {
+  background: #020617;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  padding: 10px 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.pd-team-card-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.pd-team-card-left {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+/* avatar */
+.pd-team-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6366f1, #22d3ee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #f9fafb;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* info */
+.pd-team-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pd-team-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pd-team-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.pd-team-role-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+}
+
+.pd-team-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.pd-team-meta-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #020617;
+  border: 1px dashed #1f2937;
+}
+
+/* skills */
+.pd-team-skills {
+  margin-top: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pd-team-skill-pill {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.16);
+  color: #c7d2fe;
+  border: 1px solid rgba(129, 140, 248, 0.5);
+}
+
+.pd-team-no-skill {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* right side actions */
+.pd-team-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* view tasks button (placeholder) */
+.pd-team-view-tasks-btn {
+  border: 0;
+  outline: none;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #e5e7eb;
+  cursor: pointer;
+  border: 1px solid #1f2937;
+}
+
+.pd-team-view-tasks-btn:hover {
+  background: #020617;
+}
+
+/* remove button */
+.pd-team-remove-form {
+  margin: 0;
+}
+
+.pd-team-remove-btn {
+  border: 0;
+  outline: none;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 999px;
+  background: rgba(248, 113, 113, 0.06);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.6);
+  cursor: pointer;
+}
+
+.pd-team-remove-btn:hover {
+  background: rgba(248, 113, 113, 0.16);
+}
+/* =============================
+   MEMBER TASKS MODAL
+   ============================= */
+
+.pd-member-task-list {
+  max-height: 360px;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #111827;
+  background: #020617;
+}
+
+.pd-member-task-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #020617;
+}
+
+.pd-member-task-row:last-child {
+  border-bottom: none;
+}
+
+.pd-member-task-main {
+  flex: 1;
+}
+
+.pd-member-task-title {
+  color: #e5e7eb;
+  margin-bottom: 2px;
+}
+
+.pd-member-task-meta {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.pd-member-task-meta span + span::before {
+  content: " • ";
+  color: #4b5563;
+  margin: 0 3px;
+}
+
+/* status pill tái sử dụng style */
+.pd-member-task-status-pill {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.pd-member-task-status-pill.st-done {
+  background: rgba(34,197,94,0.12);
+  border-color: rgba(34,197,94,0.6);
+  color: #bbf7d0;
+}
+
+.pd-member-task-status-pill.st-in_progress {
+  background: rgba(59,130,246,0.12);
+  border-color: rgba(59,130,246,0.6);
+  color: #bfdbfe;
+}
+
+.pd-member-task-status-pill.st-to_do {
+  background: rgba(148,163,184,0.15);
+  border-color: rgba(148,163,184,0.6);
+  color: #e5e7eb;
+}
+
+
+
 
 

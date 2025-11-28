@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <title>APT Project - Thêm vào dự án</title>
+    <style>
+        /* Reset nhẹ cho email */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        }
+        .wrapper {
+            width: 100%;
+            background-color: #f3f4f6;
+            padding: 24px 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+        }
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            padding: 20px 28px;
+            color: #ffffff;
+        }
+        .logo {
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .title {
+            margin: 8px 0 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .body {
+            padding: 24px 28px 20px;
+            color: #111827;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .body p {
+            margin: 0 0 12px;
+        }
+        .highlight {
+            font-weight: 600;
+            color: #111827;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background-color: #eef2ff;
+            color: #4f46e5;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .divider {
+            border-top: 1px solid #e5e7eb;
+            margin: 16px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background-color: #4f46e5;
+            color: #ffffff !important;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .btn:hover {
+            background-color: #4338ca;
+        }
+        .meta {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 8px;
+        }
+        .footer {
+            padding: 16px 28px 6px;
+            font-size: 11px;
+            color: #9ca3af;
+            text-align: center;
+        }
+        .footer a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">APT PROJECT</div>
+            <div class="title">Bạn vừa được thêm vào một dự án mới</div>
+        </div>
+
+        <!-- Body -->
+        <div class="body">
+            <div class="tag">Thành viên dự án mới</div>
+
+            <p>Xin chào
+                <span class="highlight" th:text="${memberName}">Member Name</span>,
+            </p>
+
+            <p>
+                Bạn vừa được <span class="highlight" th:text="${invitedBy}">PM</span>
+                thêm vào dự án
+                <span class="highlight" th:text="${projectName}">Tên dự án</span>
+                trên hệ thống APT Project.
+            </p>
+
+            <p>
+                Từ bây giờ, bạn có thể:
+            </p>
+            <ul style="margin: 0 0 12px 20px; padding: 0; color:#374151;">
+                <li>Xem backlog, board và các task được giao</li>
+                <li>Cập nhật trạng thái công việc theo tiến độ thực tế</li>
+                <li>Trao đổi với team ngay trên từng task</li>
+            </ul>
+
+            <div class="divider"></div>
+
+            <p style="margin-bottom: 16px;">
+                Nhấn vào nút bên dưới để mở dự án trên APT Project:
+            </p>
+
+            <p style="margin-bottom: 14px;">
+                <a href="#" class="btn">Mở dự án</a>
+                <!-- Nếu bạn có URL thực, dùng th:href="${projectUrl}" -->
+            </p>
+
+            <p class="meta">
+                Nếu bạn không mong đợi email này, có thể bỏ qua và tiếp tục sử dụng hệ thống như bình thường.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Email này được gửi tự động từ hệ thống APT Project. Vui lòng không trả lời email này.<br/>
+            <a href="#">Truy cập APT Project</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
