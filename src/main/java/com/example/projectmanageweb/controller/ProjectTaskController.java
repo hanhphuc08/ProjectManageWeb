@@ -89,7 +89,7 @@ public class ProjectTaskController {
     }
     
     @PostMapping("/projects/{projectId}/tasks/{taskId}/delete")
-    @PreAuthorize("isAuthenticated()")  // ai cũng được vào, nhưng xử lý trong code
+    @PreAuthorize("isAuthenticated()") 
     public String deleteTask(
             @PathVariable int projectId,
             @PathVariable int taskId,

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác thực OTP</title>
+    <link href="/assets/css/styles.css" rel="stylesheet" />
+    <link href="/assets/css/auth.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="auth-wrapper auth-forgot">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <img src="/images/navbar-logo.svg" alt="Logo"/>
+        </div>
+        <div class="auth-title">Nhập mã OTP</div>
+        <div class="auth-subtitle">
+            Mã OTP đã được gửi tới email: 
+            <strong th:text="${form.email}">example@gmail.com</strong>
+        </div>
+
+        <!-- SweetAlert error -->
+        <script th:if="${error}" th:inline="javascript">
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: /*[[${error}]]*/ ''
+            });
+        </script>
+
+        <script th:if="${errors}" th:inline="javascript">
+            const errs = /*[[${errors}]]*/ [];
+            Swal.fire({
+                icon: 'error',
+                title: 'Vui lòng kiểm tra lại',
+                html: errs.map(e => `<div style="text-align:left">• ${e}</div>`).join('')
+            });
+        </script>
+
+        <form th:action="@{/reset/verify}" method="post" th:object="${form}">
+            <input type="hidden" th:field="*{email}" />
+            
+            <div class="mb-3">
+                <label for="otpCode" class="form-label">Mã OTP<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="otpCode"
+                       th:field="*{otpCode}" placeholder="Nhập mã OTP 6 số" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-auth-primary">Xác nhận</button>
+        </form>
+
+        <div class="auth-foot">
+            <a th:href="@{/reset/request}">Gửi lại OTP</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

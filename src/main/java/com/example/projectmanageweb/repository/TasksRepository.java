@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.example.projectmanageweb.dto.CountDto;
+import com.example.projectmanageweb.dto.LabelCountDto;
 import com.example.projectmanageweb.dto.MemberTaskItem;
 import com.example.projectmanageweb.dto.MetricDto;
 import com.example.projectmanageweb.dto.RecentActivityDto;
@@ -243,6 +244,20 @@ public class TasksRepository {
 	        new CountDto(rs.getString("label"), rs.getInt("cnt"))
 	    , projectId);
 	}
+	public List<LabelCountDto> countTasksByStatus() {
+        String sql = """
+            SELECT status, COUNT(*) AS cnt
+            FROM tasks
+            GROUP BY status
+            ORDER BY status
+        """;
+        return jdbc.query(sql, (rs, i) ->
+                new com.example.projectmanageweb.dto.LabelCountDto(
+                        rs.getString("status"),
+                        rs.getLong("cnt")
+                )
+        );
+    }
 
 	public List<CountDto> countByPriority(int projectId) {
 	    String sql = """
@@ -421,6 +436,12 @@ public class TasksRepository {
         }, taskId);
 
         return list.isEmpty() ? null : list.get(0);
+    }
+    
+    public int countAllTasks() {
+        String sql = "SELECT COUNT(*) FROM tasks";
+        Integer n = jdbc.queryForObject(sql, Integer.class);
+        return n != null ? n : 0;
     }
 
 

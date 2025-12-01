@@ -6,23 +6,58 @@
         <div class="uh-search">
             <input type="text" placeholder="Search" aria-label="Search" />
         </div>
-        <div class="uh-actions">
-            <div class="uh-avatar" id="uhAvatar" title="avatar">HP</div>
+
+        <!-- Chỉ hiện menu user khi đã đăng nhập (me != null) -->
+        <div class="uh-actions" th:if="${me != null}">
+            <!-- Avatar chữ cái đầu -->
+            <div class="uh-avatar" id="uhAvatar" title="avatar"
+                 th:text="${me != null && me.fullName != null && me.fullName.length() > 0 
+                           ? me.fullName.substring(0,1) 
+                           : 'U'}">
+                U
+            </div>
+
             <div class="uh-menu" id="uhMenu">
                 <div class="uh-menu-header">
-                    <div class="avatar">HP</div>
+                    <div class="avatar"
+                         th:text="${me != null && me.fullName != null && me.fullName.length() > 0 
+                                   ? me.fullName.substring(0,1) 
+                                   : 'U'}">
+                        U
+                    </div>
                     <div class="info">
-                        <div class="name">Hạnh Phúc Trần Huy</div>
-                        <div class="email">lamngocnhaky8@gmail.com</div>
+                        <div class="name"
+                             th:text="${me != null && me.fullName != null 
+                                       ? me.fullName 
+                                       : 'User'}">
+                            User Name
+                        </div>
+                        <div class="email"
+                             th:text="${me != null && me.email != null 
+                                       ? me.email 
+                                       : ''}">
+                            user@gmail.com
+                        </div>
                     </div>
                 </div>
+
                 <div class="uh-menu-group">
-                    <a class="uh-menu-item" href="/profile"><span class="left"><span class="icon">👤</span> Profile</span></a>
-                    <a class="uh-menu-item" href="#"><span class="left"><span class="icon">🎨</span> Theme</span><span class="right">›</span></a>
+                    <a class="uh-menu-item" href="/profile">
+                        <span class="left"><span class="icon">👤</span> Profile</span>
+                    </a>
+                    <a class="uh-menu-item" href="#">
+                        <span class="left"><span class="icon">🎨</span> Theme</span>
+                        <span class="right">›</span>
+                    </a>
                 </div>
+
                 <div class="uh-menu-group">
-                    <a class="uh-menu-item" href="/reset/change"><span class="left"><span class="icon">🔁</span> Change password</span></a>
-                    <a class="uh-menu-item" href="#"><span class="left"><span class="icon">🚪</span> Log out</span></a>
+                    <a class="uh-menu-item" href="/reset/change">
+                        <span class="left"><span class="icon">🔁</span> Change password</span>
+                    </a>
+                    <a class="uh-menu-item uh-menu-item-logout" th:href="@{/logout}">
+                        <span class="left"><span class="icon">🚪</span> Log out</span>
+                    </a>
                 </div>
             </div>
         </div>

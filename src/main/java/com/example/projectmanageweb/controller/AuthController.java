@@ -50,7 +50,6 @@ public class AuthController {
 								BindingResult br,
 								RedirectAttributes ra,
 								Model model) {
-		//TODO: process POST request
 		
 		// Kiểm tra mật khẩu khớp
 	    if (!br.hasFieldErrors("password") && !br.hasFieldErrors("confirmPassword")) {

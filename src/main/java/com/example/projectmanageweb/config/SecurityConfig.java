@@ -24,14 +24,18 @@ public class SecurityConfig {
 		p.setUserDetailsService(uds);
 		p.setPasswordEncoder(enc);
 		return p;
-		
 	}
 	
 	
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http,org.springframework.security.authentication.dao.DaoAuthenticationProvider provider
-			) throws Exception {
-		
+	public SecurityFilterChain securityFilterChain(
+			HttpSecurity http,
+			org.springframework.security.authentication.dao.DaoAuthenticationProvider provider,
+			com.example.projectmanageweb.security.CustomLoginSuccessHandler loginSuccessHandler
+	) throws Exception {
+
+		http.authenticationProvider(provider);
+
 		http.authorizeHttpRequests(auth -> auth
 				.requestMatchers(
 					"/",
@@ -47,6 +51,9 @@ public class SecurityConfig {
 					"/assets/**",
 					"/webjars/**"
 				).permitAll()
+
+				.requestMatchers("/owner/**").hasRole("ADMIN")
+
 				.anyRequest().authenticated()
 			)
 		.formLogin(form -> form                     
@@ -54,7 +61,7 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login")
                 .usernameParameter("email")               
                 .passwordParameter("password")
-                .defaultSuccessUrl("/user/home", true)
+                .successHandler(loginSuccessHandler)
                 .failureUrl("/login?error")
         )
 		.rememberMe(rm -> rm
@@ -65,8 +72,9 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
         )
-			.csrf(csrf -> csrf.disable())
-			.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+		.csrf(csrf -> csrf.disable())
+		.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+
 		return http.build();
 	}
-} 
+}

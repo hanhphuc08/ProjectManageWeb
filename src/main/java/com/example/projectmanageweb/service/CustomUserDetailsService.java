@@ -33,8 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService,UserService 
 
         User u = repo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng"));
-
-        // Lấy role từ DB (đã JOIN sẵn trong repo.findByEmail)
         String role = u.getRole() != null && u.getRole().getRoleName() != null
                 ? u.getRole().getRoleName().toUpperCase()
                 : "MEMBER";  // fallback an toàn

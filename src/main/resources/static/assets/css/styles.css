@@ -11888,3 +11888,648 @@ section#contact form#contactForm :-ms-input-placeholder {
 
 
 
+
+* {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+        a { text-decoration: none; color: inherit; }
+        table { width: 100%; border-collapse: collapse; }
+
+        /* ==== LAYOUT CHUNG ==== */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Placeholder sidebar – fen có thể bỏ nếu đã có sidebar riêng */
+        .sidebar-placeholder {
+            width: 260px;
+            background: #111827;
+            color: #e5e7eb;
+            padding: 1.5rem 1rem;
+        }
+        .sidebar-placeholder h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .sidebar-placeholder ul {
+            list-style: none;
+        }
+        .sidebar-placeholder li {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .sidebar-placeholder li.active {
+            background: #1f2937;
+        }
+        .sidebar-placeholder li span {
+            opacity: 0.9;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 1.5rem 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .page-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .select {
+            padding: 0.4rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid #d1d5db;
+            font-size: 0.85rem;
+            background: #fff;
+        }
+        .btn-icon {
+            border-radius: 999px;
+            border: 1px solid #d1d5db;
+            padding: 0.4rem 0.7rem;
+            font-size: 0.8rem;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        /* ==== KPI GRID ==== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 1200px) {
+            .kpi-grid {
+                grid-template-columns: repeat(6, minmax(0, 1fr));
+            }
+        }
+        .kpi-card {
+            background: #ffffff;
+            border-radius: 0.75rem;
+            padding: 0.75rem 0.9rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            border: 1px solid #e5e7eb;
+        }
+        .kpi-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        .kpi-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        .kpi-sub {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        .kpi-accent {
+            border-left: 3px solid #3b82f6;
+        }
+        .kpi-danger {
+            border-left: 3px solid #ef4444;
+        }
+
+        /* ==== CARD CHUNG ==== */
+        .section-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 992px) {
+            .section-row.two-col {
+                grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            }
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1rem 1.1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            border: 1px solid #e5e7eb;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.75rem;
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .card-extra {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        /* ==== TABLE ==== */
+        .table-wrapper {
+            max-height: 260px;
+            overflow: auto;
+        }
+        table thead {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+        }
+        table th,
+        table td {
+            padding: 0.5rem 0.35rem;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .badge-status-inprogress {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        .badge-status-completed {
+            background: #ecfdf3;
+            color: #16a34a;
+        }
+        .badge-status-planned {
+            background: #fefce8;
+            color: #a16207;
+        }
+        .badge-status-onhold {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .btn-link {
+            font-size: 0.8rem;
+            color: #2563eb;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.4rem;
+        }
+        .btn-link:hover {
+            background: #eff6ff;
+        }
+
+        /* Progress bar (nếu fen muốn dùng sau này) */
+        .progress {
+            background: #e5e7eb;
+            border-radius: 999px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #3b82f6;
+        }
+
+        /* ==== LISTS (AI & LOG) ==== */
+        .list {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.45rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .list-main {
+            color: #111827;
+        }
+        .list-meta {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        .pill {
+            border-radius: 999px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.7rem;
+            background: #eef2ff;
+            color: #4f46e5;
+            white-space: nowrap;
+        }
+
+        /* ==== SCROLLBAR NHẸ (CHO CHROME) ==== */
+        .table-wrapper::-webkit-scrollbar,
+        .list-wrapper::-webkit-scrollbar {
+            width: 5px;
+        }
+        .table-wrapper::-webkit-scrollbar-thumb,
+        .list-wrapper::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 999px;
+        }
+
+
+
+
+/* ==========================
+   DASHBOARD KPI GRID
+   ========================== */
+
+.kpi-grid {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 card một hàng */
+    gap: 20px; /* giảm khoảng cách */
+    align-items: stretch;
+}
+
+/* KPI CARD */
+.kpi-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: 0.15s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.kpi-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+}
+
+.kpi-sub {
+    font-size: 0.8rem;
+    color: #9ca3af;
+}
+
+/* ACCENT CARD */
+.kpi-accent {
+    border-left: 4px solid #3b82f6; /* xanh dương */
+}
+
+/* DANGER CARD */
+.kpi-danger {
+    border-left: 4px solid #ef4444; /* đỏ */
+}
+
+
+/* ==========================
+   OWNER DASHBOARD – DARK THEME
+   Chỉ áp dụng cho body.theme-dark-dashboard
+   ========================== */
+
+.theme-dark-dashboard {
+    background: #020617; /* nền tổng thể very dark */
+    color: #e5e7eb;
+}
+
+/* Layout chính: sidebar + content */
+.theme-dark-dashboard .layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar giữ dark, nhưng cho nó ngầu hơn chút */
+.theme-dark-dashboard .sidebar-placeholder {
+    width: 220px;
+    background: #020617;
+    border-right: 1px solid #111827;
+    padding: 24px 16px;
+    color: #e5e7eb;
+}
+
+.theme-dark-dashboard .sidebar-placeholder h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.theme-dark-dashboard .sidebar-placeholder ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.theme-dark-dashboard .sidebar-placeholder li {
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    color: #9ca3af;
+    cursor: pointer;
+}
+
+.theme-dark-dashboard .sidebar-placeholder li.active {
+    background: #111827;
+    color: #f9fafb;
+}
+
+/* Content: thu hẹp cho đẹp, không bị trải quá rộng */
+.theme-dark-dashboard .main-content {
+    flex: 1;
+    padding: 32px 40px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+.theme-dark-dashboard .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px; /* cho gần lại */
+}
+
+.theme-dark-dashboard .page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #f9fafb;
+}
+
+.theme-dark-dashboard .page-subtitle {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+.theme-dark-dashboard .header-actions .select {
+    background: #020617;
+    border-radius: 999px;
+    border: 1px solid #1f2937;
+    padding: 6px 14px;
+    color: #e5e7eb;
+    font-size: 0.85rem;
+}
+
+.theme-dark-dashboard .header-actions .btn-icon {
+    margin-left: 8px;
+    border-radius: 999px;
+    border: 1px solid #1f2937;
+    background: #020617;
+    color: #e5e7eb;
+    width: 32px;
+    height: 32px;
+}
+
+/* KPI GRID – 3 card sát nhau, dark */
+.theme-dark-dashboard .kpi-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: stretch;
+}
+
+.theme-dark-dashboard .kpi-card {
+    background: #020617;
+    padding: 18px 20px;
+    border-radius: 16px;
+    border: 1px solid #1f2937;
+    box-shadow: none;
+    transition: 0.15s ease;
+}
+
+.theme-dark-dashboard .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.theme-dark-dashboard .kpi-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 6px;
+}
+
+.theme-dark-dashboard .kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f9fafb;
+    margin-bottom: 4px;
+}
+
+.theme-dark-dashboard .kpi-sub {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.theme-dark-dashboard .kpi-accent {
+    border-left: 4px solid #3b82f6;
+}
+
+.theme-dark-dashboard .kpi-danger {
+    border-left: 4px solid #ef4444;
+}
+
+/* Section / Card phía dưới (chart + bảng) */
+.theme-dark-dashboard .section-row {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr;
+    gap: 20px;
+}
+
+.theme-dark-dashboard .section-row.two-col {
+    grid-template-columns: 1.5fr 1.5fr;
+}
+
+.theme-dark-dashboard .card {
+    background: #020617;
+    border-radius: 16px;
+    border: 1px solid #1f2937;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.theme-dark-dashboard .card-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid #111827;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #020617;
+}
+
+.theme-dark-dashboard .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.theme-dark-dashboard .card-extra {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.theme-dark-dashboard .table-wrapper {
+    padding: 12px 16px 16px;
+}
+
+.theme-dark-dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.theme-dark-dashboard thead th {
+    text-align: left;
+    padding-bottom: 8px;
+    color: #9ca3af;
+    border-bottom: 1px solid #111827;
+    font-weight: 500;
+}
+
+.theme-dark-dashboard tbody td {
+    padding: 8px 0;
+    color: #e5e7eb;
+    border-bottom: 1px solid #111827;
+}
+
+/* Badge status trong bảng project */
+.theme-dark-dashboard .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    border: 1px solid #1f2937;
+}
+
+.theme-dark-dashboard .badge-status-inprogress {
+    border-color: #3b82f6;
+    color: #bfdbfe;
+}
+
+.theme-dark-dashboard .badge-status-completed {
+    border-color: #22c55e;
+    color: #bbf7d0;
+}
+
+.theme-dark-dashboard .badge-status-planned {
+    border-color: #eab308;
+    color: #facc15;
+}
+
+.theme-dark-dashboard .badge-status-onhold {
+    border-color: #6b7280;
+    color: #d1d5db;
+}
+
+/* Link "Xem tất cả project" */
+.theme-dark-dashboard a.card-extra {
+    text-decoration: none;
+    color: #60a5fa;
+    font-size: 0.8rem;
+}
+
+.theme-dark-dashboard a.card-extra:hover {
+    text-decoration: underline;
+}
+
+/* ==========================
+   TÙY CHỈNH DASHBOARD SPACING
+   ========================== */
+
+/* Giảm padding chung của main-content */
+.main-content {
+    padding: 20px 40px !important; /* thay vì 60–80px */
+}
+
+/* Tất cả section trên dashboard (KPI, charts, tables) */
+.section-row,
+.kpi-grid {
+    margin-top: 20px !important; /* thay vì 60–100px */
+    margin-bottom: 20px !important;
+}
+
+/* Các card thống kê, chart card, table card */
+.card {
+    padding: 20px !important; /* giảm padding trong card */
+    border-radius: 14px;
+    background: var(--bg-card);
+}
+
+/* Nếu card đang bị margin dưới quá lớn */
+.card + .card {
+    margin-top: 10px !important;
+}
+
+/* Bỏ khoảng cách lớn giữa các grid 2 cột */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px !important; /* thay vì 40–60px */
+}
+
+/* Khoảng cách giữa KPI và CHART */
+.kpi-grid + .section-row {
+    margin-top: 25px !important;
+}
+
+/* Khoảng cách giữa CHART và TABLE */
+.section-row + .section-row {
+    margin-top: 25px !important;
+}
+.logout-btn {
+    display: block;
+    padding: 12px 16px;
+    color: #f87171; /* đỏ nhạt cho nổi */
+    font-weight: 600;
+    border-radius: 8px;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.logout-btn:hover {
+    background: rgba(248, 113, 113, 0.15);
+    color: #fca5a5;
+}
+

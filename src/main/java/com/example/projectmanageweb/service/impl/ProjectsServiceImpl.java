@@ -45,7 +45,6 @@ public class ProjectsServiceImpl implements ProjectService {
                 creatorUserId
         );
 
-        // idempotent: có thì lấy, chưa có thì tạo
         int pmRoleId = rolesRepo.ensure(projectId, "PM", "Project Manager");
         rolesRepo.ensure(projectId, "MEMBER", "Project Member");
 

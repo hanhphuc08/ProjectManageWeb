@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.example.projectmanageweb.dto.RoleCountDto;
 import com.example.projectmanageweb.model.User;
 
 @Repository
@@ -70,7 +71,12 @@ public class UserRepository {
 
 
 	public void updatePasswordByEmail(String email, String hashedPassword) {
-		// TODO Auto-generated method stub
+		String sql = """
+		        UPDATE users
+		        SET password_hash = ?, updated_at = NOW()
+		        WHERE email = ?
+		    """;
+		    jdbc.update(sql, hashedPassword, email);
 		
 	}
 	public List<User> findAll() {
@@ -88,6 +94,39 @@ public class UserRepository {
             return u;
         });
     }
+	
+    public int countAllUsers() {
+        String sql = "SELECT COUNT(*) FROM users";
+        Integer n = jdbc.queryForObject(sql, Integer.class);
+        return n != null ? n : 0;
+    }
+
+    public int countUsersCreatedWithinDays(int days) {
+        String sql = """
+            SELECT COUNT(*)
+            FROM users
+            WHERE created_at >= NOW() - INTERVAL ? DAY
+        """;
+        Integer n = jdbc.queryForObject(sql, Integer.class, days);
+        return n != null ? n : 0;
+    }
+
+    public List<RoleCountDto> countUsersByRole() {
+        String sql = """
+            SELECT r.role_name, COUNT(*) AS cnt
+            FROM users u
+            JOIN roles r ON r.role_id = u.role_id
+            GROUP BY r.role_name
+            ORDER BY r.role_name
+        """;
+        return jdbc.query(sql, (rs, i) ->
+                new com.example.projectmanageweb.dto.RoleCountDto(
+                        rs.getString("role_name"),
+                        rs.getLong("cnt")
+                )
+        );
+    }
+
 	
 	
 

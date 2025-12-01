@@ -12,7 +12,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.example.projectmanageweb.dto.LabelCountDto;
 import com.example.projectmanageweb.dto.ProjectListItem;
+import com.example.projectmanageweb.dto.RecentProjectDto;
 import com.example.projectmanageweb.repository.rowmapper.ProjectListItemRowMapper;
 
 @Repository
@@ -186,5 +188,58 @@ public class ProjectsRepository {
 
         return result.isEmpty() ? null : result.get(0);
     }
+    
+    public int countAllProjects() {
+        String sql = "SELECT COUNT(*) FROM projects";
+        Integer n = jdbc.queryForObject(sql, Integer.class);
+        return n != null ? n : 0;
+    }
+
+    public List<LabelCountDto> countProjectsByStatus() {
+        String sql = """
+            SELECT status, COUNT(*) AS cnt
+            FROM projects
+            GROUP BY status
+            ORDER BY status
+        """;
+        return jdbc.query(sql, (rs, i) ->
+                new com.example.projectmanageweb.dto.LabelCountDto(
+                        rs.getString("status"),
+                        rs.getLong("cnt")
+                )
+        );
+    }
+
+    public List<RecentProjectDto> findRecentProjects(int limit) {
+        String sql = """
+            SELECT p.project_id,
+                   p.project_name,
+                   p.status,
+                   p.start_date,
+                   p.end_date,
+                   pt.type_name,
+                   u.full_name AS creator_name
+            FROM projects p
+            LEFT JOIN project_types pt ON pt.type_id = p.type_id
+            LEFT JOIN users u ON u.user_id = p.created_by
+            ORDER BY p.updated_at DESC, p.project_id DESC
+            LIMIT ?
+        """;
+
+        return jdbc.query(sql, (rs, i) -> {
+            RecentProjectDto dto = new RecentProjectDto();
+            dto.setProjectId(rs.getInt("project_id"));
+            dto.setName(rs.getString("project_name"));
+            dto.setStatus(rs.getString("status"));
+            dto.setTypeName(rs.getString("type_name"));
+            dto.setCreatedByName(rs.getString("creator_name"));
+            java.sql.Date sd = rs.getDate("start_date");
+            java.sql.Date ed = rs.getDate("end_date");
+            dto.setStartDate(sd != null ? sd.toLocalDate() : null);
+            dto.setEndDate(ed != null ? ed.toLocalDate() : null);
+            return dto;
+        }, limit);
+    }
+
     
 }
