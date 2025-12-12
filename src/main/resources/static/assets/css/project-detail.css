@@ -245,11 +245,7 @@
     visibility: visible;
 }
 
-/* Show create button when hovering over any column */
-.pd-column:hover .pd-cards::after {
-    opacity: 1;
-    visibility: visible;
-}
+
 
 /* Project Cards */
 .pd-card {
